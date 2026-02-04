@@ -1,23 +1,32 @@
 {
   "$schema": "https://raw.githubusercontent.com/dotnet/docfx/main/schemas/docfx.schema.json",
-  "metadata": [
-    {
-      "src": [
-        {
-          "files": ["StoryCADLib/StoryCADLib.csproj"],
-          "src": "../../StoryCAD"
-        }
-      ],
-      "dest": "api",
-      "includePrivateMembers": false,
-      "disableGitFeatures": false,
-      "disableDefaultFilter": false,
-      "properties": {
-        "TargetFramework": "net10.0-windows10.0.22621"
-      },
-      "filter": "filterConfig.yml"
-    }
-  ],
+
+  // TODO: API metadata generation disabled until UNO SDK multi-targeting issue resolved
+  // The StoryCADLib project uses UNO SDK with platform-specific partial classes
+  // (.desktop.cs, .WinAppSDK.cs) which cause build errors when docfx tries to
+  // compile for a single target framework.
+  //
+  // Options to fix:
+  // 1. Use pre-built DLL with XML docs instead of building from source
+  // 2. Create a docfx-specific .csproj that excludes platform-specific files
+  // 3. Wait for UNO SDK / docfx compatibility improvements
+  //
+  // "metadata": [
+  //   {
+  //     "src": [
+  //       {
+  //         "files": ["StoryCADLib/StoryCADLib.csproj"],
+  //         "src": "../../StoryCAD"
+  //       }
+  //     ],
+  //     "dest": "api",
+  //     "includePrivateMembers": false,
+  //     "properties": {
+  //       "TargetFramework": "net10.0-windows10.0.22621"
+  //     },
+  //     "filter": "filterConfig.yml"
+  //   }
+  // ],
   "build": {
     "content": [
       {

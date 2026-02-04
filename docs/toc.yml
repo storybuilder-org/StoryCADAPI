@@ -2,5 +2,6 @@
   href: index.md
 - name: Getting Started
   href: getting-started/
-- name: API Reference
-  href: api/
+# TODO: Enable when API metadata generation is fixed
+# - name: API Reference
+#   href: api/
