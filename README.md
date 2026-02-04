@@ -12,6 +12,23 @@ This sample is a application that turns an text file or document into a StoryCAD
 
 ## Quick Start
 
+### Environment Setup
+
+Samples that use LLMs (like StoryCADChat) require an OpenAI API key:
+
+```bash
+# Windows (Command Prompt)
+set OPENAI_API_KEY=your_key_here
+
+# Windows (PowerShell)
+$env:OPENAI_API_KEY="your_key_here"
+
+# Linux/Mac
+export OPENAI_API_KEY=your_key_here
+```
+
+See `.env.example` for all available environment variables.
+
 ### Installing StoryCAD Package
 The StoryCADLib API can be installed via [NuGet](https://www.nuget.org/packages/StoryCADLib)
 
