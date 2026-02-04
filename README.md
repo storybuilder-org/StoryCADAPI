@@ -1,25 +1,77 @@
-# StoryCAD API Samples
-This repo contains samples on how to use the StoryCAD API
+# StoryCADAPI
 
+Documentation and samples for the [StoryCADLib](https://www.nuget.org/packages/StoryCADLib) API.
 
-### /StoryCADChat/
-This sample is a simple console API to interact with StoryCAD in natural language via a Large Langauge Model.
+[![NuGet](https://img.shields.io/nuget/v/StoryCADLib.svg)](https://www.nuget.org/packages/StoryCADLib)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
+## What is StoryCADLib?
 
-### /ProseToOutline/
-This sample is a application that turns an text file or document into a StoryCAD Outline File (.STBX) using a Large Language Model
+StoryCADLib is the core library that powers [StoryCAD](https://github.com/storybuilder-org/StoryCAD), a free outlining tool for fiction writers. The library is available as a NuGet package for developers who want to:
 
+- Build tools that create or manipulate story outlines (.stbx files)
+- Integrate story structure into AI agents via Semantic Kernel
+- Automate story analysis and validation
+- Create custom writing assistants
+
+## Documentation
+
+**[View Full Documentation](https://storybuilder-org.github.io/StoryCADAPI/)** *(coming soon)*
+
+- [Getting Started](docs/getting-started/index.md) - Installation and first API call
+- [Quick Start Tutorial](docs/getting-started/quick-start.md) - Build an outline in 5 minutes
+- [API Reference](docs/api/index.md) - Complete method documentation
 
 ## Quick Start
 
-### Environment Setup
-
-Samples that use LLMs (like StoryCADChat) require an OpenAI API key:
+### Installation
 
 ```bash
-# Windows (Command Prompt)
-set OPENAI_API_KEY=your_key_here
+dotnet add package StoryCADLib
+```
 
+### Minimal Example
+
+```csharp
+using StoryCADLib.Services.IoC;
+using StoryCADLib.Services.API;
+using CommunityToolkit.Mvvm.DependencyInjection;
+
+// Initialize (once at startup)
+ServiceLocator.Initialize(headless: true);
+
+// Get the API
+var api = Ioc.Default.GetRequiredService<SemanticKernelApi>();
+
+// Create a new outline
+var result = await api.CreateEmptyOutline("My Story", "Author Name", "0");
+if (result.IsSuccess)
+{
+    Console.WriteLine($"Created outline with {result.Payload.Count} elements");
+}
+
+// Add a character
+var charResult = api.AddElement(
+    StoryItemType.Character,
+    result.Payload[0].ToString(),  // Parent GUID (story overview)
+    "Alex",
+    "The protagonist");
+
+// Save to file
+await api.WriteOutline("my-story.stbx");
+```
+
+## Samples
+
+| Sample | Description |
+|--------|-------------|
+| [StoryCADChat](StoryCADChat/) | Console app for natural language interaction with outlines via LLM |
+
+### Running Samples
+
+Samples that use LLMs require an OpenAI API key:
+
+```bash
 # Windows (PowerShell)
 $env:OPENAI_API_KEY="your_key_here"
 
@@ -27,60 +79,56 @@ $env:OPENAI_API_KEY="your_key_here"
 export OPENAI_API_KEY=your_key_here
 ```
 
-See `.env.example` for all available environment variables.
+See [.env.example](.env.example) for all environment variables.
 
-### Installing StoryCAD Package
-The StoryCADLib API can be installed via [NuGet](https://www.nuget.org/packages/StoryCADLib)
+## Key Concepts
 
-### Sample Usage
+### OperationResult Pattern
 
-```cs
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using StoryCAD.Services.API;
+All API methods return `OperationResult<T>` - always check `IsSuccess` before using `Payload`:
 
-namespace StoryCADConsoleSample
+```csharp
+var result = api.GetStoryElement(guid);
+if (result.IsSuccess)
 {
-    class Program
-    {
-        static async Task Main(string[] args)
-        {
-            // Create a new instance of the SemanticKernelApi (assuming dependency injection or manual instantiation)
-            var api = new SemanticKernelApi();
-            
-            // Create an empty outline
-            var outlineResult = await api.CreateEmptyOutline("The Great Adventure", "Jane Doe", "0");
-            if (!outlineResult.IsSuccess)
-            {
-                Console.WriteLine("Failed to create outline: " + outlineResult.ErrorMessage);
-                return;
-            }
-            Console.WriteLine("Outline created successfully.");
-            
-            // Suppose later we update a story element's property:
-            Guid someElementGuid = outlineResult.Payload[0]; // Get a GUID from the created outline
-            var updateResult = api.UpdateElementProperty(someElementGuid, "Name", "New Outline Name");
-            if (!updateResult.IsSuccess)
-            {
-                Console.WriteLine("Failed to update element: " + updateResult.ErrorMessage);
-            }
-            else
-            {
-                Console.WriteLine("Element updated successfully.");
-            }
-            
-            // Write the outline to disk
-            var writeResult = await api.WriteOutline("C:\\Outlines\\MyStoryOutline.stbx");
-            if (!writeResult.IsSuccess)
-            {
-                Console.WriteLine("Failed to write outline: " + writeResult.ErrorMessage);
-            }
-            else
-            {
-                Console.WriteLine("Outline written successfully.");
-            }
-        }
-    }
+    var element = result.Payload;
+    // Use element...
+}
+else
+{
+    Console.WriteLine($"Error: {result.ErrorMessage}");
 }
 ```
+
+### Headless Mode
+
+`ServiceLocator.Initialize(headless: true)` configures the library for use without a UI:
+- Console applications
+- Web APIs
+- Background services
+- AI agent integrations
+
+### Element Types
+
+| Type | Description |
+|------|-------------|
+| `StoryOverview` | Root element with story metadata |
+| `Problem` | Conflicts, themes, story questions |
+| `Character` | Characters in the story |
+| `Scene` | Individual scenes |
+| `Setting` | Locations and places |
+| `Folder` | Organizational containers |
+
+## Related Projects
+
+- [StoryCAD](https://github.com/storybuilder-org/StoryCAD) - The main application
+- [Collaborator](https://github.com/storybuilder-org/Collaborator) - AI plugin for StoryCAD
+- [StoryCAD Manual](https://storybuilder-org.github.io/StoryCAD/) - User documentation
+
+## License
+
+GNU GPL v3 - See [LICENSE](LICENSE) for details.
+
+## Contributing
+
+Contributions welcome! Please read the contribution guidelines in the main [StoryCAD repository](https://github.com/storybuilder-org/StoryCAD).
