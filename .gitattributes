@@ -1,0 +1,3 @@
+# Prevent line ending conversion for JavaScript files
+# Required for Blazor WASM integrity checks (future Prompt Generator)
+*.js binary
