@@ -86,4 +86,5 @@ Open `hero-journey.stbx` in the StoryCAD application to see your outline with th
 ## Next Steps
 
 - [Hello World Sample](hello-world.md) - Detailed walkthrough of the minimal example
+- [API Reference](../api/index.md) - Explore all available methods
 - [Samples](https://github.com/storybuilder-org/StoryCADAPI/tree/main/samples) - More complete examples

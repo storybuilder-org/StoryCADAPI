@@ -44,11 +44,8 @@ await api.WriteOutline("my-story.stbx");
 
 ## Documentation
 
-- [Samples](https://github.com/storybuilder-org/StoryCADAPI/tree/main/samples) - Working code examples
-
-<!-- TODO: Enable when API reference generation is fixed
 - [API Reference](api/index.md) - Complete technical documentation
--->
+- [Samples](https://github.com/storybuilder-org/StoryCADAPI/tree/main/samples) - Working code examples
 
 ## About StoryCAD
 

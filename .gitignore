@@ -406,5 +406,5 @@ FodyWeavers.xsd
 
 # docfx build output
 docs/_site/
-docs/api/
+
 

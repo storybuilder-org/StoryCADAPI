@@ -99,3 +99,4 @@ dotnet run
 ## Next Steps
 
 - [Quick Start](quick-start.md) - More complete example with characters and scenes
+- [API Reference](../api/index.md) - Full method documentation
