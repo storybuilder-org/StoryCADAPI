@@ -2,5 +2,13 @@
   href: index.md
 - name: Getting Started
   href: getting-started/
+- name: Concepts
+  href: concepts/
+- name: Operations
+  href: operations/
+- name: Samples
+  href: samples/
+- name: Advanced
+  href: advanced/
 - name: API Reference
   href: api/

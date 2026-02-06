@@ -22,9 +22,30 @@ StoryCADLib is the core library that powers [StoryCAD](https://github.com/storyb
 - [Quick Start Tutorial](docs/getting-started/quick-start.md) - Build an outline in 5 minutes
 - [API Reference](docs/api/index.md) - Complete method documentation
 
+## Repository Setup
+
+Samples reference StoryCADLib via ProjectReference, so you need both repos as siblings:
+
+```
+dev/src/
+  StoryCAD/          # Main application + StoryCADLib
+  StoryCADAPI/       # This repo (docs + samples)
+```
+
+```bash
+cd your-dev-directory
+git clone https://github.com/storybuilder-org/StoryCAD.git
+git clone https://github.com/storybuilder-org/StoryCADAPI.git
+```
+
+### Prerequisites
+
+- .NET 10.0 SDK
+- OpenAI API key (for Semantic Kernel samples only)
+
 ## Quick Start
 
-### Installation
+### Installation (NuGet)
 
 ```bash
 dotnet add package StoryCADLib
@@ -63,13 +84,39 @@ await api.WriteOutline("my-story.stbx");
 
 ## Samples
 
+### Core Samples (no API key required)
+
+| Sample | Description |
+|--------|-------------|
+| [StoryGraphBasics](StoryGraphBasics/) | Create, populate, link, save and reload an outline (10 API methods) |
+| [StoryMetrics](StoryMetrics/) | Analytics dashboard: element counts, character appearances, setting usage |
+| [ConsistencyValidation](ConsistencyValidation/) | 6 validation checks detecting story issues (orphan characters, unused settings, etc.) |
+
+### Semantic Kernel Samples (require `OPENAI_API_KEY`)
+
+| Sample | Description |
+|--------|-------------|
+| [StoryDiagnosticAgent](StoryDiagnosticAgent/) | LLM-powered diagnosis of pacing, passive protagonist, plot holes |
+| [AutomatedCritique](AutomatedCritique/) | LLM scores an outline against 5 craft criteria with rubric |
+
+### Other
+
 | Sample | Description |
 |--------|-------------|
 | [StoryCADChat](StoryCADChat/) | Console app for natural language interaction with outlines via LLM |
+| [HeadlessTest](HeadlessTest/) | Verification harness: 7-step round-trip test of headless API |
 
-### Running Samples
+### Building and Running Samples
 
-Samples that use LLMs require an OpenAI API key:
+All samples target `net10.0-desktop` and use Uno SDK:
+
+```bash
+cd StoryGraphBasics
+dotnet build -f net10.0-desktop
+dotnet run -f net10.0-desktop
+```
+
+For Semantic Kernel samples, set your API key first:
 
 ```bash
 # Windows (PowerShell)
@@ -118,6 +165,70 @@ else
 | `Scene` | Individual scenes |
 | `Setting` | Locations and places |
 | `Folder` | Organizational containers |
+
+## Building the Documentation Locally
+
+The API reference is auto-generated from StoryCADLib's XML documentation using [docfx](https://dotnet.github.io/docfx/).
+
+### Prerequisites
+
+- [docfx](https://dotnet.github.io/docfx/) CLI tool (`dotnet tool install -g docfx`)
+- docfx requires the .NET 9 runtime (its own dependency, separate from the project's .NET 10 target)
+- On WSL, run docfx commands via `cmd.exe` since WSL may not have .NET 9 installed
+
+### Workflow
+
+**Step 1: Build StoryCADLib** (generates DLL + XML documentation)
+
+```bash
+# From the StoryCAD repo
+dotnet build StoryCADLib/StoryCADLib.csproj -c Debug -f net10.0-windows10.0.22621
+```
+
+This produces:
+- `StoryCADLib/bin/Debug/net10.0-windows10.0.22621/StoryCADLib.dll`
+- `StoryCADLib/bin/Debug/net10.0-windows10.0.22621/StoryCADLib.xml`
+
+**Step 2: Copy artifacts to `_assemblies/`**
+
+```bash
+# From the StoryCADAPI repo root
+mkdir -p _assemblies
+cp ../StoryCAD/StoryCADLib/bin/Debug/net10.0-windows10.0.22621/StoryCADLib.dll _assemblies/
+cp ../StoryCAD/StoryCADLib/bin/Debug/net10.0-windows10.0.22621/StoryCADLib.xml _assemblies/
+```
+
+docfx reads the DLL for type metadata and the XML for documentation comments. This avoids
+building the UNO SDK project directly (which docfx cannot do due to multi-targeting).
+
+**Step 3: Generate and preview the site**
+
+```bash
+# Build only
+cd docs
+docfx docfx.json
+
+# Build and serve locally (opens at http://localhost:8080)
+docfx docfx.json --serve
+
+# Stop the server (WSL — Linux tools can't see Windows processes)
+taskkill.exe /F /IM docfx.exe
+```
+
+> **Note:** `InvalidAssemblyReference` warnings are expected. docfx cannot resolve
+> StoryCADLib's dependencies (UNO, WinUI, Semantic Kernel, etc.) but generates
+> correct API documentation regardless.
+
+### CI Workflow
+
+The GitHub Actions workflow (`.github/workflows/deploy-docs.yml`) automates this:
+1. Checks out both StoryCADAPI and StoryCAD repos
+2. Builds StoryCADLib via `dotnet build`
+3. Copies DLL + XML to `_assemblies/`
+4. Runs `docfx docfx.json`
+5. Uploads the generated site as a build artifact
+
+Deployment to GitHub Pages is disabled until the 4.0 store release.
 
 ## Related Projects
 

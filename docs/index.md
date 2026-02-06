@@ -44,8 +44,11 @@ await api.WriteOutline("my-story.stbx");
 
 ## Documentation
 
+- [Concepts](concepts/story-model.md) - Understand the story model, element types, and resource data
+- [Operations](operations/search.md) - Search, resource workflows, and beat sheet operations
+- [Samples](samples/index.md) - Working code examples
+- [Advanced](advanced/semantic-kernel.md) - Semantic Kernel integration and migration guide
 - [API Reference](api/index.md) - Complete technical documentation
-- [Samples](https://github.com/storybuilder-org/StoryCADAPI/tree/main/samples) - Working code examples
 
 ## About StoryCAD
 
