@@ -1,0 +1,245 @@
+### YamlMime:ManagedReference
+items:
+- uid: StoryCADLib.Models.StoryDocument
+  commentId: T:StoryCADLib.Models.StoryDocument
+  id: StoryDocument
+  parent: StoryCADLib.Models
+  children:
+  - StoryCADLib.Models.StoryDocument.#ctor(StoryCADLib.Models.StoryModel,System.String)
+  - StoryCADLib.Models.StoryDocument.FilePath
+  - StoryCADLib.Models.StoryDocument.IsDirty
+  - StoryCADLib.Models.StoryDocument.Model
+  langs:
+  - csharp
+  - vb
+  name: StoryDocument
+  nameWithType: StoryDocument
+  fullName: StoryCADLib.Models.StoryDocument
+  type: Class
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  summary: >-
+    Encapsulates a story document, combining the model and its file path.
+
+    This ensures the model and path are always kept together as a unit.
+  example: []
+  syntax:
+    content: public sealed class StoryDocument
+    content.vb: Public NotInheritable Class StoryDocument
+  inheritance:
+  - System.Object
+- uid: StoryCADLib.Models.StoryDocument.#ctor(StoryCADLib.Models.StoryModel,System.String)
+  commentId: M:StoryCADLib.Models.StoryDocument.#ctor(StoryCADLib.Models.StoryModel,System.String)
+  id: '#ctor(StoryCADLib.Models.StoryModel,System.String)'
+  parent: StoryCADLib.Models.StoryDocument
+  langs:
+  - csharp
+  - vb
+  name: StoryDocument(StoryModel, string?)
+  nameWithType: StoryDocument.StoryDocument(StoryModel, string?)
+  fullName: StoryCADLib.Models.StoryDocument.StoryDocument(StoryCADLib.Models.StoryModel, string?)
+  type: Constructor
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  summary: Creates a new StoryDocument with the specified model and optional file path.
+  example: []
+  syntax:
+    content: public StoryDocument(StoryModel model, string? filePath = null)
+    parameters:
+    - id: model
+      type: StoryCADLib.Models.StoryModel
+      description: The story model (required)
+    - id: filePath
+      type: System.String
+      description: The file path (optional, null for new documents)
+    content.vb: Public Sub New(model As StoryModel, filePath As String = Nothing)
+  overload: StoryCADLib.Models.StoryDocument.#ctor*
+  nameWithType.vb: StoryDocument.New(StoryModel, String)
+  fullName.vb: StoryCADLib.Models.StoryDocument.New(StoryCADLib.Models.StoryModel, String)
+  name.vb: New(StoryModel, String)
+- uid: StoryCADLib.Models.StoryDocument.Model
+  commentId: P:StoryCADLib.Models.StoryDocument.Model
+  id: Model
+  parent: StoryCADLib.Models.StoryDocument
+  langs:
+  - csharp
+  - vb
+  name: Model
+  nameWithType: StoryDocument.Model
+  fullName: StoryCADLib.Models.StoryDocument.Model
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  summary: >-
+    The story model containing all story data.
+
+    Readonly - to change models, create a new StoryDocument instance.
+  example: []
+  syntax:
+    content: public StoryModel Model { get; }
+    parameters: []
+    return:
+      type: StoryCADLib.Models.StoryModel
+    content.vb: Public ReadOnly Property Model As StoryModel
+  overload: StoryCADLib.Models.StoryDocument.Model*
+- uid: StoryCADLib.Models.StoryDocument.FilePath
+  commentId: P:StoryCADLib.Models.StoryDocument.FilePath
+  id: FilePath
+  parent: StoryCADLib.Models.StoryDocument
+  langs:
+  - csharp
+  - vb
+  name: FilePath
+  nameWithType: StoryDocument.FilePath
+  fullName: StoryCADLib.Models.StoryDocument.FilePath
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  summary: >-
+    The file path where this document is saved.
+
+    Null for new unsaved documents ("Untitled").
+
+    Mutable to support SaveAs operations.
+  example: []
+  syntax:
+    content: public string? FilePath { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property FilePath As String
+  overload: StoryCADLib.Models.StoryDocument.FilePath*
+- uid: StoryCADLib.Models.StoryDocument.IsDirty
+  commentId: P:StoryCADLib.Models.StoryDocument.IsDirty
+  id: IsDirty
+  parent: StoryCADLib.Models.StoryDocument
+  langs:
+  - csharp
+  - vb
+  name: IsDirty
+  nameWithType: StoryDocument.IsDirty
+  fullName: StoryCADLib.Models.StoryDocument.IsDirty
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  summary: >-
+    Indicates whether the document has unsaved changes.
+
+    Delegates to the Model's Changed property.
+  example: []
+  syntax:
+    content: public bool IsDirty { get; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public ReadOnly Property IsDirty As Boolean
+  overload: StoryCADLib.Models.StoryDocument.IsDirty*
+references:
+- uid: StoryCADLib.Models
+  commentId: N:StoryCADLib.Models
+  isExternal: true
+  href: StoryCADLib.html
+  name: StoryCADLib.Models
+  nameWithType: StoryCADLib.Models
+  fullName: StoryCADLib.Models
+  spec.csharp:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Models
+    name: Models
+    isExternal: true
+    href: StoryCADLib.Models.html
+  spec.vb:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Models
+    name: Models
+    isExternal: true
+    href: StoryCADLib.Models.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: StoryCADLib.Models.StoryDocument.#ctor*
+  commentId: Overload:StoryCADLib.Models.StoryDocument.#ctor
+  isExternal: true
+  href: StoryCADLib.Models.StoryDocument.html#StoryCADLib_Models_StoryDocument__ctor_StoryCADLib_Models_StoryModel_System_String_
+  name: StoryDocument
+  nameWithType: StoryDocument.StoryDocument
+  fullName: StoryCADLib.Models.StoryDocument.StoryDocument
+  nameWithType.vb: StoryDocument.New
+  fullName.vb: StoryCADLib.Models.StoryDocument.New
+  name.vb: New
+- uid: StoryCADLib.Models.StoryModel
+  commentId: T:StoryCADLib.Models.StoryModel
+  parent: StoryCADLib.Models
+  isExternal: true
+  href: StoryCADLib.Models.StoryModel.html
+  name: StoryModel
+  nameWithType: StoryModel
+  fullName: StoryCADLib.Models.StoryModel
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: StoryCADLib.Models.StoryDocument.Model*
+  commentId: Overload:StoryCADLib.Models.StoryDocument.Model
+  isExternal: true
+  href: StoryCADLib.Models.StoryDocument.html#StoryCADLib_Models_StoryDocument_Model
+  name: Model
+  nameWithType: StoryDocument.Model
+  fullName: StoryCADLib.Models.StoryDocument.Model
+- uid: StoryCADLib.Models.StoryDocument.FilePath*
+  commentId: Overload:StoryCADLib.Models.StoryDocument.FilePath
+  isExternal: true
+  href: StoryCADLib.Models.StoryDocument.html#StoryCADLib_Models_StoryDocument_FilePath
+  name: FilePath
+  nameWithType: StoryDocument.FilePath
+  fullName: StoryCADLib.Models.StoryDocument.FilePath
+- uid: StoryCADLib.Models.StoryDocument.IsDirty*
+  commentId: Overload:StoryCADLib.Models.StoryDocument.IsDirty
+  isExternal: true
+  href: StoryCADLib.Models.StoryDocument.html#StoryCADLib_Models_StoryDocument_IsDirty
+  name: IsDirty
+  nameWithType: StoryDocument.IsDirty
+  fullName: StoryCADLib.Models.StoryDocument.IsDirty
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean

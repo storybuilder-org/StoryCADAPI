@@ -1,0 +1,460 @@
+### YamlMime:ManagedReference
+items:
+- uid: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry
+  commentId: T:StoryCADLib.Models.StoryWorld.PhysicalWorldEntry
+  id: PhysicalWorldEntry
+  parent: StoryCADLib.Models.StoryWorld
+  children:
+  - StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.#ctor
+  - StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Astronomy
+  - StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Climate
+  - StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Fauna
+  - StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Flora
+  - StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Geography
+  - StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Name
+  - StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.NaturalResources
+  langs:
+  - csharp
+  - vb
+  name: PhysicalWorldEntry
+  nameWithType: PhysicalWorldEntry
+  fullName: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry
+  type: Class
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.StoryWorld
+  summary: >-
+    Entry for the Physical World list tab.
+
+    Represents a world, planet, or realm in multi-world stories.
+  example: []
+  syntax:
+    content: public class PhysicalWorldEntry
+    content.vb: Public Class PhysicalWorldEntry
+  inheritance:
+  - System.Object
+- uid: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.#ctor
+  commentId: M:StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.#ctor
+  id: '#ctor'
+  parent: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry
+  langs:
+  - csharp
+  - vb
+  name: PhysicalWorldEntry()
+  nameWithType: PhysicalWorldEntry.PhysicalWorldEntry()
+  fullName: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.PhysicalWorldEntry()
+  type: Constructor
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.StoryWorld
+  syntax:
+    content: public PhysicalWorldEntry()
+    content.vb: Public Sub New()
+  overload: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.#ctor*
+  nameWithType.vb: PhysicalWorldEntry.New()
+  fullName.vb: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.New()
+  name.vb: New()
+- uid: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Name
+  commentId: P:StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Name
+  id: Name
+  parent: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry
+  langs:
+  - csharp
+  - vb
+  name: Name
+  nameWithType: PhysicalWorldEntry.Name
+  fullName: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Name
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.StoryWorld
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("Name")]
+
+      public string Name { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("Name")>
+
+      Public Property Name As String
+  overload: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Name*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: Name
+- uid: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Geography
+  commentId: P:StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Geography
+  id: Geography
+  parent: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry
+  langs:
+  - csharp
+  - vb
+  name: Geography
+  nameWithType: PhysicalWorldEntry.Geography
+  fullName: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Geography
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.StoryWorld
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("Geography")]
+
+      public string Geography { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("Geography")>
+
+      Public Property Geography As String
+  overload: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Geography*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: Geography
+- uid: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Climate
+  commentId: P:StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Climate
+  id: Climate
+  parent: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry
+  langs:
+  - csharp
+  - vb
+  name: Climate
+  nameWithType: PhysicalWorldEntry.Climate
+  fullName: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Climate
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.StoryWorld
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("Climate")]
+
+      public string Climate { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("Climate")>
+
+      Public Property Climate As String
+  overload: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Climate*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: Climate
+- uid: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.NaturalResources
+  commentId: P:StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.NaturalResources
+  id: NaturalResources
+  parent: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry
+  langs:
+  - csharp
+  - vb
+  name: NaturalResources
+  nameWithType: PhysicalWorldEntry.NaturalResources
+  fullName: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.NaturalResources
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.StoryWorld
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("NaturalResources")]
+
+      public string NaturalResources { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("NaturalResources")>
+
+      Public Property NaturalResources As String
+  overload: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.NaturalResources*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: NaturalResources
+- uid: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Flora
+  commentId: P:StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Flora
+  id: Flora
+  parent: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry
+  langs:
+  - csharp
+  - vb
+  name: Flora
+  nameWithType: PhysicalWorldEntry.Flora
+  fullName: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Flora
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.StoryWorld
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("Flora")]
+
+      public string Flora { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("Flora")>
+
+      Public Property Flora As String
+  overload: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Flora*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: Flora
+- uid: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Fauna
+  commentId: P:StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Fauna
+  id: Fauna
+  parent: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry
+  langs:
+  - csharp
+  - vb
+  name: Fauna
+  nameWithType: PhysicalWorldEntry.Fauna
+  fullName: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Fauna
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.StoryWorld
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("Fauna")]
+
+      public string Fauna { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("Fauna")>
+
+      Public Property Fauna As String
+  overload: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Fauna*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: Fauna
+- uid: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Astronomy
+  commentId: P:StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Astronomy
+  id: Astronomy
+  parent: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry
+  langs:
+  - csharp
+  - vb
+  name: Astronomy
+  nameWithType: PhysicalWorldEntry.Astronomy
+  fullName: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Astronomy
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.StoryWorld
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("Astronomy")]
+
+      public string Astronomy { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("Astronomy")>
+
+      Public Property Astronomy As String
+  overload: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Astronomy*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: Astronomy
+references:
+- uid: StoryCADLib.Models.StoryWorld
+  commentId: N:StoryCADLib.Models.StoryWorld
+  isExternal: true
+  href: StoryCADLib.html
+  name: StoryCADLib.Models.StoryWorld
+  nameWithType: StoryCADLib.Models.StoryWorld
+  fullName: StoryCADLib.Models.StoryWorld
+  spec.csharp:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Models
+    name: Models
+    isExternal: true
+    href: StoryCADLib.Models.html
+  - name: .
+  - uid: StoryCADLib.Models.StoryWorld
+    name: StoryWorld
+    isExternal: true
+    href: StoryCADLib.Models.StoryWorld.html
+  spec.vb:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Models
+    name: Models
+    isExternal: true
+    href: StoryCADLib.Models.html
+  - name: .
+  - uid: StoryCADLib.Models.StoryWorld
+    name: StoryWorld
+    isExternal: true
+    href: StoryCADLib.Models.StoryWorld.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.#ctor*
+  commentId: Overload:StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.#ctor
+  isExternal: true
+  href: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.html#StoryCADLib_Models_StoryWorld_PhysicalWorldEntry__ctor
+  name: PhysicalWorldEntry
+  nameWithType: PhysicalWorldEntry.PhysicalWorldEntry
+  fullName: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.PhysicalWorldEntry
+  nameWithType.vb: PhysicalWorldEntry.New
+  fullName.vb: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.New
+  name.vb: New
+- uid: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Name*
+  commentId: Overload:StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Name
+  isExternal: true
+  href: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.html#StoryCADLib_Models_StoryWorld_PhysicalWorldEntry_Name
+  name: Name
+  nameWithType: PhysicalWorldEntry.Name
+  fullName: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Name
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Geography*
+  commentId: Overload:StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Geography
+  isExternal: true
+  href: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.html#StoryCADLib_Models_StoryWorld_PhysicalWorldEntry_Geography
+  name: Geography
+  nameWithType: PhysicalWorldEntry.Geography
+  fullName: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Geography
+- uid: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Climate*
+  commentId: Overload:StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Climate
+  isExternal: true
+  href: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.html#StoryCADLib_Models_StoryWorld_PhysicalWorldEntry_Climate
+  name: Climate
+  nameWithType: PhysicalWorldEntry.Climate
+  fullName: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Climate
+- uid: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.NaturalResources*
+  commentId: Overload:StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.NaturalResources
+  isExternal: true
+  href: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.html#StoryCADLib_Models_StoryWorld_PhysicalWorldEntry_NaturalResources
+  name: NaturalResources
+  nameWithType: PhysicalWorldEntry.NaturalResources
+  fullName: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.NaturalResources
+- uid: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Flora*
+  commentId: Overload:StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Flora
+  isExternal: true
+  href: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.html#StoryCADLib_Models_StoryWorld_PhysicalWorldEntry_Flora
+  name: Flora
+  nameWithType: PhysicalWorldEntry.Flora
+  fullName: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Flora
+- uid: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Fauna*
+  commentId: Overload:StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Fauna
+  isExternal: true
+  href: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.html#StoryCADLib_Models_StoryWorld_PhysicalWorldEntry_Fauna
+  name: Fauna
+  nameWithType: PhysicalWorldEntry.Fauna
+  fullName: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Fauna
+- uid: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Astronomy*
+  commentId: Overload:StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Astronomy
+  isExternal: true
+  href: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.html#StoryCADLib_Models_StoryWorld_PhysicalWorldEntry_Astronomy
+  name: Astronomy
+  nameWithType: PhysicalWorldEntry.Astronomy
+  fullName: StoryCADLib.Models.StoryWorld.PhysicalWorldEntry.Astronomy

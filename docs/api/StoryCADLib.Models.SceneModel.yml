@@ -1,0 +1,1719 @@
+### YamlMime:ManagedReference
+items:
+- uid: StoryCADLib.Models.SceneModel
+  commentId: T:StoryCADLib.Models.SceneModel
+  id: SceneModel
+  parent: StoryCADLib.Models
+  children:
+  - StoryCADLib.Models.SceneModel.#ctor
+  - StoryCADLib.Models.SceneModel.#ctor(StoryCADLib.Models.StoryModel,StoryCADLib.ViewModels.StoryNodeItem)
+  - StoryCADLib.Models.SceneModel.#ctor(System.String,StoryCADLib.Models.StoryModel,StoryCADLib.ViewModels.StoryNodeItem)
+  - StoryCADLib.Models.SceneModel.AntagEmotion
+  - StoryCADLib.Models.SceneModel.AntagGoal
+  - StoryCADLib.Models.SceneModel.Antagonist
+  - StoryCADLib.Models.SceneModel.CastMembers
+  - StoryCADLib.Models.SceneModel.Consequences
+  - StoryCADLib.Models.SceneModel.Date
+  - StoryCADLib.Models.SceneModel.Emotion
+  - StoryCADLib.Models.SceneModel.Events
+  - StoryCADLib.Models.SceneModel.NewGoal
+  - StoryCADLib.Models.SceneModel.Notes
+  - StoryCADLib.Models.SceneModel.Opposition
+  - StoryCADLib.Models.SceneModel.Outcome
+  - StoryCADLib.Models.SceneModel.ProtagEmotion
+  - StoryCADLib.Models.SceneModel.ProtagGoal
+  - StoryCADLib.Models.SceneModel.Protagonist
+  - StoryCADLib.Models.SceneModel.Realization
+  - StoryCADLib.Models.SceneModel.Review
+  - StoryCADLib.Models.SceneModel.SceneDescription
+  - StoryCADLib.Models.SceneModel.ScenePurpose
+  - StoryCADLib.Models.SceneModel.SceneType
+  - StoryCADLib.Models.SceneModel.Setting
+  - StoryCADLib.Models.SceneModel.Significance
+  - StoryCADLib.Models.SceneModel.Time
+  - StoryCADLib.Models.SceneModel.ValueExchange
+  - StoryCADLib.Models.SceneModel.ViewpointCharacter
+  langs:
+  - csharp
+  - vb
+  name: SceneModel
+  nameWithType: SceneModel
+  fullName: StoryCADLib.Models.SceneModel
+  type: Class
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  syntax:
+    content: 'public class SceneModel : StoryElement'
+    content.vb: Public Class SceneModel Inherits StoryElement
+  inheritance:
+  - System.Object
+  - StoryCADLib.Models.StoryElement
+  inheritedMembers:
+  - StoryCADLib.Models.StoryElement.GetByGuid(System.Guid,StoryCADLib.Models.StoryModel)
+  - StoryCADLib.Models.StoryElement.Deserialize(System.String)
+  - StoryCADLib.Models.StoryElement.Serialize
+  - StoryCADLib.Models.StoryElement.ToString
+  - StoryCADLib.Models.StoryElement.Uuid
+  - StoryCADLib.Models.StoryElement.Description
+  - StoryCADLib.Models.StoryElement.Name
+  - StoryCADLib.Models.StoryElement.ElementType
+  - StoryCADLib.Models.StoryElement.Node
+  - StoryCADLib.Models.StoryElement.IsSelected
+- uid: StoryCADLib.Models.SceneModel.#ctor(StoryCADLib.Models.StoryModel,StoryCADLib.ViewModels.StoryNodeItem)
+  commentId: M:StoryCADLib.Models.SceneModel.#ctor(StoryCADLib.Models.StoryModel,StoryCADLib.ViewModels.StoryNodeItem)
+  id: '#ctor(StoryCADLib.Models.StoryModel,StoryCADLib.ViewModels.StoryNodeItem)'
+  parent: StoryCADLib.Models.SceneModel
+  langs:
+  - csharp
+  - vb
+  name: SceneModel(StoryModel, StoryNodeItem)
+  nameWithType: SceneModel.SceneModel(StoryModel, StoryNodeItem)
+  fullName: StoryCADLib.Models.SceneModel.SceneModel(StoryCADLib.Models.StoryModel, StoryCADLib.ViewModels.StoryNodeItem)
+  type: Constructor
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  syntax:
+    content: public SceneModel(StoryModel model, StoryNodeItem Node)
+    parameters:
+    - id: model
+      type: StoryCADLib.Models.StoryModel
+    - id: Node
+      type: StoryCADLib.ViewModels.StoryNodeItem
+    content.vb: Public Sub New(model As StoryModel, Node As StoryNodeItem)
+  overload: StoryCADLib.Models.SceneModel.#ctor*
+  nameWithType.vb: SceneModel.New(StoryModel, StoryNodeItem)
+  fullName.vb: StoryCADLib.Models.SceneModel.New(StoryCADLib.Models.StoryModel, StoryCADLib.ViewModels.StoryNodeItem)
+  name.vb: New(StoryModel, StoryNodeItem)
+- uid: StoryCADLib.Models.SceneModel.#ctor(System.String,StoryCADLib.Models.StoryModel,StoryCADLib.ViewModels.StoryNodeItem)
+  commentId: M:StoryCADLib.Models.SceneModel.#ctor(System.String,StoryCADLib.Models.StoryModel,StoryCADLib.ViewModels.StoryNodeItem)
+  id: '#ctor(System.String,StoryCADLib.Models.StoryModel,StoryCADLib.ViewModels.StoryNodeItem)'
+  parent: StoryCADLib.Models.SceneModel
+  langs:
+  - csharp
+  - vb
+  name: SceneModel(string, StoryModel, StoryNodeItem)
+  nameWithType: SceneModel.SceneModel(string, StoryModel, StoryNodeItem)
+  fullName: StoryCADLib.Models.SceneModel.SceneModel(string, StoryCADLib.Models.StoryModel, StoryCADLib.ViewModels.StoryNodeItem)
+  type: Constructor
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  syntax:
+    content: public SceneModel(string name, StoryModel model, StoryNodeItem Node)
+    parameters:
+    - id: name
+      type: System.String
+    - id: model
+      type: StoryCADLib.Models.StoryModel
+    - id: Node
+      type: StoryCADLib.ViewModels.StoryNodeItem
+    content.vb: Public Sub New(name As String, model As StoryModel, Node As StoryNodeItem)
+  overload: StoryCADLib.Models.SceneModel.#ctor*
+  nameWithType.vb: SceneModel.New(String, StoryModel, StoryNodeItem)
+  fullName.vb: StoryCADLib.Models.SceneModel.New(String, StoryCADLib.Models.StoryModel, StoryCADLib.ViewModels.StoryNodeItem)
+  name.vb: New(String, StoryModel, StoryNodeItem)
+- uid: StoryCADLib.Models.SceneModel.#ctor
+  commentId: M:StoryCADLib.Models.SceneModel.#ctor
+  id: '#ctor'
+  parent: StoryCADLib.Models.SceneModel
+  langs:
+  - csharp
+  - vb
+  name: SceneModel()
+  nameWithType: SceneModel.SceneModel()
+  fullName: StoryCADLib.Models.SceneModel.SceneModel()
+  type: Constructor
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  syntax:
+    content: public SceneModel()
+    content.vb: Public Sub New()
+  overload: StoryCADLib.Models.SceneModel.#ctor*
+  nameWithType.vb: SceneModel.New()
+  fullName.vb: StoryCADLib.Models.SceneModel.New()
+  name.vb: New()
+- uid: StoryCADLib.Models.SceneModel.SceneDescription
+  commentId: P:StoryCADLib.Models.SceneModel.SceneDescription
+  id: SceneDescription
+  parent: StoryCADLib.Models.SceneModel
+  langs:
+  - csharp
+  - vb
+  name: SceneDescription
+  nameWithType: SceneModel.SceneDescription
+  fullName: StoryCADLib.Models.SceneModel.SceneDescription
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("Description")]
+
+      public string SceneDescription { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("Description")>
+
+      Public Property SceneDescription As String
+  overload: StoryCADLib.Models.SceneModel.SceneDescription*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: Description
+- uid: StoryCADLib.Models.SceneModel.ViewpointCharacter
+  commentId: P:StoryCADLib.Models.SceneModel.ViewpointCharacter
+  id: ViewpointCharacter
+  parent: StoryCADLib.Models.SceneModel
+  langs:
+  - csharp
+  - vb
+  name: ViewpointCharacter
+  nameWithType: SceneModel.ViewpointCharacter
+  fullName: StoryCADLib.Models.SceneModel.ViewpointCharacter
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("ViewpointCharacter")]
+
+      public Guid ViewpointCharacter { get; set; }
+    parameters: []
+    return:
+      type: System.Guid
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("ViewpointCharacter")>
+
+      Public Property ViewpointCharacter As Guid
+  overload: StoryCADLib.Models.SceneModel.ViewpointCharacter*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: ViewpointCharacter
+- uid: StoryCADLib.Models.SceneModel.Date
+  commentId: P:StoryCADLib.Models.SceneModel.Date
+  id: Date
+  parent: StoryCADLib.Models.SceneModel
+  langs:
+  - csharp
+  - vb
+  name: Date
+  nameWithType: SceneModel.Date
+  fullName: StoryCADLib.Models.SceneModel.Date
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("Date")]
+
+      public string Date { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("Date")>
+
+      Public Property [Date] As String
+  overload: StoryCADLib.Models.SceneModel.Date*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: Date
+- uid: StoryCADLib.Models.SceneModel.Time
+  commentId: P:StoryCADLib.Models.SceneModel.Time
+  id: Time
+  parent: StoryCADLib.Models.SceneModel
+  langs:
+  - csharp
+  - vb
+  name: Time
+  nameWithType: SceneModel.Time
+  fullName: StoryCADLib.Models.SceneModel.Time
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("Time")]
+
+      public string Time { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("Time")>
+
+      Public Property Time As String
+  overload: StoryCADLib.Models.SceneModel.Time*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: Time
+- uid: StoryCADLib.Models.SceneModel.Setting
+  commentId: P:StoryCADLib.Models.SceneModel.Setting
+  id: Setting
+  parent: StoryCADLib.Models.SceneModel
+  langs:
+  - csharp
+  - vb
+  name: Setting
+  nameWithType: SceneModel.Setting
+  fullName: StoryCADLib.Models.SceneModel.Setting
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("Setting")]
+
+      public Guid Setting { get; set; }
+    parameters: []
+    return:
+      type: System.Guid
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("Setting")>
+
+      Public Property Setting As Guid
+  overload: StoryCADLib.Models.SceneModel.Setting*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: Setting
+- uid: StoryCADLib.Models.SceneModel.SceneType
+  commentId: P:StoryCADLib.Models.SceneModel.SceneType
+  id: SceneType
+  parent: StoryCADLib.Models.SceneModel
+  langs:
+  - csharp
+  - vb
+  name: SceneType
+  nameWithType: SceneModel.SceneType
+  fullName: StoryCADLib.Models.SceneModel.SceneType
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("SceneType")]
+
+      public string SceneType { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("SceneType")>
+
+      Public Property SceneType As String
+  overload: StoryCADLib.Models.SceneModel.SceneType*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: SceneType
+- uid: StoryCADLib.Models.SceneModel.CastMembers
+  commentId: P:StoryCADLib.Models.SceneModel.CastMembers
+  id: CastMembers
+  parent: StoryCADLib.Models.SceneModel
+  langs:
+  - csharp
+  - vb
+  name: CastMembers
+  nameWithType: SceneModel.CastMembers
+  fullName: StoryCADLib.Models.SceneModel.CastMembers
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("CastMembers")]
+
+      public List<Guid> CastMembers { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{System.Guid}
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("CastMembers")>
+
+      Public Property CastMembers As List(Of Guid)
+  overload: StoryCADLib.Models.SceneModel.CastMembers*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: CastMembers
+- uid: StoryCADLib.Models.SceneModel.Protagonist
+  commentId: P:StoryCADLib.Models.SceneModel.Protagonist
+  id: Protagonist
+  parent: StoryCADLib.Models.SceneModel
+  langs:
+  - csharp
+  - vb
+  name: Protagonist
+  nameWithType: SceneModel.Protagonist
+  fullName: StoryCADLib.Models.SceneModel.Protagonist
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("Protagonist")]
+
+      public Guid Protagonist { get; set; }
+    parameters: []
+    return:
+      type: System.Guid
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("Protagonist")>
+
+      Public Property Protagonist As Guid
+  overload: StoryCADLib.Models.SceneModel.Protagonist*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: Protagonist
+- uid: StoryCADLib.Models.SceneModel.ProtagEmotion
+  commentId: P:StoryCADLib.Models.SceneModel.ProtagEmotion
+  id: ProtagEmotion
+  parent: StoryCADLib.Models.SceneModel
+  langs:
+  - csharp
+  - vb
+  name: ProtagEmotion
+  nameWithType: SceneModel.ProtagEmotion
+  fullName: StoryCADLib.Models.SceneModel.ProtagEmotion
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("ProtagEmotion")]
+
+      public string ProtagEmotion { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("ProtagEmotion")>
+
+      Public Property ProtagEmotion As String
+  overload: StoryCADLib.Models.SceneModel.ProtagEmotion*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: ProtagEmotion
+- uid: StoryCADLib.Models.SceneModel.ProtagGoal
+  commentId: P:StoryCADLib.Models.SceneModel.ProtagGoal
+  id: ProtagGoal
+  parent: StoryCADLib.Models.SceneModel
+  langs:
+  - csharp
+  - vb
+  name: ProtagGoal
+  nameWithType: SceneModel.ProtagGoal
+  fullName: StoryCADLib.Models.SceneModel.ProtagGoal
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("ProtagGoal")]
+
+      public string ProtagGoal { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("ProtagGoal")>
+
+      Public Property ProtagGoal As String
+  overload: StoryCADLib.Models.SceneModel.ProtagGoal*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: ProtagGoal
+- uid: StoryCADLib.Models.SceneModel.Antagonist
+  commentId: P:StoryCADLib.Models.SceneModel.Antagonist
+  id: Antagonist
+  parent: StoryCADLib.Models.SceneModel
+  langs:
+  - csharp
+  - vb
+  name: Antagonist
+  nameWithType: SceneModel.Antagonist
+  fullName: StoryCADLib.Models.SceneModel.Antagonist
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("Antagonist")]
+
+      public Guid Antagonist { get; set; }
+    parameters: []
+    return:
+      type: System.Guid
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("Antagonist")>
+
+      Public Property Antagonist As Guid
+  overload: StoryCADLib.Models.SceneModel.Antagonist*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: Antagonist
+- uid: StoryCADLib.Models.SceneModel.AntagEmotion
+  commentId: P:StoryCADLib.Models.SceneModel.AntagEmotion
+  id: AntagEmotion
+  parent: StoryCADLib.Models.SceneModel
+  langs:
+  - csharp
+  - vb
+  name: AntagEmotion
+  nameWithType: SceneModel.AntagEmotion
+  fullName: StoryCADLib.Models.SceneModel.AntagEmotion
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("AntagEmotion")]
+
+      public string AntagEmotion { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("AntagEmotion")>
+
+      Public Property AntagEmotion As String
+  overload: StoryCADLib.Models.SceneModel.AntagEmotion*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: AntagEmotion
+- uid: StoryCADLib.Models.SceneModel.AntagGoal
+  commentId: P:StoryCADLib.Models.SceneModel.AntagGoal
+  id: AntagGoal
+  parent: StoryCADLib.Models.SceneModel
+  langs:
+  - csharp
+  - vb
+  name: AntagGoal
+  nameWithType: SceneModel.AntagGoal
+  fullName: StoryCADLib.Models.SceneModel.AntagGoal
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("AntagGoal")]
+
+      public string AntagGoal { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("AntagGoal")>
+
+      Public Property AntagGoal As String
+  overload: StoryCADLib.Models.SceneModel.AntagGoal*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: AntagGoal
+- uid: StoryCADLib.Models.SceneModel.Opposition
+  commentId: P:StoryCADLib.Models.SceneModel.Opposition
+  id: Opposition
+  parent: StoryCADLib.Models.SceneModel
+  langs:
+  - csharp
+  - vb
+  name: Opposition
+  nameWithType: SceneModel.Opposition
+  fullName: StoryCADLib.Models.SceneModel.Opposition
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("Opposition")]
+
+      public string Opposition { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("Opposition")>
+
+      Public Property Opposition As String
+  overload: StoryCADLib.Models.SceneModel.Opposition*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: Opposition
+- uid: StoryCADLib.Models.SceneModel.Outcome
+  commentId: P:StoryCADLib.Models.SceneModel.Outcome
+  id: Outcome
+  parent: StoryCADLib.Models.SceneModel
+  langs:
+  - csharp
+  - vb
+  name: Outcome
+  nameWithType: SceneModel.Outcome
+  fullName: StoryCADLib.Models.SceneModel.Outcome
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("Outcome")]
+
+      public string Outcome { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("Outcome")>
+
+      Public Property Outcome As String
+  overload: StoryCADLib.Models.SceneModel.Outcome*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: Outcome
+- uid: StoryCADLib.Models.SceneModel.ScenePurpose
+  commentId: P:StoryCADLib.Models.SceneModel.ScenePurpose
+  id: ScenePurpose
+  parent: StoryCADLib.Models.SceneModel
+  langs:
+  - csharp
+  - vb
+  name: ScenePurpose
+  nameWithType: SceneModel.ScenePurpose
+  fullName: StoryCADLib.Models.SceneModel.ScenePurpose
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("ScenePurpose")]
+
+      public List<string> ScenePurpose { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{System.String}
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("ScenePurpose")>
+
+      Public Property ScenePurpose As List(Of String)
+  overload: StoryCADLib.Models.SceneModel.ScenePurpose*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: ScenePurpose
+- uid: StoryCADLib.Models.SceneModel.ValueExchange
+  commentId: P:StoryCADLib.Models.SceneModel.ValueExchange
+  id: ValueExchange
+  parent: StoryCADLib.Models.SceneModel
+  langs:
+  - csharp
+  - vb
+  name: ValueExchange
+  nameWithType: SceneModel.ValueExchange
+  fullName: StoryCADLib.Models.SceneModel.ValueExchange
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("ValueExchange")]
+
+      public string ValueExchange { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("ValueExchange")>
+
+      Public Property ValueExchange As String
+  overload: StoryCADLib.Models.SceneModel.ValueExchange*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: ValueExchange
+- uid: StoryCADLib.Models.SceneModel.Events
+  commentId: P:StoryCADLib.Models.SceneModel.Events
+  id: Events
+  parent: StoryCADLib.Models.SceneModel
+  langs:
+  - csharp
+  - vb
+  name: Events
+  nameWithType: SceneModel.Events
+  fullName: StoryCADLib.Models.SceneModel.Events
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("Events")]
+
+      public string Events { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("Events")>
+
+      Public Property Events As String
+  overload: StoryCADLib.Models.SceneModel.Events*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: Events
+- uid: StoryCADLib.Models.SceneModel.Consequences
+  commentId: P:StoryCADLib.Models.SceneModel.Consequences
+  id: Consequences
+  parent: StoryCADLib.Models.SceneModel
+  langs:
+  - csharp
+  - vb
+  name: Consequences
+  nameWithType: SceneModel.Consequences
+  fullName: StoryCADLib.Models.SceneModel.Consequences
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("Consequences")]
+
+      public string Consequences { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("Consequences")>
+
+      Public Property Consequences As String
+  overload: StoryCADLib.Models.SceneModel.Consequences*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: Consequences
+- uid: StoryCADLib.Models.SceneModel.Significance
+  commentId: P:StoryCADLib.Models.SceneModel.Significance
+  id: Significance
+  parent: StoryCADLib.Models.SceneModel
+  langs:
+  - csharp
+  - vb
+  name: Significance
+  nameWithType: SceneModel.Significance
+  fullName: StoryCADLib.Models.SceneModel.Significance
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("Significance")]
+
+      public string Significance { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("Significance")>
+
+      Public Property Significance As String
+  overload: StoryCADLib.Models.SceneModel.Significance*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: Significance
+- uid: StoryCADLib.Models.SceneModel.Realization
+  commentId: P:StoryCADLib.Models.SceneModel.Realization
+  id: Realization
+  parent: StoryCADLib.Models.SceneModel
+  langs:
+  - csharp
+  - vb
+  name: Realization
+  nameWithType: SceneModel.Realization
+  fullName: StoryCADLib.Models.SceneModel.Realization
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("Realization")]
+
+      public string Realization { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("Realization")>
+
+      Public Property Realization As String
+  overload: StoryCADLib.Models.SceneModel.Realization*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: Realization
+- uid: StoryCADLib.Models.SceneModel.Emotion
+  commentId: P:StoryCADLib.Models.SceneModel.Emotion
+  id: Emotion
+  parent: StoryCADLib.Models.SceneModel
+  langs:
+  - csharp
+  - vb
+  name: Emotion
+  nameWithType: SceneModel.Emotion
+  fullName: StoryCADLib.Models.SceneModel.Emotion
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("Emotion")]
+
+      public string Emotion { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("Emotion")>
+
+      Public Property Emotion As String
+  overload: StoryCADLib.Models.SceneModel.Emotion*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: Emotion
+- uid: StoryCADLib.Models.SceneModel.NewGoal
+  commentId: P:StoryCADLib.Models.SceneModel.NewGoal
+  id: NewGoal
+  parent: StoryCADLib.Models.SceneModel
+  langs:
+  - csharp
+  - vb
+  name: NewGoal
+  nameWithType: SceneModel.NewGoal
+  fullName: StoryCADLib.Models.SceneModel.NewGoal
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("NewGoal")]
+
+      public string NewGoal { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("NewGoal")>
+
+      Public Property NewGoal As String
+  overload: StoryCADLib.Models.SceneModel.NewGoal*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: NewGoal
+- uid: StoryCADLib.Models.SceneModel.Review
+  commentId: P:StoryCADLib.Models.SceneModel.Review
+  id: Review
+  parent: StoryCADLib.Models.SceneModel
+  langs:
+  - csharp
+  - vb
+  name: Review
+  nameWithType: SceneModel.Review
+  fullName: StoryCADLib.Models.SceneModel.Review
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("Review")]
+
+      public string Review { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("Review")>
+
+      Public Property Review As String
+  overload: StoryCADLib.Models.SceneModel.Review*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: Review
+- uid: StoryCADLib.Models.SceneModel.Notes
+  commentId: P:StoryCADLib.Models.SceneModel.Notes
+  id: Notes
+  parent: StoryCADLib.Models.SceneModel
+  langs:
+  - csharp
+  - vb
+  name: Notes
+  nameWithType: SceneModel.Notes
+  fullName: StoryCADLib.Models.SceneModel.Notes
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("Notes")]
+
+      public string Notes { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("Notes")>
+
+      Public Property Notes As String
+  overload: StoryCADLib.Models.SceneModel.Notes*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: Notes
+references:
+- uid: StoryCADLib.Models
+  commentId: N:StoryCADLib.Models
+  isExternal: true
+  href: StoryCADLib.html
+  name: StoryCADLib.Models
+  nameWithType: StoryCADLib.Models
+  fullName: StoryCADLib.Models
+  spec.csharp:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Models
+    name: Models
+    isExternal: true
+    href: StoryCADLib.Models.html
+  spec.vb:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Models
+    name: Models
+    isExternal: true
+    href: StoryCADLib.Models.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: StoryCADLib.Models.StoryElement
+  commentId: T:StoryCADLib.Models.StoryElement
+  parent: StoryCADLib.Models
+  isExternal: true
+  href: StoryCADLib.Models.StoryElement.html
+  name: StoryElement
+  nameWithType: StoryElement
+  fullName: StoryCADLib.Models.StoryElement
+- uid: StoryCADLib.Models.StoryElement.GetByGuid(System.Guid,StoryCADLib.Models.StoryModel)
+  commentId: M:StoryCADLib.Models.StoryElement.GetByGuid(System.Guid,StoryCADLib.Models.StoryModel)
+  parent: StoryCADLib.Models.StoryElement
+  isExternal: true
+  href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_GetByGuid_System_Guid_StoryCADLib_Models_StoryModel_
+  name: GetByGuid(Guid, StoryModel)
+  nameWithType: StoryElement.GetByGuid(Guid, StoryModel)
+  fullName: StoryCADLib.Models.StoryElement.GetByGuid(System.Guid, StoryCADLib.Models.StoryModel)
+  spec.csharp:
+  - uid: StoryCADLib.Models.StoryElement.GetByGuid(System.Guid,StoryCADLib.Models.StoryModel)
+    name: GetByGuid
+    isExternal: true
+    href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_GetByGuid_System_Guid_StoryCADLib_Models_StoryModel_
+  - name: (
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: StoryCADLib.Models.StoryModel
+    name: StoryModel
+    isExternal: true
+    href: StoryCADLib.Models.StoryModel.html
+  - name: )
+  spec.vb:
+  - uid: StoryCADLib.Models.StoryElement.GetByGuid(System.Guid,StoryCADLib.Models.StoryModel)
+    name: GetByGuid
+    isExternal: true
+    href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_GetByGuid_System_Guid_StoryCADLib_Models_StoryModel_
+  - name: (
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: StoryCADLib.Models.StoryModel
+    name: StoryModel
+    isExternal: true
+    href: StoryCADLib.Models.StoryModel.html
+  - name: )
+- uid: StoryCADLib.Models.StoryElement.Deserialize(System.String)
+  commentId: M:StoryCADLib.Models.StoryElement.Deserialize(System.String)
+  parent: StoryCADLib.Models.StoryElement
+  isExternal: true
+  href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_Deserialize_System_String_
+  name: Deserialize(string)
+  nameWithType: StoryElement.Deserialize(string)
+  fullName: StoryCADLib.Models.StoryElement.Deserialize(string)
+  nameWithType.vb: StoryElement.Deserialize(String)
+  fullName.vb: StoryCADLib.Models.StoryElement.Deserialize(String)
+  name.vb: Deserialize(String)
+  spec.csharp:
+  - uid: StoryCADLib.Models.StoryElement.Deserialize(System.String)
+    name: Deserialize
+    isExternal: true
+    href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_Deserialize_System_String_
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: StoryCADLib.Models.StoryElement.Deserialize(System.String)
+    name: Deserialize
+    isExternal: true
+    href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_Deserialize_System_String_
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+  - name: )
+- uid: StoryCADLib.Models.StoryElement.Serialize
+  commentId: M:StoryCADLib.Models.StoryElement.Serialize
+  parent: StoryCADLib.Models.StoryElement
+  isExternal: true
+  href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_Serialize
+  name: Serialize()
+  nameWithType: StoryElement.Serialize()
+  fullName: StoryCADLib.Models.StoryElement.Serialize()
+  spec.csharp:
+  - uid: StoryCADLib.Models.StoryElement.Serialize
+    name: Serialize
+    isExternal: true
+    href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_Serialize
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: StoryCADLib.Models.StoryElement.Serialize
+    name: Serialize
+    isExternal: true
+    href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_Serialize
+  - name: (
+  - name: )
+- uid: StoryCADLib.Models.StoryElement.ToString
+  commentId: M:StoryCADLib.Models.StoryElement.ToString
+  parent: StoryCADLib.Models.StoryElement
+  isExternal: true
+  href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_ToString
+  name: ToString()
+  nameWithType: StoryElement.ToString()
+  fullName: StoryCADLib.Models.StoryElement.ToString()
+  spec.csharp:
+  - uid: StoryCADLib.Models.StoryElement.ToString
+    name: ToString
+    isExternal: true
+    href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_ToString
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: StoryCADLib.Models.StoryElement.ToString
+    name: ToString
+    isExternal: true
+    href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_ToString
+  - name: (
+  - name: )
+- uid: StoryCADLib.Models.StoryElement.Uuid
+  commentId: P:StoryCADLib.Models.StoryElement.Uuid
+  parent: StoryCADLib.Models.StoryElement
+  isExternal: true
+  href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_Uuid
+  name: Uuid
+  nameWithType: StoryElement.Uuid
+  fullName: StoryCADLib.Models.StoryElement.Uuid
+- uid: StoryCADLib.Models.StoryElement.Description
+  commentId: P:StoryCADLib.Models.StoryElement.Description
+  parent: StoryCADLib.Models.StoryElement
+  isExternal: true
+  href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_Description
+  name: Description
+  nameWithType: StoryElement.Description
+  fullName: StoryCADLib.Models.StoryElement.Description
+- uid: StoryCADLib.Models.StoryElement.Name
+  commentId: P:StoryCADLib.Models.StoryElement.Name
+  parent: StoryCADLib.Models.StoryElement
+  isExternal: true
+  href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_Name
+  name: Name
+  nameWithType: StoryElement.Name
+  fullName: StoryCADLib.Models.StoryElement.Name
+- uid: StoryCADLib.Models.StoryElement.ElementType
+  commentId: P:StoryCADLib.Models.StoryElement.ElementType
+  parent: StoryCADLib.Models.StoryElement
+  isExternal: true
+  href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_ElementType
+  name: ElementType
+  nameWithType: StoryElement.ElementType
+  fullName: StoryCADLib.Models.StoryElement.ElementType
+- uid: StoryCADLib.Models.StoryElement.Node
+  commentId: P:StoryCADLib.Models.StoryElement.Node
+  parent: StoryCADLib.Models.StoryElement
+  isExternal: true
+  href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_Node
+  name: Node
+  nameWithType: StoryElement.Node
+  fullName: StoryCADLib.Models.StoryElement.Node
+- uid: StoryCADLib.Models.StoryElement.IsSelected
+  commentId: P:StoryCADLib.Models.StoryElement.IsSelected
+  parent: StoryCADLib.Models.StoryElement
+  isExternal: true
+  href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_IsSelected
+  name: IsSelected
+  nameWithType: StoryElement.IsSelected
+  fullName: StoryCADLib.Models.StoryElement.IsSelected
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: StoryCADLib.Models.SceneModel.#ctor*
+  commentId: Overload:StoryCADLib.Models.SceneModel.#ctor
+  isExternal: true
+  href: StoryCADLib.Models.SceneModel.html#StoryCADLib_Models_SceneModel__ctor_StoryCADLib_Models_StoryModel_StoryCADLib_ViewModels_StoryNodeItem_
+  name: SceneModel
+  nameWithType: SceneModel.SceneModel
+  fullName: StoryCADLib.Models.SceneModel.SceneModel
+  nameWithType.vb: SceneModel.New
+  fullName.vb: StoryCADLib.Models.SceneModel.New
+  name.vb: New
+- uid: StoryCADLib.Models.StoryModel
+  commentId: T:StoryCADLib.Models.StoryModel
+  parent: StoryCADLib.Models
+  isExternal: true
+  href: StoryCADLib.Models.StoryModel.html
+  name: StoryModel
+  nameWithType: StoryModel
+  fullName: StoryCADLib.Models.StoryModel
+- uid: StoryCADLib.ViewModels.StoryNodeItem
+  commentId: T:StoryCADLib.ViewModels.StoryNodeItem
+  parent: StoryCADLib.ViewModels
+  isExternal: true
+  name: StoryNodeItem
+  nameWithType: StoryNodeItem
+  fullName: StoryCADLib.ViewModels.StoryNodeItem
+- uid: StoryCADLib.ViewModels
+  commentId: N:StoryCADLib.ViewModels
+  isExternal: true
+  href: StoryCADLib.html
+  name: StoryCADLib.ViewModels
+  nameWithType: StoryCADLib.ViewModels
+  fullName: StoryCADLib.ViewModels
+  spec.csharp:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.ViewModels
+    name: ViewModels
+    isExternal: true
+    href: StoryCADLib.ViewModels.html
+  spec.vb:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.ViewModels
+    name: ViewModels
+    isExternal: true
+    href: StoryCADLib.ViewModels.html
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: StoryCADLib.Models.SceneModel.SceneDescription*
+  commentId: Overload:StoryCADLib.Models.SceneModel.SceneDescription
+  isExternal: true
+  href: StoryCADLib.Models.SceneModel.html#StoryCADLib_Models_SceneModel_SceneDescription
+  name: SceneDescription
+  nameWithType: SceneModel.SceneDescription
+  fullName: StoryCADLib.Models.SceneModel.SceneDescription
+- uid: StoryCADLib.Models.SceneModel.ViewpointCharacter*
+  commentId: Overload:StoryCADLib.Models.SceneModel.ViewpointCharacter
+  isExternal: true
+  href: StoryCADLib.Models.SceneModel.html#StoryCADLib_Models_SceneModel_ViewpointCharacter
+  name: ViewpointCharacter
+  nameWithType: SceneModel.ViewpointCharacter
+  fullName: StoryCADLib.Models.SceneModel.ViewpointCharacter
+- uid: System.Guid
+  commentId: T:System.Guid
+  parent: System
+  isExternal: true
+  name: Guid
+  nameWithType: Guid
+  fullName: System.Guid
+- uid: StoryCADLib.Models.SceneModel.Date*
+  commentId: Overload:StoryCADLib.Models.SceneModel.Date
+  isExternal: true
+  href: StoryCADLib.Models.SceneModel.html#StoryCADLib_Models_SceneModel_Date
+  name: Date
+  nameWithType: SceneModel.Date
+  fullName: StoryCADLib.Models.SceneModel.Date
+- uid: StoryCADLib.Models.SceneModel.Time*
+  commentId: Overload:StoryCADLib.Models.SceneModel.Time
+  isExternal: true
+  href: StoryCADLib.Models.SceneModel.html#StoryCADLib_Models_SceneModel_Time
+  name: Time
+  nameWithType: SceneModel.Time
+  fullName: StoryCADLib.Models.SceneModel.Time
+- uid: StoryCADLib.Models.SceneModel.Setting*
+  commentId: Overload:StoryCADLib.Models.SceneModel.Setting
+  isExternal: true
+  href: StoryCADLib.Models.SceneModel.html#StoryCADLib_Models_SceneModel_Setting
+  name: Setting
+  nameWithType: SceneModel.Setting
+  fullName: StoryCADLib.Models.SceneModel.Setting
+- uid: StoryCADLib.Models.SceneModel.SceneType*
+  commentId: Overload:StoryCADLib.Models.SceneModel.SceneType
+  isExternal: true
+  href: StoryCADLib.Models.SceneModel.html#StoryCADLib_Models_SceneModel_SceneType
+  name: SceneType
+  nameWithType: SceneModel.SceneType
+  fullName: StoryCADLib.Models.SceneModel.SceneType
+- uid: StoryCADLib.Models.SceneModel.CastMembers*
+  commentId: Overload:StoryCADLib.Models.SceneModel.CastMembers
+  isExternal: true
+  href: StoryCADLib.Models.SceneModel.html#StoryCADLib_Models_SceneModel_CastMembers
+  name: CastMembers
+  nameWithType: SceneModel.CastMembers
+  fullName: StoryCADLib.Models.SceneModel.CastMembers
+- uid: System.Collections.Generic.List{System.Guid}
+  commentId: T:System.Collections.Generic.List{System.Guid}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  name: List<Guid>
+  nameWithType: List<Guid>
+  fullName: System.Collections.Generic.List<System.Guid>
+  nameWithType.vb: List(Of Guid)
+  fullName.vb: System.Collections.Generic.List(Of System.Guid)
+  name.vb: List(Of Guid)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+  - name: <
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+  - name: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: StoryCADLib.Models.SceneModel.Protagonist*
+  commentId: Overload:StoryCADLib.Models.SceneModel.Protagonist
+  isExternal: true
+  href: StoryCADLib.Models.SceneModel.html#StoryCADLib_Models_SceneModel_Protagonist
+  name: Protagonist
+  nameWithType: SceneModel.Protagonist
+  fullName: StoryCADLib.Models.SceneModel.Protagonist
+- uid: StoryCADLib.Models.SceneModel.ProtagEmotion*
+  commentId: Overload:StoryCADLib.Models.SceneModel.ProtagEmotion
+  isExternal: true
+  href: StoryCADLib.Models.SceneModel.html#StoryCADLib_Models_SceneModel_ProtagEmotion
+  name: ProtagEmotion
+  nameWithType: SceneModel.ProtagEmotion
+  fullName: StoryCADLib.Models.SceneModel.ProtagEmotion
+- uid: StoryCADLib.Models.SceneModel.ProtagGoal*
+  commentId: Overload:StoryCADLib.Models.SceneModel.ProtagGoal
+  isExternal: true
+  href: StoryCADLib.Models.SceneModel.html#StoryCADLib_Models_SceneModel_ProtagGoal
+  name: ProtagGoal
+  nameWithType: SceneModel.ProtagGoal
+  fullName: StoryCADLib.Models.SceneModel.ProtagGoal
+- uid: StoryCADLib.Models.SceneModel.Antagonist*
+  commentId: Overload:StoryCADLib.Models.SceneModel.Antagonist
+  isExternal: true
+  href: StoryCADLib.Models.SceneModel.html#StoryCADLib_Models_SceneModel_Antagonist
+  name: Antagonist
+  nameWithType: SceneModel.Antagonist
+  fullName: StoryCADLib.Models.SceneModel.Antagonist
+- uid: StoryCADLib.Models.SceneModel.AntagEmotion*
+  commentId: Overload:StoryCADLib.Models.SceneModel.AntagEmotion
+  isExternal: true
+  href: StoryCADLib.Models.SceneModel.html#StoryCADLib_Models_SceneModel_AntagEmotion
+  name: AntagEmotion
+  nameWithType: SceneModel.AntagEmotion
+  fullName: StoryCADLib.Models.SceneModel.AntagEmotion
+- uid: StoryCADLib.Models.SceneModel.AntagGoal*
+  commentId: Overload:StoryCADLib.Models.SceneModel.AntagGoal
+  isExternal: true
+  href: StoryCADLib.Models.SceneModel.html#StoryCADLib_Models_SceneModel_AntagGoal
+  name: AntagGoal
+  nameWithType: SceneModel.AntagGoal
+  fullName: StoryCADLib.Models.SceneModel.AntagGoal
+- uid: StoryCADLib.Models.SceneModel.Opposition*
+  commentId: Overload:StoryCADLib.Models.SceneModel.Opposition
+  isExternal: true
+  href: StoryCADLib.Models.SceneModel.html#StoryCADLib_Models_SceneModel_Opposition
+  name: Opposition
+  nameWithType: SceneModel.Opposition
+  fullName: StoryCADLib.Models.SceneModel.Opposition
+- uid: StoryCADLib.Models.SceneModel.Outcome*
+  commentId: Overload:StoryCADLib.Models.SceneModel.Outcome
+  isExternal: true
+  href: StoryCADLib.Models.SceneModel.html#StoryCADLib_Models_SceneModel_Outcome
+  name: Outcome
+  nameWithType: SceneModel.Outcome
+  fullName: StoryCADLib.Models.SceneModel.Outcome
+- uid: StoryCADLib.Models.SceneModel.ScenePurpose*
+  commentId: Overload:StoryCADLib.Models.SceneModel.ScenePurpose
+  isExternal: true
+  href: StoryCADLib.Models.SceneModel.html#StoryCADLib_Models_SceneModel_ScenePurpose
+  name: ScenePurpose
+  nameWithType: SceneModel.ScenePurpose
+  fullName: StoryCADLib.Models.SceneModel.ScenePurpose
+- uid: System.Collections.Generic.List{System.String}
+  commentId: T:System.Collections.Generic.List{System.String}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  name: List<string>
+  nameWithType: List<string>
+  fullName: System.Collections.Generic.List<string>
+  nameWithType.vb: List(Of String)
+  fullName.vb: System.Collections.Generic.List(Of String)
+  name.vb: List(Of String)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+  - name: )
+- uid: StoryCADLib.Models.SceneModel.ValueExchange*
+  commentId: Overload:StoryCADLib.Models.SceneModel.ValueExchange
+  isExternal: true
+  href: StoryCADLib.Models.SceneModel.html#StoryCADLib_Models_SceneModel_ValueExchange
+  name: ValueExchange
+  nameWithType: SceneModel.ValueExchange
+  fullName: StoryCADLib.Models.SceneModel.ValueExchange
+- uid: StoryCADLib.Models.SceneModel.Events*
+  commentId: Overload:StoryCADLib.Models.SceneModel.Events
+  isExternal: true
+  href: StoryCADLib.Models.SceneModel.html#StoryCADLib_Models_SceneModel_Events
+  name: Events
+  nameWithType: SceneModel.Events
+  fullName: StoryCADLib.Models.SceneModel.Events
+- uid: StoryCADLib.Models.SceneModel.Consequences*
+  commentId: Overload:StoryCADLib.Models.SceneModel.Consequences
+  isExternal: true
+  href: StoryCADLib.Models.SceneModel.html#StoryCADLib_Models_SceneModel_Consequences
+  name: Consequences
+  nameWithType: SceneModel.Consequences
+  fullName: StoryCADLib.Models.SceneModel.Consequences
+- uid: StoryCADLib.Models.SceneModel.Significance*
+  commentId: Overload:StoryCADLib.Models.SceneModel.Significance
+  isExternal: true
+  href: StoryCADLib.Models.SceneModel.html#StoryCADLib_Models_SceneModel_Significance
+  name: Significance
+  nameWithType: SceneModel.Significance
+  fullName: StoryCADLib.Models.SceneModel.Significance
+- uid: StoryCADLib.Models.SceneModel.Realization*
+  commentId: Overload:StoryCADLib.Models.SceneModel.Realization
+  isExternal: true
+  href: StoryCADLib.Models.SceneModel.html#StoryCADLib_Models_SceneModel_Realization
+  name: Realization
+  nameWithType: SceneModel.Realization
+  fullName: StoryCADLib.Models.SceneModel.Realization
+- uid: StoryCADLib.Models.SceneModel.Emotion*
+  commentId: Overload:StoryCADLib.Models.SceneModel.Emotion
+  isExternal: true
+  href: StoryCADLib.Models.SceneModel.html#StoryCADLib_Models_SceneModel_Emotion
+  name: Emotion
+  nameWithType: SceneModel.Emotion
+  fullName: StoryCADLib.Models.SceneModel.Emotion
+- uid: StoryCADLib.Models.SceneModel.NewGoal*
+  commentId: Overload:StoryCADLib.Models.SceneModel.NewGoal
+  isExternal: true
+  href: StoryCADLib.Models.SceneModel.html#StoryCADLib_Models_SceneModel_NewGoal
+  name: NewGoal
+  nameWithType: SceneModel.NewGoal
+  fullName: StoryCADLib.Models.SceneModel.NewGoal
+- uid: StoryCADLib.Models.SceneModel.Review*
+  commentId: Overload:StoryCADLib.Models.SceneModel.Review
+  isExternal: true
+  href: StoryCADLib.Models.SceneModel.html#StoryCADLib_Models_SceneModel_Review
+  name: Review
+  nameWithType: SceneModel.Review
+  fullName: StoryCADLib.Models.SceneModel.Review
+- uid: StoryCADLib.Models.SceneModel.Notes*
+  commentId: Overload:StoryCADLib.Models.SceneModel.Notes
+  isExternal: true
+  href: StoryCADLib.Models.SceneModel.html#StoryCADLib_Models_SceneModel_Notes
+  name: Notes
+  nameWithType: SceneModel.Notes
+  fullName: StoryCADLib.Models.SceneModel.Notes

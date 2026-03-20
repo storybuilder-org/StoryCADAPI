@@ -1,0 +1,689 @@
+### YamlMime:ManagedReference
+items:
+- uid: StoryCADLib.Services.API.OperationResult`1
+  commentId: T:StoryCADLib.Services.API.OperationResult`1
+  id: OperationResult`1
+  parent: StoryCADLib.Services.API
+  children:
+  - StoryCADLib.Services.API.OperationResult`1.#ctor
+  - StoryCADLib.Services.API.OperationResult`1.#ctor(System.Boolean,`0,System.String)
+  - StoryCADLib.Services.API.OperationResult`1.ErrorMessage
+  - StoryCADLib.Services.API.OperationResult`1.Failure(System.String)
+  - StoryCADLib.Services.API.OperationResult`1.IsSuccess
+  - StoryCADLib.Services.API.OperationResult`1.Payload
+  - StoryCADLib.Services.API.OperationResult`1.SafeExecuteAsync(System.Func{System.Threading.Tasks.Task})
+  - StoryCADLib.Services.API.OperationResult`1.SafeExecuteAsync(System.Threading.Tasks.Task{`0})
+  - StoryCADLib.Services.API.OperationResult`1.SafeExecuteAsync``1(System.Func{System.Threading.Tasks.Task{`0}})
+  - StoryCADLib.Services.API.OperationResult`1.Success(`0)
+  langs:
+  - csharp
+  - vb
+  name: OperationResult<T>
+  nameWithType: OperationResult<T>
+  fullName: StoryCADLib.Services.API.OperationResult<T>
+  type: Class
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Services.API
+  summary: Result of API Operation
+  example: []
+  syntax:
+    content: public class OperationResult<T>
+    typeParameters:
+    - id: T
+      description: ''
+    content.vb: Public Class OperationResult(Of T)
+  inheritance:
+  - System.Object
+  nameWithType.vb: OperationResult(Of T)
+  fullName.vb: StoryCADLib.Services.API.OperationResult(Of T)
+  name.vb: OperationResult(Of T)
+- uid: StoryCADLib.Services.API.OperationResult`1.#ctor
+  commentId: M:StoryCADLib.Services.API.OperationResult`1.#ctor
+  id: '#ctor'
+  parent: StoryCADLib.Services.API.OperationResult`1
+  langs:
+  - csharp
+  - vb
+  name: OperationResult()
+  nameWithType: OperationResult<T>.OperationResult()
+  fullName: StoryCADLib.Services.API.OperationResult<T>.OperationResult()
+  type: Constructor
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Services.API
+  syntax:
+    content: public OperationResult()
+    content.vb: Public Sub New()
+  overload: StoryCADLib.Services.API.OperationResult`1.#ctor*
+  nameWithType.vb: OperationResult(Of T).New()
+  fullName.vb: StoryCADLib.Services.API.OperationResult(Of T).New()
+  name.vb: New()
+- uid: StoryCADLib.Services.API.OperationResult`1.#ctor(System.Boolean,`0,System.String)
+  commentId: M:StoryCADLib.Services.API.OperationResult`1.#ctor(System.Boolean,`0,System.String)
+  id: '#ctor(System.Boolean,`0,System.String)'
+  parent: StoryCADLib.Services.API.OperationResult`1
+  langs:
+  - csharp
+  - vb
+  name: OperationResult(bool, T, string)
+  nameWithType: OperationResult<T>.OperationResult(bool, T, string)
+  fullName: StoryCADLib.Services.API.OperationResult<T>.OperationResult(bool, T, string)
+  type: Constructor
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Services.API
+  syntax:
+    content: public OperationResult(bool isSuccess, T payload, string errorMessage)
+    parameters:
+    - id: isSuccess
+      type: System.Boolean
+    - id: payload
+      type: '{T}'
+    - id: errorMessage
+      type: System.String
+    content.vb: Public Sub New(isSuccess As Boolean, payload As T, errorMessage As String)
+  overload: StoryCADLib.Services.API.OperationResult`1.#ctor*
+  nameWithType.vb: OperationResult(Of T).New(Boolean, T, String)
+  fullName.vb: StoryCADLib.Services.API.OperationResult(Of T).New(Boolean, T, String)
+  name.vb: New(Boolean, T, String)
+- uid: StoryCADLib.Services.API.OperationResult`1.Success(`0)
+  commentId: M:StoryCADLib.Services.API.OperationResult`1.Success(`0)
+  id: Success(`0)
+  parent: StoryCADLib.Services.API.OperationResult`1
+  langs:
+  - csharp
+  - vb
+  name: Success(T)
+  nameWithType: OperationResult<T>.Success(T)
+  fullName: StoryCADLib.Services.API.OperationResult<T>.Success(T)
+  type: Method
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Services.API
+  syntax:
+    content: public static OperationResult<T> Success(T payload)
+    parameters:
+    - id: payload
+      type: '{T}'
+    return:
+      type: StoryCADLib.Services.API.OperationResult`1
+    content.vb: Public Shared Function Success(payload As T) As OperationResult(Of T)
+  overload: StoryCADLib.Services.API.OperationResult`1.Success*
+  nameWithType.vb: OperationResult(Of T).Success(T)
+  fullName.vb: StoryCADLib.Services.API.OperationResult(Of T).Success(T)
+- uid: StoryCADLib.Services.API.OperationResult`1.Failure(System.String)
+  commentId: M:StoryCADLib.Services.API.OperationResult`1.Failure(System.String)
+  id: Failure(System.String)
+  parent: StoryCADLib.Services.API.OperationResult`1
+  langs:
+  - csharp
+  - vb
+  name: Failure(string)
+  nameWithType: OperationResult<T>.Failure(string)
+  fullName: StoryCADLib.Services.API.OperationResult<T>.Failure(string)
+  type: Method
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Services.API
+  syntax:
+    content: public static OperationResult<T> Failure(string errorMessage)
+    parameters:
+    - id: errorMessage
+      type: System.String
+    return:
+      type: StoryCADLib.Services.API.OperationResult`1
+    content.vb: Public Shared Function Failure(errorMessage As String) As OperationResult(Of T)
+  overload: StoryCADLib.Services.API.OperationResult`1.Failure*
+  nameWithType.vb: OperationResult(Of T).Failure(String)
+  fullName.vb: StoryCADLib.Services.API.OperationResult(Of T).Failure(String)
+  name.vb: Failure(String)
+- uid: StoryCADLib.Services.API.OperationResult`1.SafeExecuteAsync``1(System.Func{System.Threading.Tasks.Task{`0}})
+  commentId: M:StoryCADLib.Services.API.OperationResult`1.SafeExecuteAsync``1(System.Func{System.Threading.Tasks.Task{`0}})
+  id: SafeExecuteAsync``1(System.Func{System.Threading.Tasks.Task{`0}})
+  parent: StoryCADLib.Services.API.OperationResult`1
+  langs:
+  - csharp
+  - vb
+  name: SafeExecuteAsync<U>(Func<Task<T>>)
+  nameWithType: OperationResult<T>.SafeExecuteAsync<U>(Func<Task<T>>)
+  fullName: StoryCADLib.Services.API.OperationResult<T>.SafeExecuteAsync<U>(System.Func<System.Threading.Tasks.Task<T>>)
+  type: Method
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Services.API
+  syntax:
+    content: public static Task<OperationResult<T>> SafeExecuteAsync<U>(Func<Task<T>> operation)
+    parameters:
+    - id: operation
+      type: System.Func{System.Threading.Tasks.Task{{T}}}
+    typeParameters:
+    - id: U
+    return:
+      type: System.Threading.Tasks.Task{StoryCADLib.Services.API.OperationResult`1}
+    content.vb: Public Shared Function SafeExecuteAsync(Of U)(operation As Func(Of Task(Of T))) As Task(Of OperationResult(Of T))
+  overload: StoryCADLib.Services.API.OperationResult`1.SafeExecuteAsync*
+  nameWithType.vb: OperationResult(Of T).SafeExecuteAsync(Of U)(Func(Of Task(Of T)))
+  fullName.vb: StoryCADLib.Services.API.OperationResult(Of T).SafeExecuteAsync(Of U)(System.Func(Of System.Threading.Tasks.Task(Of T)))
+  name.vb: SafeExecuteAsync(Of U)(Func(Of Task(Of T)))
+- uid: StoryCADLib.Services.API.OperationResult`1.SafeExecuteAsync(System.Threading.Tasks.Task{`0})
+  commentId: M:StoryCADLib.Services.API.OperationResult`1.SafeExecuteAsync(System.Threading.Tasks.Task{`0})
+  id: SafeExecuteAsync(System.Threading.Tasks.Task{`0})
+  parent: StoryCADLib.Services.API.OperationResult`1
+  langs:
+  - csharp
+  - vb
+  name: SafeExecuteAsync(Task<T>)
+  nameWithType: OperationResult<T>.SafeExecuteAsync(Task<T>)
+  fullName: StoryCADLib.Services.API.OperationResult<T>.SafeExecuteAsync(System.Threading.Tasks.Task<T>)
+  type: Method
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Services.API
+  syntax:
+    content: public static Task<OperationResult<T>> SafeExecuteAsync(Task<T> task)
+    parameters:
+    - id: task
+      type: System.Threading.Tasks.Task{{T}}
+    return:
+      type: System.Threading.Tasks.Task{StoryCADLib.Services.API.OperationResult`1}
+    content.vb: Public Shared Function SafeExecuteAsync(task As Task(Of T)) As Task(Of OperationResult(Of T))
+  overload: StoryCADLib.Services.API.OperationResult`1.SafeExecuteAsync*
+  nameWithType.vb: OperationResult(Of T).SafeExecuteAsync(Task(Of T))
+  fullName.vb: StoryCADLib.Services.API.OperationResult(Of T).SafeExecuteAsync(System.Threading.Tasks.Task(Of T))
+  name.vb: SafeExecuteAsync(Task(Of T))
+- uid: StoryCADLib.Services.API.OperationResult`1.SafeExecuteAsync(System.Func{System.Threading.Tasks.Task})
+  commentId: M:StoryCADLib.Services.API.OperationResult`1.SafeExecuteAsync(System.Func{System.Threading.Tasks.Task})
+  id: SafeExecuteAsync(System.Func{System.Threading.Tasks.Task})
+  parent: StoryCADLib.Services.API.OperationResult`1
+  langs:
+  - csharp
+  - vb
+  name: SafeExecuteAsync(Func<Task>)
+  nameWithType: OperationResult<T>.SafeExecuteAsync(Func<Task>)
+  fullName: StoryCADLib.Services.API.OperationResult<T>.SafeExecuteAsync(System.Func<System.Threading.Tasks.Task>)
+  type: Method
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Services.API
+  syntax:
+    content: public static Task<OperationResult<T>> SafeExecuteAsync(Func<Task> action)
+    parameters:
+    - id: action
+      type: System.Func{System.Threading.Tasks.Task}
+    return:
+      type: System.Threading.Tasks.Task{StoryCADLib.Services.API.OperationResult`1}
+    content.vb: Public Shared Function SafeExecuteAsync(action As Func(Of Task)) As Task(Of OperationResult(Of T))
+  overload: StoryCADLib.Services.API.OperationResult`1.SafeExecuteAsync*
+  nameWithType.vb: OperationResult(Of T).SafeExecuteAsync(Func(Of Task))
+  fullName.vb: StoryCADLib.Services.API.OperationResult(Of T).SafeExecuteAsync(System.Func(Of System.Threading.Tasks.Task))
+  name.vb: SafeExecuteAsync(Func(Of Task))
+- uid: StoryCADLib.Services.API.OperationResult`1.IsSuccess
+  commentId: P:StoryCADLib.Services.API.OperationResult`1.IsSuccess
+  id: IsSuccess
+  parent: StoryCADLib.Services.API.OperationResult`1
+  langs:
+  - csharp
+  - vb
+  name: IsSuccess
+  nameWithType: OperationResult<T>.IsSuccess
+  fullName: StoryCADLib.Services.API.OperationResult<T>.IsSuccess
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Services.API
+  syntax:
+    content: public bool IsSuccess { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: Public Property IsSuccess As Boolean
+  overload: StoryCADLib.Services.API.OperationResult`1.IsSuccess*
+  nameWithType.vb: OperationResult(Of T).IsSuccess
+  fullName.vb: StoryCADLib.Services.API.OperationResult(Of T).IsSuccess
+- uid: StoryCADLib.Services.API.OperationResult`1.ErrorMessage
+  commentId: P:StoryCADLib.Services.API.OperationResult`1.ErrorMessage
+  id: ErrorMessage
+  parent: StoryCADLib.Services.API.OperationResult`1
+  langs:
+  - csharp
+  - vb
+  name: ErrorMessage
+  nameWithType: OperationResult<T>.ErrorMessage
+  fullName: StoryCADLib.Services.API.OperationResult<T>.ErrorMessage
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Services.API
+  syntax:
+    content: public string ErrorMessage { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property ErrorMessage As String
+  overload: StoryCADLib.Services.API.OperationResult`1.ErrorMessage*
+  nameWithType.vb: OperationResult(Of T).ErrorMessage
+  fullName.vb: StoryCADLib.Services.API.OperationResult(Of T).ErrorMessage
+- uid: StoryCADLib.Services.API.OperationResult`1.Payload
+  commentId: P:StoryCADLib.Services.API.OperationResult`1.Payload
+  id: Payload
+  parent: StoryCADLib.Services.API.OperationResult`1
+  langs:
+  - csharp
+  - vb
+  name: Payload
+  nameWithType: OperationResult<T>.Payload
+  fullName: StoryCADLib.Services.API.OperationResult<T>.Payload
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Services.API
+  syntax:
+    content: public T Payload { get; set; }
+    parameters: []
+    return:
+      type: '{T}'
+    content.vb: Public Property Payload As T
+  overload: StoryCADLib.Services.API.OperationResult`1.Payload*
+  nameWithType.vb: OperationResult(Of T).Payload
+  fullName.vb: StoryCADLib.Services.API.OperationResult(Of T).Payload
+references:
+- uid: StoryCADLib.Services.API
+  commentId: N:StoryCADLib.Services.API
+  isExternal: true
+  href: StoryCADLib.html
+  name: StoryCADLib.Services.API
+  nameWithType: StoryCADLib.Services.API
+  fullName: StoryCADLib.Services.API
+  spec.csharp:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Services
+    name: Services
+    isExternal: true
+    href: StoryCADLib.Services.html
+  - name: .
+  - uid: StoryCADLib.Services.API
+    name: API
+    isExternal: true
+    href: StoryCADLib.Services.API.html
+  spec.vb:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Services
+    name: Services
+    isExternal: true
+    href: StoryCADLib.Services.html
+  - name: .
+  - uid: StoryCADLib.Services.API
+    name: API
+    isExternal: true
+    href: StoryCADLib.Services.API.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: StoryCADLib.Services.API.OperationResult`1.#ctor*
+  commentId: Overload:StoryCADLib.Services.API.OperationResult`1.#ctor
+  isExternal: true
+  href: StoryCADLib.Services.API.OperationResult-1.html#StoryCADLib_Services_API_OperationResult_1__ctor
+  name: OperationResult
+  nameWithType: OperationResult<T>.OperationResult
+  fullName: StoryCADLib.Services.API.OperationResult<T>.OperationResult
+  nameWithType.vb: OperationResult(Of T).New
+  fullName.vb: StoryCADLib.Services.API.OperationResult(Of T).New
+  name.vb: New
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: StoryCADLib.Services.API.OperationResult`1.Success*
+  commentId: Overload:StoryCADLib.Services.API.OperationResult`1.Success
+  isExternal: true
+  href: StoryCADLib.Services.API.OperationResult-1.html#StoryCADLib_Services_API_OperationResult_1_Success__0_
+  name: Success
+  nameWithType: OperationResult<T>.Success
+  fullName: StoryCADLib.Services.API.OperationResult<T>.Success
+  nameWithType.vb: OperationResult(Of T).Success
+  fullName.vb: StoryCADLib.Services.API.OperationResult(Of T).Success
+- uid: StoryCADLib.Services.API.OperationResult`1
+  commentId: T:StoryCADLib.Services.API.OperationResult`1
+  parent: StoryCADLib.Services.API
+  isExternal: true
+  href: StoryCADLib.Services.API.OperationResult-1.html
+  name: OperationResult<T>
+  nameWithType: OperationResult<T>
+  fullName: StoryCADLib.Services.API.OperationResult<T>
+  nameWithType.vb: OperationResult(Of T)
+  fullName.vb: StoryCADLib.Services.API.OperationResult(Of T)
+  name.vb: OperationResult(Of T)
+  spec.csharp:
+  - uid: StoryCADLib.Services.API.OperationResult`1
+    name: OperationResult
+    isExternal: true
+    href: StoryCADLib.Services.API.OperationResult-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: StoryCADLib.Services.API.OperationResult`1
+    name: OperationResult
+    isExternal: true
+    href: StoryCADLib.Services.API.OperationResult-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: StoryCADLib.Services.API.OperationResult`1.Failure*
+  commentId: Overload:StoryCADLib.Services.API.OperationResult`1.Failure
+  isExternal: true
+  href: StoryCADLib.Services.API.OperationResult-1.html#StoryCADLib_Services_API_OperationResult_1_Failure_System_String_
+  name: Failure
+  nameWithType: OperationResult<T>.Failure
+  fullName: StoryCADLib.Services.API.OperationResult<T>.Failure
+  nameWithType.vb: OperationResult(Of T).Failure
+  fullName.vb: StoryCADLib.Services.API.OperationResult(Of T).Failure
+- uid: StoryCADLib.Services.API.OperationResult`1.SafeExecuteAsync*
+  commentId: Overload:StoryCADLib.Services.API.OperationResult`1.SafeExecuteAsync
+  isExternal: true
+  href: StoryCADLib.Services.API.OperationResult-1.html#StoryCADLib_Services_API_OperationResult_1_SafeExecuteAsync__1_System_Func_System_Threading_Tasks_Task__0___
+  name: SafeExecuteAsync
+  nameWithType: OperationResult<T>.SafeExecuteAsync
+  fullName: StoryCADLib.Services.API.OperationResult<T>.SafeExecuteAsync
+  nameWithType.vb: OperationResult(Of T).SafeExecuteAsync
+  fullName.vb: StoryCADLib.Services.API.OperationResult(Of T).SafeExecuteAsync
+- uid: System.Func{System.Threading.Tasks.Task{{T}}}
+  commentId: T:System.Func{System.Threading.Tasks.Task{`0}}
+  parent: System
+  definition: System.Func`1
+  name: Func<Task<T>>
+  nameWithType: Func<Task<T>>
+  fullName: System.Func<System.Threading.Tasks.Task<T>>
+  nameWithType.vb: Func(Of Task(Of T))
+  fullName.vb: System.Func(Of System.Threading.Tasks.Task(Of T))
+  name.vb: Func(Of Task(Of T))
+  spec.csharp:
+  - uid: System.Func`1
+    name: Func
+    isExternal: true
+  - name: <
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+  - name: <
+  - name: T
+  - name: '>'
+  - name: '>'
+  spec.vb:
+  - uid: System.Func`1
+    name: Func
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: )
+- uid: System.Threading.Tasks.Task{StoryCADLib.Services.API.OperationResult`1}
+  commentId: T:System.Threading.Tasks.Task{StoryCADLib.Services.API.OperationResult`1}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: StoryCADLib.Services.API.OperationResult-1.html
+  name: Task<OperationResult<T>>
+  nameWithType: Task<OperationResult<T>>
+  fullName: System.Threading.Tasks.Task<StoryCADLib.Services.API.OperationResult<T>>
+  nameWithType.vb: Task(Of OperationResult(Of T))
+  fullName.vb: System.Threading.Tasks.Task(Of StoryCADLib.Services.API.OperationResult(Of T))
+  name.vb: Task(Of OperationResult(Of T))
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+  - name: <
+  - uid: StoryCADLib.Services.API.OperationResult`1
+    name: OperationResult
+    isExternal: true
+    href: StoryCADLib.Services.API.OperationResult-1.html
+  - name: <
+  - name: T
+  - name: '>'
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: StoryCADLib.Services.API.OperationResult`1
+    name: OperationResult
+    isExternal: true
+    href: StoryCADLib.Services.API.OperationResult-1.html
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+  - name: )
+- uid: System.Func`1
+  commentId: T:System.Func`1
+  isExternal: true
+  name: Func<TResult>
+  nameWithType: Func<TResult>
+  fullName: System.Func<TResult>
+  nameWithType.vb: Func(Of TResult)
+  fullName.vb: System.Func(Of TResult)
+  name.vb: Func(Of TResult)
+  spec.csharp:
+  - uid: System.Func`1
+    name: Func
+    isExternal: true
+  - name: <
+  - name: TResult
+  - name: '>'
+  spec.vb:
+  - uid: System.Func`1
+    name: Func
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TResult
+  - name: )
+- uid: System.Threading.Tasks.Task`1
+  commentId: T:System.Threading.Tasks.Task`1
+  isExternal: true
+  name: Task<TResult>
+  nameWithType: Task<TResult>
+  fullName: System.Threading.Tasks.Task<TResult>
+  nameWithType.vb: Task(Of TResult)
+  fullName.vb: System.Threading.Tasks.Task(Of TResult)
+  name.vb: Task(Of TResult)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+  - name: <
+  - name: TResult
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TResult
+  - name: )
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+- uid: System.Threading.Tasks.Task{{T}}
+  commentId: T:System.Threading.Tasks.Task{`0}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  name: Task<T>
+  nameWithType: Task<T>
+  fullName: System.Threading.Tasks.Task<T>
+  nameWithType.vb: Task(Of T)
+  fullName.vb: System.Threading.Tasks.Task(Of T)
+  name.vb: Task(Of T)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Func{System.Threading.Tasks.Task}
+  commentId: T:System.Func{System.Threading.Tasks.Task}
+  parent: System
+  definition: System.Func`1
+  name: Func<Task>
+  nameWithType: Func<Task>
+  fullName: System.Func<System.Threading.Tasks.Task>
+  nameWithType.vb: Func(Of Task)
+  fullName.vb: System.Func(Of System.Threading.Tasks.Task)
+  name.vb: Func(Of Task)
+  spec.csharp:
+  - uid: System.Func`1
+    name: Func
+    isExternal: true
+  - name: <
+  - uid: System.Threading.Tasks.Task
+    name: Task
+    isExternal: true
+  - name: '>'
+  spec.vb:
+  - uid: System.Func`1
+    name: Func
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Threading.Tasks.Task
+    name: Task
+    isExternal: true
+  - name: )
+- uid: StoryCADLib.Services.API.OperationResult`1.IsSuccess*
+  commentId: Overload:StoryCADLib.Services.API.OperationResult`1.IsSuccess
+  isExternal: true
+  href: StoryCADLib.Services.API.OperationResult-1.html#StoryCADLib_Services_API_OperationResult_1_IsSuccess
+  name: IsSuccess
+  nameWithType: OperationResult<T>.IsSuccess
+  fullName: StoryCADLib.Services.API.OperationResult<T>.IsSuccess
+  nameWithType.vb: OperationResult(Of T).IsSuccess
+  fullName.vb: StoryCADLib.Services.API.OperationResult(Of T).IsSuccess
+- uid: StoryCADLib.Services.API.OperationResult`1.ErrorMessage*
+  commentId: Overload:StoryCADLib.Services.API.OperationResult`1.ErrorMessage
+  isExternal: true
+  href: StoryCADLib.Services.API.OperationResult-1.html#StoryCADLib_Services_API_OperationResult_1_ErrorMessage
+  name: ErrorMessage
+  nameWithType: OperationResult<T>.ErrorMessage
+  fullName: StoryCADLib.Services.API.OperationResult<T>.ErrorMessage
+  nameWithType.vb: OperationResult(Of T).ErrorMessage
+  fullName.vb: StoryCADLib.Services.API.OperationResult(Of T).ErrorMessage
+- uid: StoryCADLib.Services.API.OperationResult`1.Payload*
+  commentId: Overload:StoryCADLib.Services.API.OperationResult`1.Payload
+  isExternal: true
+  href: StoryCADLib.Services.API.OperationResult-1.html#StoryCADLib_Services_API_OperationResult_1_Payload
+  name: Payload
+  nameWithType: OperationResult<T>.Payload
+  fullName: StoryCADLib.Services.API.OperationResult<T>.Payload
+  nameWithType.vb: OperationResult(Of T).Payload
+  fullName.vb: StoryCADLib.Services.API.OperationResult(Of T).Payload

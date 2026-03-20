@@ -1,0 +1,277 @@
+### YamlMime:ManagedReference
+items:
+- uid: StoryCADLib.Models.Tools.PlotPatternModel
+  commentId: T:StoryCADLib.Models.Tools.PlotPatternModel
+  id: PlotPatternModel
+  parent: StoryCADLib.Models.Tools
+  children:
+  - StoryCADLib.Models.Tools.PlotPatternModel.#ctor(System.String)
+  - StoryCADLib.Models.Tools.PlotPatternModel.PlotPatternName
+  - StoryCADLib.Models.Tools.PlotPatternModel.PlotPatternNotes
+  - StoryCADLib.Models.Tools.PlotPatternModel.PlotPatternScenes
+  langs:
+  - csharp
+  - vb
+  name: PlotPatternModel
+  nameWithType: PlotPatternModel
+  fullName: StoryCADLib.Models.Tools.PlotPatternModel
+  type: Class
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  syntax:
+    content: public class PlotPatternModel
+    content.vb: Public Class PlotPatternModel
+  inheritance:
+  - System.Object
+- uid: StoryCADLib.Models.Tools.PlotPatternModel.PlotPatternName
+  commentId: F:StoryCADLib.Models.Tools.PlotPatternModel.PlotPatternName
+  id: PlotPatternName
+  parent: StoryCADLib.Models.Tools.PlotPatternModel
+  langs:
+  - csharp
+  - vb
+  name: PlotPatternName
+  nameWithType: PlotPatternModel.PlotPatternName
+  fullName: StoryCADLib.Models.Tools.PlotPatternModel.PlotPatternName
+  type: Field
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  syntax:
+    content: public string PlotPatternName
+    return:
+      type: System.String
+    content.vb: Public PlotPatternName As String
+- uid: StoryCADLib.Models.Tools.PlotPatternModel.PlotPatternNotes
+  commentId: F:StoryCADLib.Models.Tools.PlotPatternModel.PlotPatternNotes
+  id: PlotPatternNotes
+  parent: StoryCADLib.Models.Tools.PlotPatternModel
+  langs:
+  - csharp
+  - vb
+  name: PlotPatternNotes
+  nameWithType: PlotPatternModel.PlotPatternNotes
+  fullName: StoryCADLib.Models.Tools.PlotPatternModel.PlotPatternNotes
+  type: Field
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  syntax:
+    content: public string PlotPatternNotes
+    return:
+      type: System.String
+    content.vb: Public PlotPatternNotes As String
+- uid: StoryCADLib.Models.Tools.PlotPatternModel.PlotPatternScenes
+  commentId: F:StoryCADLib.Models.Tools.PlotPatternModel.PlotPatternScenes
+  id: PlotPatternScenes
+  parent: StoryCADLib.Models.Tools.PlotPatternModel
+  langs:
+  - csharp
+  - vb
+  name: PlotPatternScenes
+  nameWithType: PlotPatternModel.PlotPatternScenes
+  fullName: StoryCADLib.Models.Tools.PlotPatternModel.PlotPatternScenes
+  type: Field
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  syntax:
+    content: public List<PlotPatternScene> PlotPatternScenes
+    return:
+      type: System.Collections.Generic.List{StoryCADLib.Models.Tools.PlotPatternScene}
+    content.vb: Public PlotPatternScenes As List(Of PlotPatternScene)
+- uid: StoryCADLib.Models.Tools.PlotPatternModel.#ctor(System.String)
+  commentId: M:StoryCADLib.Models.Tools.PlotPatternModel.#ctor(System.String)
+  id: '#ctor(System.String)'
+  parent: StoryCADLib.Models.Tools.PlotPatternModel
+  langs:
+  - csharp
+  - vb
+  name: PlotPatternModel(string)
+  nameWithType: PlotPatternModel.PlotPatternModel(string)
+  fullName: StoryCADLib.Models.Tools.PlotPatternModel.PlotPatternModel(string)
+  type: Constructor
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  syntax:
+    content: public PlotPatternModel(string name)
+    parameters:
+    - id: name
+      type: System.String
+    content.vb: Public Sub New(name As String)
+  overload: StoryCADLib.Models.Tools.PlotPatternModel.#ctor*
+  nameWithType.vb: PlotPatternModel.New(String)
+  fullName.vb: StoryCADLib.Models.Tools.PlotPatternModel.New(String)
+  name.vb: New(String)
+references:
+- uid: StoryCADLib.Models.Tools
+  commentId: N:StoryCADLib.Models.Tools
+  isExternal: true
+  href: StoryCADLib.html
+  name: StoryCADLib.Models.Tools
+  nameWithType: StoryCADLib.Models.Tools
+  fullName: StoryCADLib.Models.Tools
+  spec.csharp:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Models
+    name: Models
+    isExternal: true
+    href: StoryCADLib.Models.html
+  - name: .
+  - uid: StoryCADLib.Models.Tools
+    name: Tools
+    isExternal: true
+    href: StoryCADLib.Models.Tools.html
+  spec.vb:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Models
+    name: Models
+    isExternal: true
+    href: StoryCADLib.Models.html
+  - name: .
+  - uid: StoryCADLib.Models.Tools
+    name: Tools
+    isExternal: true
+    href: StoryCADLib.Models.Tools.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: System.Collections.Generic.List{StoryCADLib.Models.Tools.PlotPatternScene}
+  commentId: T:System.Collections.Generic.List{StoryCADLib.Models.Tools.PlotPatternScene}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  href: StoryCADLib.Models.Tools.PlotPatternScene.html
+  name: List<PlotPatternScene>
+  nameWithType: List<PlotPatternScene>
+  fullName: System.Collections.Generic.List<StoryCADLib.Models.Tools.PlotPatternScene>
+  nameWithType.vb: List(Of PlotPatternScene)
+  fullName.vb: System.Collections.Generic.List(Of StoryCADLib.Models.Tools.PlotPatternScene)
+  name.vb: List(Of PlotPatternScene)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+  - name: <
+  - uid: StoryCADLib.Models.Tools.PlotPatternScene
+    name: PlotPatternScene
+    isExternal: true
+    href: StoryCADLib.Models.Tools.PlotPatternScene.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: StoryCADLib.Models.Tools.PlotPatternScene
+    name: PlotPatternScene
+    isExternal: true
+    href: StoryCADLib.Models.Tools.PlotPatternScene.html
+  - name: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: StoryCADLib.Models.Tools.PlotPatternModel.#ctor*
+  commentId: Overload:StoryCADLib.Models.Tools.PlotPatternModel.#ctor
+  isExternal: true
+  href: StoryCADLib.Models.Tools.PlotPatternModel.html#StoryCADLib_Models_Tools_PlotPatternModel__ctor_System_String_
+  name: PlotPatternModel
+  nameWithType: PlotPatternModel.PlotPatternModel
+  fullName: StoryCADLib.Models.Tools.PlotPatternModel.PlotPatternModel
+  nameWithType.vb: PlotPatternModel.New
+  fullName.vb: StoryCADLib.Models.Tools.PlotPatternModel.New
+  name.vb: New

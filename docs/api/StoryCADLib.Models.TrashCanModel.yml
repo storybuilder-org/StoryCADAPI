@@ -1,0 +1,358 @@
+### YamlMime:ManagedReference
+items:
+- uid: StoryCADLib.Models.TrashCanModel
+  commentId: T:StoryCADLib.Models.TrashCanModel
+  id: TrashCanModel
+  parent: StoryCADLib.Models
+  children:
+  - StoryCADLib.Models.TrashCanModel.#ctor
+  - StoryCADLib.Models.TrashCanModel.#ctor(StoryCADLib.Models.StoryModel,StoryCADLib.ViewModels.StoryNodeItem)
+  langs:
+  - csharp
+  - vb
+  name: TrashCanModel
+  nameWithType: TrashCanModel
+  fullName: StoryCADLib.Models.TrashCanModel
+  type: Class
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  summary: >-
+    The TrashCanModel is a container for deleted StoryElements. It's the second root node
+
+    in both the Explorer View and Narrator Views, and contains no properties.
+  example: []
+  syntax:
+    content: 'public class TrashCanModel : StoryElement'
+    content.vb: Public Class TrashCanModel Inherits StoryElement
+  inheritance:
+  - System.Object
+  - StoryCADLib.Models.StoryElement
+  inheritedMembers:
+  - StoryCADLib.Models.StoryElement.GetByGuid(System.Guid,StoryCADLib.Models.StoryModel)
+  - StoryCADLib.Models.StoryElement.Deserialize(System.String)
+  - StoryCADLib.Models.StoryElement.Serialize
+  - StoryCADLib.Models.StoryElement.ToString
+  - StoryCADLib.Models.StoryElement.Uuid
+  - StoryCADLib.Models.StoryElement.Description
+  - StoryCADLib.Models.StoryElement.Name
+  - StoryCADLib.Models.StoryElement.ElementType
+  - StoryCADLib.Models.StoryElement.Node
+  - StoryCADLib.Models.StoryElement.IsSelected
+- uid: StoryCADLib.Models.TrashCanModel.#ctor
+  commentId: M:StoryCADLib.Models.TrashCanModel.#ctor
+  id: '#ctor'
+  parent: StoryCADLib.Models.TrashCanModel
+  langs:
+  - csharp
+  - vb
+  name: TrashCanModel()
+  nameWithType: TrashCanModel.TrashCanModel()
+  fullName: StoryCADLib.Models.TrashCanModel.TrashCanModel()
+  type: Constructor
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  summary: JSON Constructor
+  example: []
+  syntax:
+    content: public TrashCanModel()
+    content.vb: Public Sub New()
+  overload: StoryCADLib.Models.TrashCanModel.#ctor*
+  nameWithType.vb: TrashCanModel.New()
+  fullName.vb: StoryCADLib.Models.TrashCanModel.New()
+  name.vb: New()
+- uid: StoryCADLib.Models.TrashCanModel.#ctor(StoryCADLib.Models.StoryModel,StoryCADLib.ViewModels.StoryNodeItem)
+  commentId: M:StoryCADLib.Models.TrashCanModel.#ctor(StoryCADLib.Models.StoryModel,StoryCADLib.ViewModels.StoryNodeItem)
+  id: '#ctor(StoryCADLib.Models.StoryModel,StoryCADLib.ViewModels.StoryNodeItem)'
+  parent: StoryCADLib.Models.TrashCanModel
+  langs:
+  - csharp
+  - vb
+  name: TrashCanModel(StoryModel, StoryNodeItem)
+  nameWithType: TrashCanModel.TrashCanModel(StoryModel, StoryNodeItem)
+  fullName: StoryCADLib.Models.TrashCanModel.TrashCanModel(StoryCADLib.Models.StoryModel, StoryCADLib.ViewModels.StoryNodeItem)
+  type: Constructor
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  syntax:
+    content: public TrashCanModel(StoryModel model, StoryNodeItem node)
+    parameters:
+    - id: model
+      type: StoryCADLib.Models.StoryModel
+    - id: node
+      type: StoryCADLib.ViewModels.StoryNodeItem
+    content.vb: Public Sub New(model As StoryModel, node As StoryNodeItem)
+  overload: StoryCADLib.Models.TrashCanModel.#ctor*
+  nameWithType.vb: TrashCanModel.New(StoryModel, StoryNodeItem)
+  fullName.vb: StoryCADLib.Models.TrashCanModel.New(StoryCADLib.Models.StoryModel, StoryCADLib.ViewModels.StoryNodeItem)
+  name.vb: New(StoryModel, StoryNodeItem)
+references:
+- uid: StoryCADLib.Models
+  commentId: N:StoryCADLib.Models
+  isExternal: true
+  href: StoryCADLib.html
+  name: StoryCADLib.Models
+  nameWithType: StoryCADLib.Models
+  fullName: StoryCADLib.Models
+  spec.csharp:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Models
+    name: Models
+    isExternal: true
+    href: StoryCADLib.Models.html
+  spec.vb:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Models
+    name: Models
+    isExternal: true
+    href: StoryCADLib.Models.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: StoryCADLib.Models.StoryElement
+  commentId: T:StoryCADLib.Models.StoryElement
+  parent: StoryCADLib.Models
+  isExternal: true
+  href: StoryCADLib.Models.StoryElement.html
+  name: StoryElement
+  nameWithType: StoryElement
+  fullName: StoryCADLib.Models.StoryElement
+- uid: StoryCADLib.Models.StoryElement.GetByGuid(System.Guid,StoryCADLib.Models.StoryModel)
+  commentId: M:StoryCADLib.Models.StoryElement.GetByGuid(System.Guid,StoryCADLib.Models.StoryModel)
+  parent: StoryCADLib.Models.StoryElement
+  isExternal: true
+  href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_GetByGuid_System_Guid_StoryCADLib_Models_StoryModel_
+  name: GetByGuid(Guid, StoryModel)
+  nameWithType: StoryElement.GetByGuid(Guid, StoryModel)
+  fullName: StoryCADLib.Models.StoryElement.GetByGuid(System.Guid, StoryCADLib.Models.StoryModel)
+  spec.csharp:
+  - uid: StoryCADLib.Models.StoryElement.GetByGuid(System.Guid,StoryCADLib.Models.StoryModel)
+    name: GetByGuid
+    isExternal: true
+    href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_GetByGuid_System_Guid_StoryCADLib_Models_StoryModel_
+  - name: (
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: StoryCADLib.Models.StoryModel
+    name: StoryModel
+    isExternal: true
+    href: StoryCADLib.Models.StoryModel.html
+  - name: )
+  spec.vb:
+  - uid: StoryCADLib.Models.StoryElement.GetByGuid(System.Guid,StoryCADLib.Models.StoryModel)
+    name: GetByGuid
+    isExternal: true
+    href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_GetByGuid_System_Guid_StoryCADLib_Models_StoryModel_
+  - name: (
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: StoryCADLib.Models.StoryModel
+    name: StoryModel
+    isExternal: true
+    href: StoryCADLib.Models.StoryModel.html
+  - name: )
+- uid: StoryCADLib.Models.StoryElement.Deserialize(System.String)
+  commentId: M:StoryCADLib.Models.StoryElement.Deserialize(System.String)
+  parent: StoryCADLib.Models.StoryElement
+  isExternal: true
+  href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_Deserialize_System_String_
+  name: Deserialize(string)
+  nameWithType: StoryElement.Deserialize(string)
+  fullName: StoryCADLib.Models.StoryElement.Deserialize(string)
+  nameWithType.vb: StoryElement.Deserialize(String)
+  fullName.vb: StoryCADLib.Models.StoryElement.Deserialize(String)
+  name.vb: Deserialize(String)
+  spec.csharp:
+  - uid: StoryCADLib.Models.StoryElement.Deserialize(System.String)
+    name: Deserialize
+    isExternal: true
+    href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_Deserialize_System_String_
+  - name: (
+  - uid: System.String
+    name: string
+    isExternal: true
+  - name: )
+  spec.vb:
+  - uid: StoryCADLib.Models.StoryElement.Deserialize(System.String)
+    name: Deserialize
+    isExternal: true
+    href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_Deserialize_System_String_
+  - name: (
+  - uid: System.String
+    name: String
+    isExternal: true
+  - name: )
+- uid: StoryCADLib.Models.StoryElement.Serialize
+  commentId: M:StoryCADLib.Models.StoryElement.Serialize
+  parent: StoryCADLib.Models.StoryElement
+  isExternal: true
+  href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_Serialize
+  name: Serialize()
+  nameWithType: StoryElement.Serialize()
+  fullName: StoryCADLib.Models.StoryElement.Serialize()
+  spec.csharp:
+  - uid: StoryCADLib.Models.StoryElement.Serialize
+    name: Serialize
+    isExternal: true
+    href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_Serialize
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: StoryCADLib.Models.StoryElement.Serialize
+    name: Serialize
+    isExternal: true
+    href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_Serialize
+  - name: (
+  - name: )
+- uid: StoryCADLib.Models.StoryElement.ToString
+  commentId: M:StoryCADLib.Models.StoryElement.ToString
+  parent: StoryCADLib.Models.StoryElement
+  isExternal: true
+  href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_ToString
+  name: ToString()
+  nameWithType: StoryElement.ToString()
+  fullName: StoryCADLib.Models.StoryElement.ToString()
+  spec.csharp:
+  - uid: StoryCADLib.Models.StoryElement.ToString
+    name: ToString
+    isExternal: true
+    href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_ToString
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: StoryCADLib.Models.StoryElement.ToString
+    name: ToString
+    isExternal: true
+    href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_ToString
+  - name: (
+  - name: )
+- uid: StoryCADLib.Models.StoryElement.Uuid
+  commentId: P:StoryCADLib.Models.StoryElement.Uuid
+  parent: StoryCADLib.Models.StoryElement
+  isExternal: true
+  href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_Uuid
+  name: Uuid
+  nameWithType: StoryElement.Uuid
+  fullName: StoryCADLib.Models.StoryElement.Uuid
+- uid: StoryCADLib.Models.StoryElement.Description
+  commentId: P:StoryCADLib.Models.StoryElement.Description
+  parent: StoryCADLib.Models.StoryElement
+  isExternal: true
+  href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_Description
+  name: Description
+  nameWithType: StoryElement.Description
+  fullName: StoryCADLib.Models.StoryElement.Description
+- uid: StoryCADLib.Models.StoryElement.Name
+  commentId: P:StoryCADLib.Models.StoryElement.Name
+  parent: StoryCADLib.Models.StoryElement
+  isExternal: true
+  href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_Name
+  name: Name
+  nameWithType: StoryElement.Name
+  fullName: StoryCADLib.Models.StoryElement.Name
+- uid: StoryCADLib.Models.StoryElement.ElementType
+  commentId: P:StoryCADLib.Models.StoryElement.ElementType
+  parent: StoryCADLib.Models.StoryElement
+  isExternal: true
+  href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_ElementType
+  name: ElementType
+  nameWithType: StoryElement.ElementType
+  fullName: StoryCADLib.Models.StoryElement.ElementType
+- uid: StoryCADLib.Models.StoryElement.Node
+  commentId: P:StoryCADLib.Models.StoryElement.Node
+  parent: StoryCADLib.Models.StoryElement
+  isExternal: true
+  href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_Node
+  name: Node
+  nameWithType: StoryElement.Node
+  fullName: StoryCADLib.Models.StoryElement.Node
+- uid: StoryCADLib.Models.StoryElement.IsSelected
+  commentId: P:StoryCADLib.Models.StoryElement.IsSelected
+  parent: StoryCADLib.Models.StoryElement
+  isExternal: true
+  href: StoryCADLib.Models.StoryElement.html#StoryCADLib_Models_StoryElement_IsSelected
+  name: IsSelected
+  nameWithType: StoryElement.IsSelected
+  fullName: StoryCADLib.Models.StoryElement.IsSelected
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: StoryCADLib.Models.TrashCanModel.#ctor*
+  commentId: Overload:StoryCADLib.Models.TrashCanModel.#ctor
+  isExternal: true
+  href: StoryCADLib.Models.TrashCanModel.html#StoryCADLib_Models_TrashCanModel__ctor
+  name: TrashCanModel
+  nameWithType: TrashCanModel.TrashCanModel
+  fullName: StoryCADLib.Models.TrashCanModel.TrashCanModel
+  nameWithType.vb: TrashCanModel.New
+  fullName.vb: StoryCADLib.Models.TrashCanModel.New
+  name.vb: New
+- uid: StoryCADLib.Models.StoryModel
+  commentId: T:StoryCADLib.Models.StoryModel
+  parent: StoryCADLib.Models
+  isExternal: true
+  href: StoryCADLib.Models.StoryModel.html
+  name: StoryModel
+  nameWithType: StoryModel
+  fullName: StoryCADLib.Models.StoryModel
+- uid: StoryCADLib.ViewModels.StoryNodeItem
+  commentId: T:StoryCADLib.ViewModels.StoryNodeItem
+  parent: StoryCADLib.ViewModels
+  isExternal: true
+  name: StoryNodeItem
+  nameWithType: StoryNodeItem
+  fullName: StoryCADLib.ViewModels.StoryNodeItem
+- uid: StoryCADLib.ViewModels
+  commentId: N:StoryCADLib.ViewModels
+  isExternal: true
+  href: StoryCADLib.html
+  name: StoryCADLib.ViewModels
+  nameWithType: StoryCADLib.ViewModels
+  fullName: StoryCADLib.ViewModels
+  spec.csharp:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.ViewModels
+    name: ViewModels
+    isExternal: true
+    href: StoryCADLib.ViewModels.html
+  spec.vb:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.ViewModels
+    name: ViewModels
+    isExternal: true
+    href: StoryCADLib.ViewModels.html

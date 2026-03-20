@@ -1,0 +1,412 @@
+### YamlMime:ManagedReference
+items:
+- uid: StoryCADLib.Models.StoryWorld.SpeciesEntry
+  commentId: T:StoryCADLib.Models.StoryWorld.SpeciesEntry
+  id: SpeciesEntry
+  parent: StoryCADLib.Models.StoryWorld
+  children:
+  - StoryCADLib.Models.StoryWorld.SpeciesEntry.#ctor
+  - StoryCADLib.Models.StoryWorld.SpeciesEntry.Diversity
+  - StoryCADLib.Models.StoryWorld.SpeciesEntry.Lifespan
+  - StoryCADLib.Models.StoryWorld.SpeciesEntry.Name
+  - StoryCADLib.Models.StoryWorld.SpeciesEntry.Origins
+  - StoryCADLib.Models.StoryWorld.SpeciesEntry.PhysicalTraits
+  - StoryCADLib.Models.StoryWorld.SpeciesEntry.SocialStructure
+  langs:
+  - csharp
+  - vb
+  name: SpeciesEntry
+  nameWithType: SpeciesEntry
+  fullName: StoryCADLib.Models.StoryWorld.SpeciesEntry
+  type: Class
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.StoryWorld
+  summary: >-
+    Entry for the People/Species list tab.
+
+    Represents a species, race, or people group.
+  example: []
+  syntax:
+    content: public class SpeciesEntry
+    content.vb: Public Class SpeciesEntry
+  inheritance:
+  - System.Object
+- uid: StoryCADLib.Models.StoryWorld.SpeciesEntry.#ctor
+  commentId: M:StoryCADLib.Models.StoryWorld.SpeciesEntry.#ctor
+  id: '#ctor'
+  parent: StoryCADLib.Models.StoryWorld.SpeciesEntry
+  langs:
+  - csharp
+  - vb
+  name: SpeciesEntry()
+  nameWithType: SpeciesEntry.SpeciesEntry()
+  fullName: StoryCADLib.Models.StoryWorld.SpeciesEntry.SpeciesEntry()
+  type: Constructor
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.StoryWorld
+  syntax:
+    content: public SpeciesEntry()
+    content.vb: Public Sub New()
+  overload: StoryCADLib.Models.StoryWorld.SpeciesEntry.#ctor*
+  nameWithType.vb: SpeciesEntry.New()
+  fullName.vb: StoryCADLib.Models.StoryWorld.SpeciesEntry.New()
+  name.vb: New()
+- uid: StoryCADLib.Models.StoryWorld.SpeciesEntry.Name
+  commentId: P:StoryCADLib.Models.StoryWorld.SpeciesEntry.Name
+  id: Name
+  parent: StoryCADLib.Models.StoryWorld.SpeciesEntry
+  langs:
+  - csharp
+  - vb
+  name: Name
+  nameWithType: SpeciesEntry.Name
+  fullName: StoryCADLib.Models.StoryWorld.SpeciesEntry.Name
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.StoryWorld
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("Name")]
+
+      public string Name { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("Name")>
+
+      Public Property Name As String
+  overload: StoryCADLib.Models.StoryWorld.SpeciesEntry.Name*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: Name
+- uid: StoryCADLib.Models.StoryWorld.SpeciesEntry.PhysicalTraits
+  commentId: P:StoryCADLib.Models.StoryWorld.SpeciesEntry.PhysicalTraits
+  id: PhysicalTraits
+  parent: StoryCADLib.Models.StoryWorld.SpeciesEntry
+  langs:
+  - csharp
+  - vb
+  name: PhysicalTraits
+  nameWithType: SpeciesEntry.PhysicalTraits
+  fullName: StoryCADLib.Models.StoryWorld.SpeciesEntry.PhysicalTraits
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.StoryWorld
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("PhysicalTraits")]
+
+      public string PhysicalTraits { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("PhysicalTraits")>
+
+      Public Property PhysicalTraits As String
+  overload: StoryCADLib.Models.StoryWorld.SpeciesEntry.PhysicalTraits*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: PhysicalTraits
+- uid: StoryCADLib.Models.StoryWorld.SpeciesEntry.Lifespan
+  commentId: P:StoryCADLib.Models.StoryWorld.SpeciesEntry.Lifespan
+  id: Lifespan
+  parent: StoryCADLib.Models.StoryWorld.SpeciesEntry
+  langs:
+  - csharp
+  - vb
+  name: Lifespan
+  nameWithType: SpeciesEntry.Lifespan
+  fullName: StoryCADLib.Models.StoryWorld.SpeciesEntry.Lifespan
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.StoryWorld
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("Lifespan")]
+
+      public string Lifespan { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("Lifespan")>
+
+      Public Property Lifespan As String
+  overload: StoryCADLib.Models.StoryWorld.SpeciesEntry.Lifespan*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: Lifespan
+- uid: StoryCADLib.Models.StoryWorld.SpeciesEntry.Origins
+  commentId: P:StoryCADLib.Models.StoryWorld.SpeciesEntry.Origins
+  id: Origins
+  parent: StoryCADLib.Models.StoryWorld.SpeciesEntry
+  langs:
+  - csharp
+  - vb
+  name: Origins
+  nameWithType: SpeciesEntry.Origins
+  fullName: StoryCADLib.Models.StoryWorld.SpeciesEntry.Origins
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.StoryWorld
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("Origins")]
+
+      public string Origins { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("Origins")>
+
+      Public Property Origins As String
+  overload: StoryCADLib.Models.StoryWorld.SpeciesEntry.Origins*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: Origins
+- uid: StoryCADLib.Models.StoryWorld.SpeciesEntry.SocialStructure
+  commentId: P:StoryCADLib.Models.StoryWorld.SpeciesEntry.SocialStructure
+  id: SocialStructure
+  parent: StoryCADLib.Models.StoryWorld.SpeciesEntry
+  langs:
+  - csharp
+  - vb
+  name: SocialStructure
+  nameWithType: SpeciesEntry.SocialStructure
+  fullName: StoryCADLib.Models.StoryWorld.SpeciesEntry.SocialStructure
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.StoryWorld
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("SocialStructure")]
+
+      public string SocialStructure { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("SocialStructure")>
+
+      Public Property SocialStructure As String
+  overload: StoryCADLib.Models.StoryWorld.SpeciesEntry.SocialStructure*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: SocialStructure
+- uid: StoryCADLib.Models.StoryWorld.SpeciesEntry.Diversity
+  commentId: P:StoryCADLib.Models.StoryWorld.SpeciesEntry.Diversity
+  id: Diversity
+  parent: StoryCADLib.Models.StoryWorld.SpeciesEntry
+  langs:
+  - csharp
+  - vb
+  name: Diversity
+  nameWithType: SpeciesEntry.Diversity
+  fullName: StoryCADLib.Models.StoryWorld.SpeciesEntry.Diversity
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.StoryWorld
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("Diversity")]
+
+      public string Diversity { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("Diversity")>
+
+      Public Property Diversity As String
+  overload: StoryCADLib.Models.StoryWorld.SpeciesEntry.Diversity*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: Diversity
+references:
+- uid: StoryCADLib.Models.StoryWorld
+  commentId: N:StoryCADLib.Models.StoryWorld
+  isExternal: true
+  href: StoryCADLib.html
+  name: StoryCADLib.Models.StoryWorld
+  nameWithType: StoryCADLib.Models.StoryWorld
+  fullName: StoryCADLib.Models.StoryWorld
+  spec.csharp:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Models
+    name: Models
+    isExternal: true
+    href: StoryCADLib.Models.html
+  - name: .
+  - uid: StoryCADLib.Models.StoryWorld
+    name: StoryWorld
+    isExternal: true
+    href: StoryCADLib.Models.StoryWorld.html
+  spec.vb:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Models
+    name: Models
+    isExternal: true
+    href: StoryCADLib.Models.html
+  - name: .
+  - uid: StoryCADLib.Models.StoryWorld
+    name: StoryWorld
+    isExternal: true
+    href: StoryCADLib.Models.StoryWorld.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: StoryCADLib.Models.StoryWorld.SpeciesEntry.#ctor*
+  commentId: Overload:StoryCADLib.Models.StoryWorld.SpeciesEntry.#ctor
+  isExternal: true
+  href: StoryCADLib.Models.StoryWorld.SpeciesEntry.html#StoryCADLib_Models_StoryWorld_SpeciesEntry__ctor
+  name: SpeciesEntry
+  nameWithType: SpeciesEntry.SpeciesEntry
+  fullName: StoryCADLib.Models.StoryWorld.SpeciesEntry.SpeciesEntry
+  nameWithType.vb: SpeciesEntry.New
+  fullName.vb: StoryCADLib.Models.StoryWorld.SpeciesEntry.New
+  name.vb: New
+- uid: StoryCADLib.Models.StoryWorld.SpeciesEntry.Name*
+  commentId: Overload:StoryCADLib.Models.StoryWorld.SpeciesEntry.Name
+  isExternal: true
+  href: StoryCADLib.Models.StoryWorld.SpeciesEntry.html#StoryCADLib_Models_StoryWorld_SpeciesEntry_Name
+  name: Name
+  nameWithType: SpeciesEntry.Name
+  fullName: StoryCADLib.Models.StoryWorld.SpeciesEntry.Name
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: StoryCADLib.Models.StoryWorld.SpeciesEntry.PhysicalTraits*
+  commentId: Overload:StoryCADLib.Models.StoryWorld.SpeciesEntry.PhysicalTraits
+  isExternal: true
+  href: StoryCADLib.Models.StoryWorld.SpeciesEntry.html#StoryCADLib_Models_StoryWorld_SpeciesEntry_PhysicalTraits
+  name: PhysicalTraits
+  nameWithType: SpeciesEntry.PhysicalTraits
+  fullName: StoryCADLib.Models.StoryWorld.SpeciesEntry.PhysicalTraits
+- uid: StoryCADLib.Models.StoryWorld.SpeciesEntry.Lifespan*
+  commentId: Overload:StoryCADLib.Models.StoryWorld.SpeciesEntry.Lifespan
+  isExternal: true
+  href: StoryCADLib.Models.StoryWorld.SpeciesEntry.html#StoryCADLib_Models_StoryWorld_SpeciesEntry_Lifespan
+  name: Lifespan
+  nameWithType: SpeciesEntry.Lifespan
+  fullName: StoryCADLib.Models.StoryWorld.SpeciesEntry.Lifespan
+- uid: StoryCADLib.Models.StoryWorld.SpeciesEntry.Origins*
+  commentId: Overload:StoryCADLib.Models.StoryWorld.SpeciesEntry.Origins
+  isExternal: true
+  href: StoryCADLib.Models.StoryWorld.SpeciesEntry.html#StoryCADLib_Models_StoryWorld_SpeciesEntry_Origins
+  name: Origins
+  nameWithType: SpeciesEntry.Origins
+  fullName: StoryCADLib.Models.StoryWorld.SpeciesEntry.Origins
+- uid: StoryCADLib.Models.StoryWorld.SpeciesEntry.SocialStructure*
+  commentId: Overload:StoryCADLib.Models.StoryWorld.SpeciesEntry.SocialStructure
+  isExternal: true
+  href: StoryCADLib.Models.StoryWorld.SpeciesEntry.html#StoryCADLib_Models_StoryWorld_SpeciesEntry_SocialStructure
+  name: SocialStructure
+  nameWithType: SpeciesEntry.SocialStructure
+  fullName: StoryCADLib.Models.StoryWorld.SpeciesEntry.SocialStructure
+- uid: StoryCADLib.Models.StoryWorld.SpeciesEntry.Diversity*
+  commentId: Overload:StoryCADLib.Models.StoryWorld.SpeciesEntry.Diversity
+  isExternal: true
+  href: StoryCADLib.Models.StoryWorld.SpeciesEntry.html#StoryCADLib_Models_StoryWorld_SpeciesEntry_Diversity
+  name: Diversity
+  nameWithType: SpeciesEntry.Diversity
+  fullName: StoryCADLib.Models.StoryWorld.SpeciesEntry.Diversity

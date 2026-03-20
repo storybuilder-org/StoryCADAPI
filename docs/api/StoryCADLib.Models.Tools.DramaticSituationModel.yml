@@ -1,0 +1,412 @@
+### YamlMime:ManagedReference
+items:
+- uid: StoryCADLib.Models.Tools.DramaticSituationModel
+  commentId: T:StoryCADLib.Models.Tools.DramaticSituationModel
+  id: DramaticSituationModel
+  parent: StoryCADLib.Models.Tools
+  children:
+  - StoryCADLib.Models.Tools.DramaticSituationModel.#ctor(System.String)
+  - StoryCADLib.Models.Tools.DramaticSituationModel.Description1
+  - StoryCADLib.Models.Tools.DramaticSituationModel.Description2
+  - StoryCADLib.Models.Tools.DramaticSituationModel.Description3
+  - StoryCADLib.Models.Tools.DramaticSituationModel.Description4
+  - StoryCADLib.Models.Tools.DramaticSituationModel.Notes
+  - StoryCADLib.Models.Tools.DramaticSituationModel.Role1
+  - StoryCADLib.Models.Tools.DramaticSituationModel.Role2
+  - StoryCADLib.Models.Tools.DramaticSituationModel.Role3
+  - StoryCADLib.Models.Tools.DramaticSituationModel.Role4
+  - StoryCADLib.Models.Tools.DramaticSituationModel.SituationName
+  langs:
+  - csharp
+  - vb
+  name: DramaticSituationModel
+  nameWithType: DramaticSituationModel
+  fullName: StoryCADLib.Models.Tools.DramaticSituationModel
+  type: Class
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  syntax:
+    content: public class DramaticSituationModel
+    content.vb: Public Class DramaticSituationModel
+  inheritance:
+  - System.Object
+- uid: StoryCADLib.Models.Tools.DramaticSituationModel.#ctor(System.String)
+  commentId: M:StoryCADLib.Models.Tools.DramaticSituationModel.#ctor(System.String)
+  id: '#ctor(System.String)'
+  parent: StoryCADLib.Models.Tools.DramaticSituationModel
+  langs:
+  - csharp
+  - vb
+  name: DramaticSituationModel(string)
+  nameWithType: DramaticSituationModel.DramaticSituationModel(string)
+  fullName: StoryCADLib.Models.Tools.DramaticSituationModel.DramaticSituationModel(string)
+  type: Constructor
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  syntax:
+    content: public DramaticSituationModel(string situationName)
+    parameters:
+    - id: situationName
+      type: System.String
+    content.vb: Public Sub New(situationName As String)
+  overload: StoryCADLib.Models.Tools.DramaticSituationModel.#ctor*
+  nameWithType.vb: DramaticSituationModel.New(String)
+  fullName.vb: StoryCADLib.Models.Tools.DramaticSituationModel.New(String)
+  name.vb: New(String)
+- uid: StoryCADLib.Models.Tools.DramaticSituationModel.SituationName
+  commentId: P:StoryCADLib.Models.Tools.DramaticSituationModel.SituationName
+  id: SituationName
+  parent: StoryCADLib.Models.Tools.DramaticSituationModel
+  langs:
+  - csharp
+  - vb
+  name: SituationName
+  nameWithType: DramaticSituationModel.SituationName
+  fullName: StoryCADLib.Models.Tools.DramaticSituationModel.SituationName
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  syntax:
+    content: public string SituationName { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property SituationName As String
+  overload: StoryCADLib.Models.Tools.DramaticSituationModel.SituationName*
+- uid: StoryCADLib.Models.Tools.DramaticSituationModel.Role1
+  commentId: P:StoryCADLib.Models.Tools.DramaticSituationModel.Role1
+  id: Role1
+  parent: StoryCADLib.Models.Tools.DramaticSituationModel
+  langs:
+  - csharp
+  - vb
+  name: Role1
+  nameWithType: DramaticSituationModel.Role1
+  fullName: StoryCADLib.Models.Tools.DramaticSituationModel.Role1
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  syntax:
+    content: public string Role1 { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property Role1 As String
+  overload: StoryCADLib.Models.Tools.DramaticSituationModel.Role1*
+- uid: StoryCADLib.Models.Tools.DramaticSituationModel.Role2
+  commentId: P:StoryCADLib.Models.Tools.DramaticSituationModel.Role2
+  id: Role2
+  parent: StoryCADLib.Models.Tools.DramaticSituationModel
+  langs:
+  - csharp
+  - vb
+  name: Role2
+  nameWithType: DramaticSituationModel.Role2
+  fullName: StoryCADLib.Models.Tools.DramaticSituationModel.Role2
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  syntax:
+    content: public string Role2 { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property Role2 As String
+  overload: StoryCADLib.Models.Tools.DramaticSituationModel.Role2*
+- uid: StoryCADLib.Models.Tools.DramaticSituationModel.Role3
+  commentId: P:StoryCADLib.Models.Tools.DramaticSituationModel.Role3
+  id: Role3
+  parent: StoryCADLib.Models.Tools.DramaticSituationModel
+  langs:
+  - csharp
+  - vb
+  name: Role3
+  nameWithType: DramaticSituationModel.Role3
+  fullName: StoryCADLib.Models.Tools.DramaticSituationModel.Role3
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  syntax:
+    content: public string Role3 { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property Role3 As String
+  overload: StoryCADLib.Models.Tools.DramaticSituationModel.Role3*
+- uid: StoryCADLib.Models.Tools.DramaticSituationModel.Role4
+  commentId: P:StoryCADLib.Models.Tools.DramaticSituationModel.Role4
+  id: Role4
+  parent: StoryCADLib.Models.Tools.DramaticSituationModel
+  langs:
+  - csharp
+  - vb
+  name: Role4
+  nameWithType: DramaticSituationModel.Role4
+  fullName: StoryCADLib.Models.Tools.DramaticSituationModel.Role4
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  syntax:
+    content: public string Role4 { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property Role4 As String
+  overload: StoryCADLib.Models.Tools.DramaticSituationModel.Role4*
+- uid: StoryCADLib.Models.Tools.DramaticSituationModel.Description1
+  commentId: P:StoryCADLib.Models.Tools.DramaticSituationModel.Description1
+  id: Description1
+  parent: StoryCADLib.Models.Tools.DramaticSituationModel
+  langs:
+  - csharp
+  - vb
+  name: Description1
+  nameWithType: DramaticSituationModel.Description1
+  fullName: StoryCADLib.Models.Tools.DramaticSituationModel.Description1
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  syntax:
+    content: public string Description1 { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property Description1 As String
+  overload: StoryCADLib.Models.Tools.DramaticSituationModel.Description1*
+- uid: StoryCADLib.Models.Tools.DramaticSituationModel.Description2
+  commentId: P:StoryCADLib.Models.Tools.DramaticSituationModel.Description2
+  id: Description2
+  parent: StoryCADLib.Models.Tools.DramaticSituationModel
+  langs:
+  - csharp
+  - vb
+  name: Description2
+  nameWithType: DramaticSituationModel.Description2
+  fullName: StoryCADLib.Models.Tools.DramaticSituationModel.Description2
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  syntax:
+    content: public string Description2 { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property Description2 As String
+  overload: StoryCADLib.Models.Tools.DramaticSituationModel.Description2*
+- uid: StoryCADLib.Models.Tools.DramaticSituationModel.Description3
+  commentId: P:StoryCADLib.Models.Tools.DramaticSituationModel.Description3
+  id: Description3
+  parent: StoryCADLib.Models.Tools.DramaticSituationModel
+  langs:
+  - csharp
+  - vb
+  name: Description3
+  nameWithType: DramaticSituationModel.Description3
+  fullName: StoryCADLib.Models.Tools.DramaticSituationModel.Description3
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  syntax:
+    content: public string Description3 { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property Description3 As String
+  overload: StoryCADLib.Models.Tools.DramaticSituationModel.Description3*
+- uid: StoryCADLib.Models.Tools.DramaticSituationModel.Description4
+  commentId: P:StoryCADLib.Models.Tools.DramaticSituationModel.Description4
+  id: Description4
+  parent: StoryCADLib.Models.Tools.DramaticSituationModel
+  langs:
+  - csharp
+  - vb
+  name: Description4
+  nameWithType: DramaticSituationModel.Description4
+  fullName: StoryCADLib.Models.Tools.DramaticSituationModel.Description4
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  syntax:
+    content: public string Description4 { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property Description4 As String
+  overload: StoryCADLib.Models.Tools.DramaticSituationModel.Description4*
+- uid: StoryCADLib.Models.Tools.DramaticSituationModel.Notes
+  commentId: P:StoryCADLib.Models.Tools.DramaticSituationModel.Notes
+  id: Notes
+  parent: StoryCADLib.Models.Tools.DramaticSituationModel
+  langs:
+  - csharp
+  - vb
+  name: Notes
+  nameWithType: DramaticSituationModel.Notes
+  fullName: StoryCADLib.Models.Tools.DramaticSituationModel.Notes
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  syntax:
+    content: public string Notes { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property Notes As String
+  overload: StoryCADLib.Models.Tools.DramaticSituationModel.Notes*
+references:
+- uid: StoryCADLib.Models.Tools
+  commentId: N:StoryCADLib.Models.Tools
+  isExternal: true
+  href: StoryCADLib.html
+  name: StoryCADLib.Models.Tools
+  nameWithType: StoryCADLib.Models.Tools
+  fullName: StoryCADLib.Models.Tools
+  spec.csharp:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Models
+    name: Models
+    isExternal: true
+    href: StoryCADLib.Models.html
+  - name: .
+  - uid: StoryCADLib.Models.Tools
+    name: Tools
+    isExternal: true
+    href: StoryCADLib.Models.Tools.html
+  spec.vb:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Models
+    name: Models
+    isExternal: true
+    href: StoryCADLib.Models.html
+  - name: .
+  - uid: StoryCADLib.Models.Tools
+    name: Tools
+    isExternal: true
+    href: StoryCADLib.Models.Tools.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: StoryCADLib.Models.Tools.DramaticSituationModel.#ctor*
+  commentId: Overload:StoryCADLib.Models.Tools.DramaticSituationModel.#ctor
+  isExternal: true
+  href: StoryCADLib.Models.Tools.DramaticSituationModel.html#StoryCADLib_Models_Tools_DramaticSituationModel__ctor_System_String_
+  name: DramaticSituationModel
+  nameWithType: DramaticSituationModel.DramaticSituationModel
+  fullName: StoryCADLib.Models.Tools.DramaticSituationModel.DramaticSituationModel
+  nameWithType.vb: DramaticSituationModel.New
+  fullName.vb: StoryCADLib.Models.Tools.DramaticSituationModel.New
+  name.vb: New
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: StoryCADLib.Models.Tools.DramaticSituationModel.SituationName*
+  commentId: Overload:StoryCADLib.Models.Tools.DramaticSituationModel.SituationName
+  isExternal: true
+  href: StoryCADLib.Models.Tools.DramaticSituationModel.html#StoryCADLib_Models_Tools_DramaticSituationModel_SituationName
+  name: SituationName
+  nameWithType: DramaticSituationModel.SituationName
+  fullName: StoryCADLib.Models.Tools.DramaticSituationModel.SituationName
+- uid: StoryCADLib.Models.Tools.DramaticSituationModel.Role1*
+  commentId: Overload:StoryCADLib.Models.Tools.DramaticSituationModel.Role1
+  isExternal: true
+  href: StoryCADLib.Models.Tools.DramaticSituationModel.html#StoryCADLib_Models_Tools_DramaticSituationModel_Role1
+  name: Role1
+  nameWithType: DramaticSituationModel.Role1
+  fullName: StoryCADLib.Models.Tools.DramaticSituationModel.Role1
+- uid: StoryCADLib.Models.Tools.DramaticSituationModel.Role2*
+  commentId: Overload:StoryCADLib.Models.Tools.DramaticSituationModel.Role2
+  isExternal: true
+  href: StoryCADLib.Models.Tools.DramaticSituationModel.html#StoryCADLib_Models_Tools_DramaticSituationModel_Role2
+  name: Role2
+  nameWithType: DramaticSituationModel.Role2
+  fullName: StoryCADLib.Models.Tools.DramaticSituationModel.Role2
+- uid: StoryCADLib.Models.Tools.DramaticSituationModel.Role3*
+  commentId: Overload:StoryCADLib.Models.Tools.DramaticSituationModel.Role3
+  isExternal: true
+  href: StoryCADLib.Models.Tools.DramaticSituationModel.html#StoryCADLib_Models_Tools_DramaticSituationModel_Role3
+  name: Role3
+  nameWithType: DramaticSituationModel.Role3
+  fullName: StoryCADLib.Models.Tools.DramaticSituationModel.Role3
+- uid: StoryCADLib.Models.Tools.DramaticSituationModel.Role4*
+  commentId: Overload:StoryCADLib.Models.Tools.DramaticSituationModel.Role4
+  isExternal: true
+  href: StoryCADLib.Models.Tools.DramaticSituationModel.html#StoryCADLib_Models_Tools_DramaticSituationModel_Role4
+  name: Role4
+  nameWithType: DramaticSituationModel.Role4
+  fullName: StoryCADLib.Models.Tools.DramaticSituationModel.Role4
+- uid: StoryCADLib.Models.Tools.DramaticSituationModel.Description1*
+  commentId: Overload:StoryCADLib.Models.Tools.DramaticSituationModel.Description1
+  isExternal: true
+  href: StoryCADLib.Models.Tools.DramaticSituationModel.html#StoryCADLib_Models_Tools_DramaticSituationModel_Description1
+  name: Description1
+  nameWithType: DramaticSituationModel.Description1
+  fullName: StoryCADLib.Models.Tools.DramaticSituationModel.Description1
+- uid: StoryCADLib.Models.Tools.DramaticSituationModel.Description2*
+  commentId: Overload:StoryCADLib.Models.Tools.DramaticSituationModel.Description2
+  isExternal: true
+  href: StoryCADLib.Models.Tools.DramaticSituationModel.html#StoryCADLib_Models_Tools_DramaticSituationModel_Description2
+  name: Description2
+  nameWithType: DramaticSituationModel.Description2
+  fullName: StoryCADLib.Models.Tools.DramaticSituationModel.Description2
+- uid: StoryCADLib.Models.Tools.DramaticSituationModel.Description3*
+  commentId: Overload:StoryCADLib.Models.Tools.DramaticSituationModel.Description3
+  isExternal: true
+  href: StoryCADLib.Models.Tools.DramaticSituationModel.html#StoryCADLib_Models_Tools_DramaticSituationModel_Description3
+  name: Description3
+  nameWithType: DramaticSituationModel.Description3
+  fullName: StoryCADLib.Models.Tools.DramaticSituationModel.Description3
+- uid: StoryCADLib.Models.Tools.DramaticSituationModel.Description4*
+  commentId: Overload:StoryCADLib.Models.Tools.DramaticSituationModel.Description4
+  isExternal: true
+  href: StoryCADLib.Models.Tools.DramaticSituationModel.html#StoryCADLib_Models_Tools_DramaticSituationModel_Description4
+  name: Description4
+  nameWithType: DramaticSituationModel.Description4
+  fullName: StoryCADLib.Models.Tools.DramaticSituationModel.Description4
+- uid: StoryCADLib.Models.Tools.DramaticSituationModel.Notes*
+  commentId: Overload:StoryCADLib.Models.Tools.DramaticSituationModel.Notes
+  isExternal: true
+  href: StoryCADLib.Models.Tools.DramaticSituationModel.html#StoryCADLib_Models_Tools_DramaticSituationModel_Notes
+  name: Notes
+  nameWithType: DramaticSituationModel.Notes
+  fullName: StoryCADLib.Models.Tools.DramaticSituationModel.Notes

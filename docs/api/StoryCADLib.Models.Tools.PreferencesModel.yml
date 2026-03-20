@@ -1,0 +1,1768 @@
+### YamlMime:ManagedReference
+items:
+- uid: StoryCADLib.Models.Tools.PreferencesModel
+  commentId: T:StoryCADLib.Models.Tools.PreferencesModel
+  id: PreferencesModel
+  parent: StoryCADLib.Models.Tools
+  children:
+  - StoryCADLib.Models.Tools.PreferencesModel.#ctor
+  - StoryCADLib.Models.Tools.PreferencesModel.AdvancedLogging
+  - StoryCADLib.Models.Tools.PreferencesModel.AutoSave
+  - StoryCADLib.Models.Tools.PreferencesModel.AutoSaveInterval
+  - StoryCADLib.Models.Tools.PreferencesModel.BackupDirectory
+  - StoryCADLib.Models.Tools.PreferencesModel.BackupOnOpen
+  - StoryCADLib.Models.Tools.PreferencesModel.CumulativeTimeUsed
+  - StoryCADLib.Models.Tools.PreferencesModel.Email
+  - StoryCADLib.Models.Tools.PreferencesModel.ErrorCollectionConsent
+  - StoryCADLib.Models.Tools.PreferencesModel.FirstName
+  - StoryCADLib.Models.Tools.PreferencesModel.HideKeyFileWarning
+  - StoryCADLib.Models.Tools.PreferencesModel.HideRatingPrompt
+  - StoryCADLib.Models.Tools.PreferencesModel.LastName
+  - StoryCADLib.Models.Tools.PreferencesModel.LastReviewDate
+  - StoryCADLib.Models.Tools.PreferencesModel.LastSelectedTemplate
+  - StoryCADLib.Models.Tools.PreferencesModel.Newsletter
+  - StoryCADLib.Models.Tools.PreferencesModel.PreferencesInitialized
+  - StoryCADLib.Models.Tools.PreferencesModel.PreferredSearchEngine
+  - StoryCADLib.Models.Tools.PreferencesModel.ProjectDirectory
+  - StoryCADLib.Models.Tools.PreferencesModel.RecentFiles
+  - StoryCADLib.Models.Tools.PreferencesModel.RecordPreferencesStatus
+  - StoryCADLib.Models.Tools.PreferencesModel.RecordVersionStatus
+  - StoryCADLib.Models.Tools.PreferencesModel.SearchEngineIndex
+  - StoryCADLib.Models.Tools.PreferencesModel.ShowFilePickerOnStartup
+  - StoryCADLib.Models.Tools.PreferencesModel.ShowStartupDialog
+  - StoryCADLib.Models.Tools.PreferencesModel.ThemePreference
+  - StoryCADLib.Models.Tools.PreferencesModel.TimedBackup
+  - StoryCADLib.Models.Tools.PreferencesModel.TimedBackupInterval
+  - StoryCADLib.Models.Tools.PreferencesModel.Version
+  - StoryCADLib.Models.Tools.PreferencesModel.WrapNodeNames
+  langs:
+  - csharp
+  - vb
+  name: PreferencesModel
+  nameWithType: PreferencesModel
+  fullName: StoryCADLib.Models.Tools.PreferencesModel
+  type: Class
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  summary: >-
+    PreferencesModel contains StoryCAD User preferences.
+
+    The model is maintained from a Shell Preferences() method
+
+    which is launched from a Command tied to a View button, and by
+
+    PreferencesViewModel using a ContentDialog as the view.
+
+    The StoryCAD user preferences are stored as Preferences.json within AppState.RootDirectory.
+
+    If Preferences.json doesn't exist, it will be created once the user hits done within
+
+    the preferences initialisation screen.
+  example: []
+  syntax:
+    content: 'public class PreferencesModel : ObservableObject'
+    content.vb: Public Class PreferencesModel Inherits ObservableObject
+  inheritance:
+  - System.Object
+- uid: StoryCADLib.Models.Tools.PreferencesModel.#ctor
+  commentId: M:StoryCADLib.Models.Tools.PreferencesModel.#ctor
+  id: '#ctor'
+  parent: StoryCADLib.Models.Tools.PreferencesModel
+  langs:
+  - csharp
+  - vb
+  name: PreferencesModel()
+  nameWithType: PreferencesModel.PreferencesModel()
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.PreferencesModel()
+  type: Constructor
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  syntax:
+    content: public PreferencesModel()
+    content.vb: Public Sub New()
+  overload: StoryCADLib.Models.Tools.PreferencesModel.#ctor*
+  nameWithType.vb: PreferencesModel.New()
+  fullName.vb: StoryCADLib.Models.Tools.PreferencesModel.New()
+  name.vb: New()
+- uid: StoryCADLib.Models.Tools.PreferencesModel.FirstName
+  commentId: P:StoryCADLib.Models.Tools.PreferencesModel.FirstName
+  id: FirstName
+  parent: StoryCADLib.Models.Tools.PreferencesModel
+  langs:
+  - csharp
+  - vb
+  name: FirstName
+  nameWithType: PreferencesModel.FirstName
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.FirstName
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  summary: This is the user's first name
+  example: []
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("FirstName")]
+
+      public string FirstName { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("FirstName")>
+
+      Public Property FirstName As String
+  overload: StoryCADLib.Models.Tools.PreferencesModel.FirstName*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: FirstName
+- uid: StoryCADLib.Models.Tools.PreferencesModel.LastName
+  commentId: P:StoryCADLib.Models.Tools.PreferencesModel.LastName
+  id: LastName
+  parent: StoryCADLib.Models.Tools.PreferencesModel
+  langs:
+  - csharp
+  - vb
+  name: LastName
+  nameWithType: PreferencesModel.LastName
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.LastName
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  summary: This is the user's surname
+  example: []
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("LastName")]
+
+      public string LastName { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("LastName")>
+
+      Public Property LastName As String
+  overload: StoryCADLib.Models.Tools.PreferencesModel.LastName*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: LastName
+- uid: StoryCADLib.Models.Tools.PreferencesModel.Email
+  commentId: P:StoryCADLib.Models.Tools.PreferencesModel.Email
+  id: Email
+  parent: StoryCADLib.Models.Tools.PreferencesModel
+  langs:
+  - csharp
+  - vb
+  name: Email
+  nameWithType: PreferencesModel.Email
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.Email
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  summary: >-
+    This is the user's email
+
+    (Used to get in contact for errors and newsletter if enabled)
+  example: []
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("Email")]
+
+      public string Email { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("Email")>
+
+      Public Property Email As String
+  overload: StoryCADLib.Models.Tools.PreferencesModel.Email*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: Email
+- uid: StoryCADLib.Models.Tools.PreferencesModel.ErrorCollectionConsent
+  commentId: P:StoryCADLib.Models.Tools.PreferencesModel.ErrorCollectionConsent
+  id: ErrorCollectionConsent
+  parent: StoryCADLib.Models.Tools.PreferencesModel
+  langs:
+  - csharp
+  - vb
+  name: ErrorCollectionConsent
+  nameWithType: PreferencesModel.ErrorCollectionConsent
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.ErrorCollectionConsent
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  summary: Disables Elmah.io integration if false
+  example: []
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("ElmahConsent")]
+
+      public bool ErrorCollectionConsent { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("ElmahConsent")>
+
+      Public Property ErrorCollectionConsent As Boolean
+  overload: StoryCADLib.Models.Tools.PreferencesModel.ErrorCollectionConsent*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: ElmahConsent
+- uid: StoryCADLib.Models.Tools.PreferencesModel.Newsletter
+  commentId: P:StoryCADLib.Models.Tools.PreferencesModel.Newsletter
+  id: Newsletter
+  parent: StoryCADLib.Models.Tools.PreferencesModel
+  langs:
+  - csharp
+  - vb
+  name: Newsletter
+  nameWithType: PreferencesModel.Newsletter
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.Newsletter
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  summary: If set to true user email will be added to the newsletter list
+  example: []
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("NewsletterConsent")]
+
+      public bool Newsletter { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("NewsletterConsent")>
+
+      Public Property Newsletter As Boolean
+  overload: StoryCADLib.Models.Tools.PreferencesModel.Newsletter*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: NewsletterConsent
+- uid: StoryCADLib.Models.Tools.PreferencesModel.PreferencesInitialized
+  commentId: P:StoryCADLib.Models.Tools.PreferencesModel.PreferencesInitialized
+  id: PreferencesInitialized
+  parent: StoryCADLib.Models.Tools.PreferencesModel
+  langs:
+  - csharp
+  - vb
+  name: PreferencesInitialized
+  nameWithType: PreferencesModel.PreferencesInitialized
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.PreferencesInitialized
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  summary: This switch tracks whether this is the first time StoryCAD is opened
+  example: []
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("Initialized")]
+
+      public bool PreferencesInitialized { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("Initialized")>
+
+      Public Property PreferencesInitialized As Boolean
+  overload: StoryCADLib.Models.Tools.PreferencesModel.PreferencesInitialized*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: Initialized
+- uid: StoryCADLib.Models.Tools.PreferencesModel.LastSelectedTemplate
+  commentId: P:StoryCADLib.Models.Tools.PreferencesModel.LastSelectedTemplate
+  id: LastSelectedTemplate
+  parent: StoryCADLib.Models.Tools.PreferencesModel
+  langs:
+  - csharp
+  - vb
+  name: LastSelectedTemplate
+  nameWithType: PreferencesModel.LastSelectedTemplate
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.LastSelectedTemplate
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  summary: Tracks the last used template, for new outline creation
+  example: []
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("LastTemplate")]
+
+      public int LastSelectedTemplate { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("LastTemplate")>
+
+      Public Property LastSelectedTemplate As Integer
+  overload: StoryCADLib.Models.Tools.PreferencesModel.LastSelectedTemplate*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: LastTemplate
+- uid: StoryCADLib.Models.Tools.PreferencesModel.ThemePreference
+  commentId: P:StoryCADLib.Models.Tools.PreferencesModel.ThemePreference
+  id: ThemePreference
+  parent: StoryCADLib.Models.Tools.PreferencesModel
+  langs:
+  - csharp
+  - vb
+  name: ThemePreference
+  nameWithType: PreferencesModel.ThemePreference
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.ThemePreference
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  summary: This is the user's theme preference
+  example: []
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("Theme")]
+
+      public ElementTheme ThemePreference { get; set; }
+    parameters: []
+    return:
+      type: Microsoft.UI.Xaml.ElementTheme
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("Theme")>
+
+      Public Property ThemePreference As ElementTheme
+  overload: StoryCADLib.Models.Tools.PreferencesModel.ThemePreference*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: Theme
+- uid: StoryCADLib.Models.Tools.PreferencesModel.WrapNodeNames
+  commentId: P:StoryCADLib.Models.Tools.PreferencesModel.WrapNodeNames
+  id: WrapNodeNames
+  parent: StoryCADLib.Models.Tools.PreferencesModel
+  langs:
+  - csharp
+  - vb
+  name: WrapNodeNames
+  nameWithType: PreferencesModel.WrapNodeNames
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.WrapNodeNames
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  summary: >-
+    If set to wrap, node names will wrap in the tree.
+
+    If set to disabled, node names will cut off.
+  example: []
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("NodeWrap")]
+
+      public TextWrapping WrapNodeNames { get; set; }
+    parameters: []
+    return:
+      type: Microsoft.UI.Xaml.TextWrapping
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("NodeWrap")>
+
+      Public Property WrapNodeNames As TextWrapping
+  overload: StoryCADLib.Models.Tools.PreferencesModel.WrapNodeNames*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: NodeWrap
+- uid: StoryCADLib.Models.Tools.PreferencesModel.AutoSave
+  commentId: P:StoryCADLib.Models.Tools.PreferencesModel.AutoSave
+  id: AutoSave
+  parent: StoryCADLib.Models.Tools.PreferencesModel
+  langs:
+  - csharp
+  - vb
+  name: AutoSave
+  nameWithType: PreferencesModel.AutoSave
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.AutoSave
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  summary: StoryCAD will automatically save the outline if true
+  example: []
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("Autosave")]
+
+      public bool AutoSave { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("Autosave")>
+
+      Public Property AutoSave As Boolean
+  overload: StoryCADLib.Models.Tools.PreferencesModel.AutoSave*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: Autosave
+- uid: StoryCADLib.Models.Tools.PreferencesModel.AutoSaveInterval
+  commentId: P:StoryCADLib.Models.Tools.PreferencesModel.AutoSaveInterval
+  id: AutoSaveInterval
+  parent: StoryCADLib.Models.Tools.PreferencesModel
+  langs:
+  - csharp
+  - vb
+  name: AutoSaveInterval
+  nameWithType: PreferencesModel.AutoSaveInterval
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.AutoSaveInterval
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  summary: >-
+    Controls how often autosave is run
+
+    (Ignored if AutoSave is off)
+  example: []
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("AutosaveInterval")]
+
+      public int AutoSaveInterval { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("AutosaveInterval")>
+
+      Public Property AutoSaveInterval As Integer
+  overload: StoryCADLib.Models.Tools.PreferencesModel.AutoSaveInterval*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: AutosaveInterval
+- uid: StoryCADLib.Models.Tools.PreferencesModel.BackupOnOpen
+  commentId: P:StoryCADLib.Models.Tools.PreferencesModel.BackupOnOpen
+  id: BackupOnOpen
+  parent: StoryCADLib.Models.Tools.PreferencesModel
+  langs:
+  - csharp
+  - vb
+  name: BackupOnOpen
+  nameWithType: PreferencesModel.BackupOnOpen
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.BackupOnOpen
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  summary: StoryCAD will create a backup of the outline when opened if true
+  example: []
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("BackupOnOpen")]
+
+      public bool BackupOnOpen { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("BackupOnOpen")>
+
+      Public Property BackupOnOpen As Boolean
+  overload: StoryCADLib.Models.Tools.PreferencesModel.BackupOnOpen*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: BackupOnOpen
+- uid: StoryCADLib.Models.Tools.PreferencesModel.TimedBackup
+  commentId: P:StoryCADLib.Models.Tools.PreferencesModel.TimedBackup
+  id: TimedBackup
+  parent: StoryCADLib.Models.Tools.PreferencesModel
+  langs:
+  - csharp
+  - vb
+  name: TimedBackup
+  nameWithType: PreferencesModel.TimedBackup
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.TimedBackup
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  summary: StoryCAD will create a backup of the currently opened outline if true.
+  example: []
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("TimedBackup")]
+
+      public bool TimedBackup { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("TimedBackup")>
+
+      Public Property TimedBackup As Boolean
+  overload: StoryCADLib.Models.Tools.PreferencesModel.TimedBackup*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: TimedBackup
+- uid: StoryCADLib.Models.Tools.PreferencesModel.TimedBackupInterval
+  commentId: P:StoryCADLib.Models.Tools.PreferencesModel.TimedBackupInterval
+  id: TimedBackupInterval
+  parent: StoryCADLib.Models.Tools.PreferencesModel
+  langs:
+  - csharp
+  - vb
+  name: TimedBackupInterval
+  nameWithType: PreferencesModel.TimedBackupInterval
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.TimedBackupInterval
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  summary: Controls timed backup frequency.
+  example: []
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("TimedBackupInterval")]
+
+      public int TimedBackupInterval { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("TimedBackupInterval")>
+
+      Public Property TimedBackupInterval As Integer
+  overload: StoryCADLib.Models.Tools.PreferencesModel.TimedBackupInterval*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: TimedBackupInterval
+- uid: StoryCADLib.Models.Tools.PreferencesModel.ProjectDirectory
+  commentId: P:StoryCADLib.Models.Tools.PreferencesModel.ProjectDirectory
+  id: ProjectDirectory
+  parent: StoryCADLib.Models.Tools.PreferencesModel
+  langs:
+  - csharp
+  - vb
+  name: ProjectDirectory
+  nameWithType: PreferencesModel.ProjectDirectory
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.ProjectDirectory
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  summary: Default location where outlines are stored.
+  example: []
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("OutlineDirectory")]
+
+      public string ProjectDirectory { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("OutlineDirectory")>
+
+      Public Property ProjectDirectory As String
+  overload: StoryCADLib.Models.Tools.PreferencesModel.ProjectDirectory*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: OutlineDirectory
+- uid: StoryCADLib.Models.Tools.PreferencesModel.BackupDirectory
+  commentId: P:StoryCADLib.Models.Tools.PreferencesModel.BackupDirectory
+  id: BackupDirectory
+  parent: StoryCADLib.Models.Tools.PreferencesModel
+  langs:
+  - csharp
+  - vb
+  name: BackupDirectory
+  nameWithType: PreferencesModel.BackupDirectory
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.BackupDirectory
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  summary: Location where backups are stored if enabled
+  example: []
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("BackupDirectory")]
+
+      public string BackupDirectory { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("BackupDirectory")>
+
+      Public Property BackupDirectory As String
+  overload: StoryCADLib.Models.Tools.PreferencesModel.BackupDirectory*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: BackupDirectory
+- uid: StoryCADLib.Models.Tools.PreferencesModel.RecentFiles
+  commentId: P:StoryCADLib.Models.Tools.PreferencesModel.RecentFiles
+  id: RecentFiles
+  parent: StoryCADLib.Models.Tools.PreferencesModel
+  langs:
+  - csharp
+  - vb
+  name: RecentFiles
+  nameWithType: PreferencesModel.RecentFiles
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.RecentFiles
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  summary: >-
+    Recently opened files
+
+    (Capped at 25)
+  example: []
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("RecentFiles")]
+
+      public List<string> RecentFiles { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{System.String}
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("RecentFiles")>
+
+      Public Property RecentFiles As List(Of String)
+  overload: StoryCADLib.Models.Tools.PreferencesModel.RecentFiles*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: RecentFiles
+- uid: StoryCADLib.Models.Tools.PreferencesModel.Version
+  commentId: P:StoryCADLib.Models.Tools.PreferencesModel.Version
+  id: Version
+  parent: StoryCADLib.Models.Tools.PreferencesModel
+  langs:
+  - csharp
+  - vb
+  name: Version
+  nameWithType: PreferencesModel.Version
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.Version
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  summary: Tracks last version of StoryCAD that was opened
+  example: []
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("Version")]
+
+      public string Version { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("Version")>
+
+      Public Property Version As String
+  overload: StoryCADLib.Models.Tools.PreferencesModel.Version*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: Version
+- uid: StoryCADLib.Models.Tools.PreferencesModel.RecordPreferencesStatus
+  commentId: P:StoryCADLib.Models.Tools.PreferencesModel.RecordPreferencesStatus
+  id: RecordPreferencesStatus
+  parent: StoryCADLib.Models.Tools.PreferencesModel
+  langs:
+  - csharp
+  - vb
+  name: RecordPreferencesStatus
+  nameWithType: PreferencesModel.RecordPreferencesStatus
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.RecordPreferencesStatus
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("RecordPreferencesStatus")]
+
+      public bool RecordPreferencesStatus { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("RecordPreferencesStatus")>
+
+      Public Property RecordPreferencesStatus As Boolean
+  overload: StoryCADLib.Models.Tools.PreferencesModel.RecordPreferencesStatus*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: RecordPreferencesStatus
+- uid: StoryCADLib.Models.Tools.PreferencesModel.RecordVersionStatus
+  commentId: P:StoryCADLib.Models.Tools.PreferencesModel.RecordVersionStatus
+  id: RecordVersionStatus
+  parent: StoryCADLib.Models.Tools.PreferencesModel
+  langs:
+  - csharp
+  - vb
+  name: RecordVersionStatus
+  nameWithType: PreferencesModel.RecordVersionStatus
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.RecordVersionStatus
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("RecordVersionStatus")]
+
+      public bool RecordVersionStatus { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("RecordVersionStatus")>
+
+      Public Property RecordVersionStatus As Boolean
+  overload: StoryCADLib.Models.Tools.PreferencesModel.RecordVersionStatus*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: RecordVersionStatus
+- uid: StoryCADLib.Models.Tools.PreferencesModel.PreferredSearchEngine
+  commentId: P:StoryCADLib.Models.Tools.PreferencesModel.PreferredSearchEngine
+  id: PreferredSearchEngine
+  parent: StoryCADLib.Models.Tools.PreferencesModel
+  langs:
+  - csharp
+  - vb
+  name: PreferredSearchEngine
+  nameWithType: PreferencesModel.PreferredSearchEngine
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.PreferredSearchEngine
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("PreferredSearchEngine")]
+
+      public BrowserType PreferredSearchEngine { get; set; }
+    parameters: []
+    return:
+      type: StoryCADLib.Models.BrowserType
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("PreferredSearchEngine")>
+
+      Public Property PreferredSearchEngine As BrowserType
+  overload: StoryCADLib.Models.Tools.PreferencesModel.PreferredSearchEngine*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: PreferredSearchEngine
+- uid: StoryCADLib.Models.Tools.PreferencesModel.SearchEngineIndex
+  commentId: P:StoryCADLib.Models.Tools.PreferencesModel.SearchEngineIndex
+  id: SearchEngineIndex
+  parent: StoryCADLib.Models.Tools.PreferencesModel
+  langs:
+  - csharp
+  - vb
+  name: SearchEngineIndex
+  nameWithType: PreferencesModel.SearchEngineIndex
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.SearchEngineIndex
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  summary: Search engine to use.
+  example: []
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("SearchEngineIndex")]
+
+      public int SearchEngineIndex { get; set; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("SearchEngineIndex")>
+
+      Public Property SearchEngineIndex As Integer
+  overload: StoryCADLib.Models.Tools.PreferencesModel.SearchEngineIndex*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: SearchEngineIndex
+- uid: StoryCADLib.Models.Tools.PreferencesModel.HideRatingPrompt
+  commentId: P:StoryCADLib.Models.Tools.PreferencesModel.HideRatingPrompt
+  id: HideRatingPrompt
+  parent: StoryCADLib.Models.Tools.PreferencesModel
+  langs:
+  - csharp
+  - vb
+  name: HideRatingPrompt
+  nameWithType: PreferencesModel.HideRatingPrompt
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.HideRatingPrompt
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  summary: Hides the rating prompt until the next update
+  example: []
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("ShowRatings")]
+
+      public bool HideRatingPrompt { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("ShowRatings")>
+
+      Public Property HideRatingPrompt As Boolean
+  overload: StoryCADLib.Models.Tools.PreferencesModel.HideRatingPrompt*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: ShowRatings
+- uid: StoryCADLib.Models.Tools.PreferencesModel.CumulativeTimeUsed
+  commentId: P:StoryCADLib.Models.Tools.PreferencesModel.CumulativeTimeUsed
+  id: CumulativeTimeUsed
+  parent: StoryCADLib.Models.Tools.PreferencesModel
+  langs:
+  - csharp
+  - vb
+  name: CumulativeTimeUsed
+  nameWithType: PreferencesModel.CumulativeTimeUsed
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.CumulativeTimeUsed
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  summary: Total amount of time StoryCAD has been used/open on the system
+  example: []
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("TimeUsed")]
+
+      public long CumulativeTimeUsed { get; set; }
+    parameters: []
+    return:
+      type: System.Int64
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("TimeUsed")>
+
+      Public Property CumulativeTimeUsed As Long
+  overload: StoryCADLib.Models.Tools.PreferencesModel.CumulativeTimeUsed*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: TimeUsed
+- uid: StoryCADLib.Models.Tools.PreferencesModel.LastReviewDate
+  commentId: P:StoryCADLib.Models.Tools.PreferencesModel.LastReviewDate
+  id: LastReviewDate
+  parent: StoryCADLib.Models.Tools.PreferencesModel
+  langs:
+  - csharp
+  - vb
+  name: LastReviewDate
+  nameWithType: PreferencesModel.LastReviewDate
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.LastReviewDate
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  summary: DateTime of last review
+  example: []
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("LastReview")]
+
+      public DateTime LastReviewDate { get; set; }
+    parameters: []
+    return:
+      type: System.DateTime
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("LastReview")>
+
+      Public Property LastReviewDate As Date
+  overload: StoryCADLib.Models.Tools.PreferencesModel.LastReviewDate*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: LastReview
+- uid: StoryCADLib.Models.Tools.PreferencesModel.ShowStartupDialog
+  commentId: P:StoryCADLib.Models.Tools.PreferencesModel.ShowStartupDialog
+  id: ShowStartupDialog
+  parent: StoryCADLib.Models.Tools.PreferencesModel
+  langs:
+  - csharp
+  - vb
+  name: ShowStartupDialog
+  nameWithType: PreferencesModel.ShowStartupDialog
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.ShowStartupDialog
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  summary: Should the startup dialog (HelpPage) be shown
+  example: []
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("ShowStartupDialog")]
+
+      public bool ShowStartupDialog { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("ShowStartupDialog")>
+
+      Public Property ShowStartupDialog As Boolean
+  overload: StoryCADLib.Models.Tools.PreferencesModel.ShowStartupDialog*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: ShowStartupDialog
+- uid: StoryCADLib.Models.Tools.PreferencesModel.AdvancedLogging
+  commentId: P:StoryCADLib.Models.Tools.PreferencesModel.AdvancedLogging
+  id: AdvancedLogging
+  parent: StoryCADLib.Models.Tools.PreferencesModel
+  langs:
+  - csharp
+  - vb
+  name: AdvancedLogging
+  nameWithType: PreferencesModel.AdvancedLogging
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.AdvancedLogging
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  summary: Do we want to log more in depth
+  example: []
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("AdvancedLogging")]
+
+      public bool AdvancedLogging { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("AdvancedLogging")>
+
+      Public Property AdvancedLogging As Boolean
+  overload: StoryCADLib.Models.Tools.PreferencesModel.AdvancedLogging*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: AdvancedLogging
+- uid: StoryCADLib.Models.Tools.PreferencesModel.HideKeyFileWarning
+  commentId: P:StoryCADLib.Models.Tools.PreferencesModel.HideKeyFileWarning
+  id: HideKeyFileWarning
+  parent: StoryCADLib.Models.Tools.PreferencesModel
+  langs:
+  - csharp
+  - vb
+  name: HideKeyFileWarning
+  nameWithType: PreferencesModel.HideKeyFileWarning
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.HideKeyFileWarning
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  summary: Hide the key file missing warning dialog.
+  example: []
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("HideKeyFileWarning")]
+
+      public bool HideKeyFileWarning { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("HideKeyFileWarning")>
+
+      Public Property HideKeyFileWarning As Boolean
+  overload: StoryCADLib.Models.Tools.PreferencesModel.HideKeyFileWarning*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: HideKeyFileWarning
+- uid: StoryCADLib.Models.Tools.PreferencesModel.ShowFilePickerOnStartup
+  commentId: P:StoryCADLib.Models.Tools.PreferencesModel.ShowFilePickerOnStartup
+  id: ShowFilePickerOnStartup
+  parent: StoryCADLib.Models.Tools.PreferencesModel
+  langs:
+  - csharp
+  - vb
+  name: ShowFilePickerOnStartup
+  nameWithType: PreferencesModel.ShowFilePickerOnStartup
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.ShowFilePickerOnStartup
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  summary: Should the file picker be shown on startup
+  example: []
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("ShowFilePickerOnStartup")]
+
+      public bool ShowFilePickerOnStartup { get; set; }
+    parameters: []
+    return:
+      type: System.Boolean
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("ShowFilePickerOnStartup")>
+
+      Public Property ShowFilePickerOnStartup As Boolean
+  overload: StoryCADLib.Models.Tools.PreferencesModel.ShowFilePickerOnStartup*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: ShowFilePickerOnStartup
+references:
+- uid: StoryCADLib.Models.Tools
+  commentId: N:StoryCADLib.Models.Tools
+  isExternal: true
+  href: StoryCADLib.html
+  name: StoryCADLib.Models.Tools
+  nameWithType: StoryCADLib.Models.Tools
+  fullName: StoryCADLib.Models.Tools
+  spec.csharp:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Models
+    name: Models
+    isExternal: true
+    href: StoryCADLib.Models.html
+  - name: .
+  - uid: StoryCADLib.Models.Tools
+    name: Tools
+    isExternal: true
+    href: StoryCADLib.Models.Tools.html
+  spec.vb:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Models
+    name: Models
+    isExternal: true
+    href: StoryCADLib.Models.html
+  - name: .
+  - uid: StoryCADLib.Models.Tools
+    name: Tools
+    isExternal: true
+    href: StoryCADLib.Models.Tools.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: StoryCADLib.Models.Tools.PreferencesModel.#ctor*
+  commentId: Overload:StoryCADLib.Models.Tools.PreferencesModel.#ctor
+  isExternal: true
+  href: StoryCADLib.Models.Tools.PreferencesModel.html#StoryCADLib_Models_Tools_PreferencesModel__ctor
+  name: PreferencesModel
+  nameWithType: PreferencesModel.PreferencesModel
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.PreferencesModel
+  nameWithType.vb: PreferencesModel.New
+  fullName.vb: StoryCADLib.Models.Tools.PreferencesModel.New
+  name.vb: New
+- uid: StoryCADLib.Models.Tools.PreferencesModel.FirstName*
+  commentId: Overload:StoryCADLib.Models.Tools.PreferencesModel.FirstName
+  isExternal: true
+  href: StoryCADLib.Models.Tools.PreferencesModel.html#StoryCADLib_Models_Tools_PreferencesModel_FirstName
+  name: FirstName
+  nameWithType: PreferencesModel.FirstName
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.FirstName
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: StoryCADLib.Models.Tools.PreferencesModel.LastName*
+  commentId: Overload:StoryCADLib.Models.Tools.PreferencesModel.LastName
+  isExternal: true
+  href: StoryCADLib.Models.Tools.PreferencesModel.html#StoryCADLib_Models_Tools_PreferencesModel_LastName
+  name: LastName
+  nameWithType: PreferencesModel.LastName
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.LastName
+- uid: StoryCADLib.Models.Tools.PreferencesModel.Email*
+  commentId: Overload:StoryCADLib.Models.Tools.PreferencesModel.Email
+  isExternal: true
+  href: StoryCADLib.Models.Tools.PreferencesModel.html#StoryCADLib_Models_Tools_PreferencesModel_Email
+  name: Email
+  nameWithType: PreferencesModel.Email
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.Email
+- uid: StoryCADLib.Models.Tools.PreferencesModel.ErrorCollectionConsent*
+  commentId: Overload:StoryCADLib.Models.Tools.PreferencesModel.ErrorCollectionConsent
+  isExternal: true
+  href: StoryCADLib.Models.Tools.PreferencesModel.html#StoryCADLib_Models_Tools_PreferencesModel_ErrorCollectionConsent
+  name: ErrorCollectionConsent
+  nameWithType: PreferencesModel.ErrorCollectionConsent
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.ErrorCollectionConsent
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: StoryCADLib.Models.Tools.PreferencesModel.Newsletter*
+  commentId: Overload:StoryCADLib.Models.Tools.PreferencesModel.Newsletter
+  isExternal: true
+  href: StoryCADLib.Models.Tools.PreferencesModel.html#StoryCADLib_Models_Tools_PreferencesModel_Newsletter
+  name: Newsletter
+  nameWithType: PreferencesModel.Newsletter
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.Newsletter
+- uid: StoryCADLib.Models.Tools.PreferencesModel.PreferencesInitialized*
+  commentId: Overload:StoryCADLib.Models.Tools.PreferencesModel.PreferencesInitialized
+  isExternal: true
+  href: StoryCADLib.Models.Tools.PreferencesModel.html#StoryCADLib_Models_Tools_PreferencesModel_PreferencesInitialized
+  name: PreferencesInitialized
+  nameWithType: PreferencesModel.PreferencesInitialized
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.PreferencesInitialized
+- uid: StoryCADLib.Models.Tools.PreferencesModel.LastSelectedTemplate*
+  commentId: Overload:StoryCADLib.Models.Tools.PreferencesModel.LastSelectedTemplate
+  isExternal: true
+  href: StoryCADLib.Models.Tools.PreferencesModel.html#StoryCADLib_Models_Tools_PreferencesModel_LastSelectedTemplate
+  name: LastSelectedTemplate
+  nameWithType: PreferencesModel.LastSelectedTemplate
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.LastSelectedTemplate
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: StoryCADLib.Models.Tools.PreferencesModel.ThemePreference*
+  commentId: Overload:StoryCADLib.Models.Tools.PreferencesModel.ThemePreference
+  isExternal: true
+  href: StoryCADLib.Models.Tools.PreferencesModel.html#StoryCADLib_Models_Tools_PreferencesModel_ThemePreference
+  name: ThemePreference
+  nameWithType: PreferencesModel.ThemePreference
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.ThemePreference
+- uid: Microsoft.UI.Xaml.ElementTheme
+  isExternal: true
+  name: ElementTheme
+  nameWithType: ElementTheme
+  fullName: Microsoft.UI.Xaml.ElementTheme
+- uid: StoryCADLib.Models.Tools.PreferencesModel.WrapNodeNames*
+  commentId: Overload:StoryCADLib.Models.Tools.PreferencesModel.WrapNodeNames
+  isExternal: true
+  href: StoryCADLib.Models.Tools.PreferencesModel.html#StoryCADLib_Models_Tools_PreferencesModel_WrapNodeNames
+  name: WrapNodeNames
+  nameWithType: PreferencesModel.WrapNodeNames
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.WrapNodeNames
+- uid: Microsoft.UI.Xaml.TextWrapping
+  commentId: '!:Microsoft.UI.Xaml.TextWrapping'
+  isExternal: true
+  name: TextWrapping
+  nameWithType: TextWrapping
+  fullName: Microsoft.UI.Xaml.TextWrapping
+- uid: StoryCADLib.Models.Tools.PreferencesModel.AutoSave*
+  commentId: Overload:StoryCADLib.Models.Tools.PreferencesModel.AutoSave
+  isExternal: true
+  href: StoryCADLib.Models.Tools.PreferencesModel.html#StoryCADLib_Models_Tools_PreferencesModel_AutoSave
+  name: AutoSave
+  nameWithType: PreferencesModel.AutoSave
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.AutoSave
+- uid: StoryCADLib.Models.Tools.PreferencesModel.AutoSaveInterval*
+  commentId: Overload:StoryCADLib.Models.Tools.PreferencesModel.AutoSaveInterval
+  isExternal: true
+  href: StoryCADLib.Models.Tools.PreferencesModel.html#StoryCADLib_Models_Tools_PreferencesModel_AutoSaveInterval
+  name: AutoSaveInterval
+  nameWithType: PreferencesModel.AutoSaveInterval
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.AutoSaveInterval
+- uid: StoryCADLib.Models.Tools.PreferencesModel.BackupOnOpen*
+  commentId: Overload:StoryCADLib.Models.Tools.PreferencesModel.BackupOnOpen
+  isExternal: true
+  href: StoryCADLib.Models.Tools.PreferencesModel.html#StoryCADLib_Models_Tools_PreferencesModel_BackupOnOpen
+  name: BackupOnOpen
+  nameWithType: PreferencesModel.BackupOnOpen
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.BackupOnOpen
+- uid: StoryCADLib.Models.Tools.PreferencesModel.TimedBackup*
+  commentId: Overload:StoryCADLib.Models.Tools.PreferencesModel.TimedBackup
+  isExternal: true
+  href: StoryCADLib.Models.Tools.PreferencesModel.html#StoryCADLib_Models_Tools_PreferencesModel_TimedBackup
+  name: TimedBackup
+  nameWithType: PreferencesModel.TimedBackup
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.TimedBackup
+- uid: StoryCADLib.Models.Tools.PreferencesModel.TimedBackupInterval*
+  commentId: Overload:StoryCADLib.Models.Tools.PreferencesModel.TimedBackupInterval
+  isExternal: true
+  href: StoryCADLib.Models.Tools.PreferencesModel.html#StoryCADLib_Models_Tools_PreferencesModel_TimedBackupInterval
+  name: TimedBackupInterval
+  nameWithType: PreferencesModel.TimedBackupInterval
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.TimedBackupInterval
+- uid: StoryCADLib.Models.Tools.PreferencesModel.ProjectDirectory*
+  commentId: Overload:StoryCADLib.Models.Tools.PreferencesModel.ProjectDirectory
+  isExternal: true
+  href: StoryCADLib.Models.Tools.PreferencesModel.html#StoryCADLib_Models_Tools_PreferencesModel_ProjectDirectory
+  name: ProjectDirectory
+  nameWithType: PreferencesModel.ProjectDirectory
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.ProjectDirectory
+- uid: StoryCADLib.Models.Tools.PreferencesModel.BackupDirectory*
+  commentId: Overload:StoryCADLib.Models.Tools.PreferencesModel.BackupDirectory
+  isExternal: true
+  href: StoryCADLib.Models.Tools.PreferencesModel.html#StoryCADLib_Models_Tools_PreferencesModel_BackupDirectory
+  name: BackupDirectory
+  nameWithType: PreferencesModel.BackupDirectory
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.BackupDirectory
+- uid: StoryCADLib.Models.Tools.PreferencesModel.RecentFiles*
+  commentId: Overload:StoryCADLib.Models.Tools.PreferencesModel.RecentFiles
+  isExternal: true
+  href: StoryCADLib.Models.Tools.PreferencesModel.html#StoryCADLib_Models_Tools_PreferencesModel_RecentFiles
+  name: RecentFiles
+  nameWithType: PreferencesModel.RecentFiles
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.RecentFiles
+- uid: System.Collections.Generic.List{System.String}
+  commentId: T:System.Collections.Generic.List{System.String}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  name: List<string>
+  nameWithType: List<string>
+  fullName: System.Collections.Generic.List<string>
+  nameWithType.vb: List(Of String)
+  fullName.vb: System.Collections.Generic.List(Of String)
+  name.vb: List(Of String)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+  - name: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: StoryCADLib.Models.Tools.PreferencesModel.Version*
+  commentId: Overload:StoryCADLib.Models.Tools.PreferencesModel.Version
+  isExternal: true
+  href: StoryCADLib.Models.Tools.PreferencesModel.html#StoryCADLib_Models_Tools_PreferencesModel_Version
+  name: Version
+  nameWithType: PreferencesModel.Version
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.Version
+- uid: StoryCADLib.Models.Tools.PreferencesModel.RecordPreferencesStatus*
+  commentId: Overload:StoryCADLib.Models.Tools.PreferencesModel.RecordPreferencesStatus
+  isExternal: true
+  href: StoryCADLib.Models.Tools.PreferencesModel.html#StoryCADLib_Models_Tools_PreferencesModel_RecordPreferencesStatus
+  name: RecordPreferencesStatus
+  nameWithType: PreferencesModel.RecordPreferencesStatus
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.RecordPreferencesStatus
+- uid: StoryCADLib.Models.Tools.PreferencesModel.RecordVersionStatus*
+  commentId: Overload:StoryCADLib.Models.Tools.PreferencesModel.RecordVersionStatus
+  isExternal: true
+  href: StoryCADLib.Models.Tools.PreferencesModel.html#StoryCADLib_Models_Tools_PreferencesModel_RecordVersionStatus
+  name: RecordVersionStatus
+  nameWithType: PreferencesModel.RecordVersionStatus
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.RecordVersionStatus
+- uid: StoryCADLib.Models.Tools.PreferencesModel.PreferredSearchEngine*
+  commentId: Overload:StoryCADLib.Models.Tools.PreferencesModel.PreferredSearchEngine
+  isExternal: true
+  href: StoryCADLib.Models.Tools.PreferencesModel.html#StoryCADLib_Models_Tools_PreferencesModel_PreferredSearchEngine
+  name: PreferredSearchEngine
+  nameWithType: PreferencesModel.PreferredSearchEngine
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.PreferredSearchEngine
+- uid: StoryCADLib.Models.BrowserType
+  commentId: T:StoryCADLib.Models.BrowserType
+  parent: StoryCADLib.Models
+  isExternal: true
+  href: StoryCADLib.Models.BrowserType.html
+  name: BrowserType
+  nameWithType: BrowserType
+  fullName: StoryCADLib.Models.BrowserType
+- uid: StoryCADLib.Models
+  commentId: N:StoryCADLib.Models
+  isExternal: true
+  href: StoryCADLib.html
+  name: StoryCADLib.Models
+  nameWithType: StoryCADLib.Models
+  fullName: StoryCADLib.Models
+  spec.csharp:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Models
+    name: Models
+    isExternal: true
+    href: StoryCADLib.Models.html
+  spec.vb:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Models
+    name: Models
+    isExternal: true
+    href: StoryCADLib.Models.html
+- uid: StoryCADLib.Models.Tools.PreferencesModel.SearchEngineIndex*
+  commentId: Overload:StoryCADLib.Models.Tools.PreferencesModel.SearchEngineIndex
+  isExternal: true
+  href: StoryCADLib.Models.Tools.PreferencesModel.html#StoryCADLib_Models_Tools_PreferencesModel_SearchEngineIndex
+  name: SearchEngineIndex
+  nameWithType: PreferencesModel.SearchEngineIndex
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.SearchEngineIndex
+- uid: StoryCADLib.Models.Tools.PreferencesModel.HideRatingPrompt*
+  commentId: Overload:StoryCADLib.Models.Tools.PreferencesModel.HideRatingPrompt
+  isExternal: true
+  href: StoryCADLib.Models.Tools.PreferencesModel.html#StoryCADLib_Models_Tools_PreferencesModel_HideRatingPrompt
+  name: HideRatingPrompt
+  nameWithType: PreferencesModel.HideRatingPrompt
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.HideRatingPrompt
+- uid: StoryCADLib.Models.Tools.PreferencesModel.CumulativeTimeUsed*
+  commentId: Overload:StoryCADLib.Models.Tools.PreferencesModel.CumulativeTimeUsed
+  isExternal: true
+  href: StoryCADLib.Models.Tools.PreferencesModel.html#StoryCADLib_Models_Tools_PreferencesModel_CumulativeTimeUsed
+  name: CumulativeTimeUsed
+  nameWithType: PreferencesModel.CumulativeTimeUsed
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.CumulativeTimeUsed
+- uid: System.Int64
+  commentId: T:System.Int64
+  parent: System
+  isExternal: true
+  name: long
+  nameWithType: long
+  fullName: long
+  nameWithType.vb: Long
+  fullName.vb: Long
+  name.vb: Long
+- uid: StoryCADLib.Models.Tools.PreferencesModel.LastReviewDate*
+  commentId: Overload:StoryCADLib.Models.Tools.PreferencesModel.LastReviewDate
+  isExternal: true
+  href: StoryCADLib.Models.Tools.PreferencesModel.html#StoryCADLib_Models_Tools_PreferencesModel_LastReviewDate
+  name: LastReviewDate
+  nameWithType: PreferencesModel.LastReviewDate
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.LastReviewDate
+- uid: System.DateTime
+  commentId: T:System.DateTime
+  parent: System
+  isExternal: true
+  name: DateTime
+  nameWithType: DateTime
+  fullName: System.DateTime
+  nameWithType.vb: Date
+  fullName.vb: Date
+  name.vb: Date
+- uid: StoryCADLib.Models.Tools.PreferencesModel.ShowStartupDialog*
+  commentId: Overload:StoryCADLib.Models.Tools.PreferencesModel.ShowStartupDialog
+  isExternal: true
+  href: StoryCADLib.Models.Tools.PreferencesModel.html#StoryCADLib_Models_Tools_PreferencesModel_ShowStartupDialog
+  name: ShowStartupDialog
+  nameWithType: PreferencesModel.ShowStartupDialog
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.ShowStartupDialog
+- uid: StoryCADLib.Models.Tools.PreferencesModel.AdvancedLogging*
+  commentId: Overload:StoryCADLib.Models.Tools.PreferencesModel.AdvancedLogging
+  isExternal: true
+  href: StoryCADLib.Models.Tools.PreferencesModel.html#StoryCADLib_Models_Tools_PreferencesModel_AdvancedLogging
+  name: AdvancedLogging
+  nameWithType: PreferencesModel.AdvancedLogging
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.AdvancedLogging
+- uid: StoryCADLib.Models.Tools.PreferencesModel.HideKeyFileWarning*
+  commentId: Overload:StoryCADLib.Models.Tools.PreferencesModel.HideKeyFileWarning
+  isExternal: true
+  href: StoryCADLib.Models.Tools.PreferencesModel.html#StoryCADLib_Models_Tools_PreferencesModel_HideKeyFileWarning
+  name: HideKeyFileWarning
+  nameWithType: PreferencesModel.HideKeyFileWarning
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.HideKeyFileWarning
+- uid: StoryCADLib.Models.Tools.PreferencesModel.ShowFilePickerOnStartup*
+  commentId: Overload:StoryCADLib.Models.Tools.PreferencesModel.ShowFilePickerOnStartup
+  isExternal: true
+  href: StoryCADLib.Models.Tools.PreferencesModel.html#StoryCADLib_Models_Tools_PreferencesModel_ShowFilePickerOnStartup
+  name: ShowFilePickerOnStartup
+  nameWithType: PreferencesModel.ShowFilePickerOnStartup
+  fullName: StoryCADLib.Models.Tools.PreferencesModel.ShowFilePickerOnStartup

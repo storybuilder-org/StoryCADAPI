@@ -1,0 +1,412 @@
+### YamlMime:ManagedReference
+items:
+- uid: StoryCADLib.Models.StoryWorld.GovernmentEntry
+  commentId: T:StoryCADLib.Models.StoryWorld.GovernmentEntry
+  id: GovernmentEntry
+  parent: StoryCADLib.Models.StoryWorld
+  children:
+  - StoryCADLib.Models.StoryWorld.GovernmentEntry.#ctor
+  - StoryCADLib.Models.StoryWorld.GovernmentEntry.ClassStructure
+  - StoryCADLib.Models.StoryWorld.GovernmentEntry.ForeignRelations
+  - StoryCADLib.Models.StoryWorld.GovernmentEntry.Laws
+  - StoryCADLib.Models.StoryWorld.GovernmentEntry.Name
+  - StoryCADLib.Models.StoryWorld.GovernmentEntry.PowerStructures
+  - StoryCADLib.Models.StoryWorld.GovernmentEntry.Type
+  langs:
+  - csharp
+  - vb
+  name: GovernmentEntry
+  nameWithType: GovernmentEntry
+  fullName: StoryCADLib.Models.StoryWorld.GovernmentEntry
+  type: Class
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.StoryWorld
+  summary: >-
+    Entry for the Governments list tab.
+
+    Represents a government, faction, or power structure.
+  example: []
+  syntax:
+    content: public class GovernmentEntry
+    content.vb: Public Class GovernmentEntry
+  inheritance:
+  - System.Object
+- uid: StoryCADLib.Models.StoryWorld.GovernmentEntry.#ctor
+  commentId: M:StoryCADLib.Models.StoryWorld.GovernmentEntry.#ctor
+  id: '#ctor'
+  parent: StoryCADLib.Models.StoryWorld.GovernmentEntry
+  langs:
+  - csharp
+  - vb
+  name: GovernmentEntry()
+  nameWithType: GovernmentEntry.GovernmentEntry()
+  fullName: StoryCADLib.Models.StoryWorld.GovernmentEntry.GovernmentEntry()
+  type: Constructor
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.StoryWorld
+  syntax:
+    content: public GovernmentEntry()
+    content.vb: Public Sub New()
+  overload: StoryCADLib.Models.StoryWorld.GovernmentEntry.#ctor*
+  nameWithType.vb: GovernmentEntry.New()
+  fullName.vb: StoryCADLib.Models.StoryWorld.GovernmentEntry.New()
+  name.vb: New()
+- uid: StoryCADLib.Models.StoryWorld.GovernmentEntry.Name
+  commentId: P:StoryCADLib.Models.StoryWorld.GovernmentEntry.Name
+  id: Name
+  parent: StoryCADLib.Models.StoryWorld.GovernmentEntry
+  langs:
+  - csharp
+  - vb
+  name: Name
+  nameWithType: GovernmentEntry.Name
+  fullName: StoryCADLib.Models.StoryWorld.GovernmentEntry.Name
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.StoryWorld
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("Name")]
+
+      public string Name { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("Name")>
+
+      Public Property Name As String
+  overload: StoryCADLib.Models.StoryWorld.GovernmentEntry.Name*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: Name
+- uid: StoryCADLib.Models.StoryWorld.GovernmentEntry.Type
+  commentId: P:StoryCADLib.Models.StoryWorld.GovernmentEntry.Type
+  id: Type
+  parent: StoryCADLib.Models.StoryWorld.GovernmentEntry
+  langs:
+  - csharp
+  - vb
+  name: Type
+  nameWithType: GovernmentEntry.Type
+  fullName: StoryCADLib.Models.StoryWorld.GovernmentEntry.Type
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.StoryWorld
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("Type")]
+
+      public string Type { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("Type")>
+
+      Public Property Type As String
+  overload: StoryCADLib.Models.StoryWorld.GovernmentEntry.Type*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: Type
+- uid: StoryCADLib.Models.StoryWorld.GovernmentEntry.PowerStructures
+  commentId: P:StoryCADLib.Models.StoryWorld.GovernmentEntry.PowerStructures
+  id: PowerStructures
+  parent: StoryCADLib.Models.StoryWorld.GovernmentEntry
+  langs:
+  - csharp
+  - vb
+  name: PowerStructures
+  nameWithType: GovernmentEntry.PowerStructures
+  fullName: StoryCADLib.Models.StoryWorld.GovernmentEntry.PowerStructures
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.StoryWorld
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("PowerStructures")]
+
+      public string PowerStructures { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("PowerStructures")>
+
+      Public Property PowerStructures As String
+  overload: StoryCADLib.Models.StoryWorld.GovernmentEntry.PowerStructures*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: PowerStructures
+- uid: StoryCADLib.Models.StoryWorld.GovernmentEntry.Laws
+  commentId: P:StoryCADLib.Models.StoryWorld.GovernmentEntry.Laws
+  id: Laws
+  parent: StoryCADLib.Models.StoryWorld.GovernmentEntry
+  langs:
+  - csharp
+  - vb
+  name: Laws
+  nameWithType: GovernmentEntry.Laws
+  fullName: StoryCADLib.Models.StoryWorld.GovernmentEntry.Laws
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.StoryWorld
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("Laws")]
+
+      public string Laws { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("Laws")>
+
+      Public Property Laws As String
+  overload: StoryCADLib.Models.StoryWorld.GovernmentEntry.Laws*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: Laws
+- uid: StoryCADLib.Models.StoryWorld.GovernmentEntry.ClassStructure
+  commentId: P:StoryCADLib.Models.StoryWorld.GovernmentEntry.ClassStructure
+  id: ClassStructure
+  parent: StoryCADLib.Models.StoryWorld.GovernmentEntry
+  langs:
+  - csharp
+  - vb
+  name: ClassStructure
+  nameWithType: GovernmentEntry.ClassStructure
+  fullName: StoryCADLib.Models.StoryWorld.GovernmentEntry.ClassStructure
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.StoryWorld
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("ClassStructure")]
+
+      public string ClassStructure { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("ClassStructure")>
+
+      Public Property ClassStructure As String
+  overload: StoryCADLib.Models.StoryWorld.GovernmentEntry.ClassStructure*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: ClassStructure
+- uid: StoryCADLib.Models.StoryWorld.GovernmentEntry.ForeignRelations
+  commentId: P:StoryCADLib.Models.StoryWorld.GovernmentEntry.ForeignRelations
+  id: ForeignRelations
+  parent: StoryCADLib.Models.StoryWorld.GovernmentEntry
+  langs:
+  - csharp
+  - vb
+  name: ForeignRelations
+  nameWithType: GovernmentEntry.ForeignRelations
+  fullName: StoryCADLib.Models.StoryWorld.GovernmentEntry.ForeignRelations
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.StoryWorld
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      [JsonPropertyName("ForeignRelations")]
+
+      public string ForeignRelations { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      <JsonPropertyName("ForeignRelations")>
+
+      Public Property ForeignRelations As String
+  overload: StoryCADLib.Models.StoryWorld.GovernmentEntry.ForeignRelations*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+  - type: System.Text.Json.Serialization.JsonPropertyNameAttribute
+    ctor: System.Text.Json.Serialization.JsonPropertyNameAttribute.#ctor(System.String)
+    arguments:
+    - type: System.String
+      value: ForeignRelations
+references:
+- uid: StoryCADLib.Models.StoryWorld
+  commentId: N:StoryCADLib.Models.StoryWorld
+  isExternal: true
+  href: StoryCADLib.html
+  name: StoryCADLib.Models.StoryWorld
+  nameWithType: StoryCADLib.Models.StoryWorld
+  fullName: StoryCADLib.Models.StoryWorld
+  spec.csharp:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Models
+    name: Models
+    isExternal: true
+    href: StoryCADLib.Models.html
+  - name: .
+  - uid: StoryCADLib.Models.StoryWorld
+    name: StoryWorld
+    isExternal: true
+    href: StoryCADLib.Models.StoryWorld.html
+  spec.vb:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Models
+    name: Models
+    isExternal: true
+    href: StoryCADLib.Models.html
+  - name: .
+  - uid: StoryCADLib.Models.StoryWorld
+    name: StoryWorld
+    isExternal: true
+    href: StoryCADLib.Models.StoryWorld.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: StoryCADLib.Models.StoryWorld.GovernmentEntry.#ctor*
+  commentId: Overload:StoryCADLib.Models.StoryWorld.GovernmentEntry.#ctor
+  isExternal: true
+  href: StoryCADLib.Models.StoryWorld.GovernmentEntry.html#StoryCADLib_Models_StoryWorld_GovernmentEntry__ctor
+  name: GovernmentEntry
+  nameWithType: GovernmentEntry.GovernmentEntry
+  fullName: StoryCADLib.Models.StoryWorld.GovernmentEntry.GovernmentEntry
+  nameWithType.vb: GovernmentEntry.New
+  fullName.vb: StoryCADLib.Models.StoryWorld.GovernmentEntry.New
+  name.vb: New
+- uid: StoryCADLib.Models.StoryWorld.GovernmentEntry.Name*
+  commentId: Overload:StoryCADLib.Models.StoryWorld.GovernmentEntry.Name
+  isExternal: true
+  href: StoryCADLib.Models.StoryWorld.GovernmentEntry.html#StoryCADLib_Models_StoryWorld_GovernmentEntry_Name
+  name: Name
+  nameWithType: GovernmentEntry.Name
+  fullName: StoryCADLib.Models.StoryWorld.GovernmentEntry.Name
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: StoryCADLib.Models.StoryWorld.GovernmentEntry.Type*
+  commentId: Overload:StoryCADLib.Models.StoryWorld.GovernmentEntry.Type
+  isExternal: true
+  href: StoryCADLib.Models.StoryWorld.GovernmentEntry.html#StoryCADLib_Models_StoryWorld_GovernmentEntry_Type
+  name: Type
+  nameWithType: GovernmentEntry.Type
+  fullName: StoryCADLib.Models.StoryWorld.GovernmentEntry.Type
+- uid: StoryCADLib.Models.StoryWorld.GovernmentEntry.PowerStructures*
+  commentId: Overload:StoryCADLib.Models.StoryWorld.GovernmentEntry.PowerStructures
+  isExternal: true
+  href: StoryCADLib.Models.StoryWorld.GovernmentEntry.html#StoryCADLib_Models_StoryWorld_GovernmentEntry_PowerStructures
+  name: PowerStructures
+  nameWithType: GovernmentEntry.PowerStructures
+  fullName: StoryCADLib.Models.StoryWorld.GovernmentEntry.PowerStructures
+- uid: StoryCADLib.Models.StoryWorld.GovernmentEntry.Laws*
+  commentId: Overload:StoryCADLib.Models.StoryWorld.GovernmentEntry.Laws
+  isExternal: true
+  href: StoryCADLib.Models.StoryWorld.GovernmentEntry.html#StoryCADLib_Models_StoryWorld_GovernmentEntry_Laws
+  name: Laws
+  nameWithType: GovernmentEntry.Laws
+  fullName: StoryCADLib.Models.StoryWorld.GovernmentEntry.Laws
+- uid: StoryCADLib.Models.StoryWorld.GovernmentEntry.ClassStructure*
+  commentId: Overload:StoryCADLib.Models.StoryWorld.GovernmentEntry.ClassStructure
+  isExternal: true
+  href: StoryCADLib.Models.StoryWorld.GovernmentEntry.html#StoryCADLib_Models_StoryWorld_GovernmentEntry_ClassStructure
+  name: ClassStructure
+  nameWithType: GovernmentEntry.ClassStructure
+  fullName: StoryCADLib.Models.StoryWorld.GovernmentEntry.ClassStructure
+- uid: StoryCADLib.Models.StoryWorld.GovernmentEntry.ForeignRelations*
+  commentId: Overload:StoryCADLib.Models.StoryWorld.GovernmentEntry.ForeignRelations
+  isExternal: true
+  href: StoryCADLib.Models.StoryWorld.GovernmentEntry.html#StoryCADLib_Models_StoryWorld_GovernmentEntry_ForeignRelations
+  name: ForeignRelations
+  nameWithType: GovernmentEntry.ForeignRelations
+  fullName: StoryCADLib.Models.StoryWorld.GovernmentEntry.ForeignRelations

@@ -1,0 +1,135 @@
+### YamlMime:ManagedReference
+items:
+- uid: StoryCADLib.Models.Tools
+  commentId: N:StoryCADLib.Models.Tools
+  id: StoryCADLib.Models.Tools
+  children:
+  - StoryCADLib.Models.Tools.ConflictCategoryModel
+  - StoryCADLib.Models.Tools.DramaticSituationModel
+  - StoryCADLib.Models.Tools.KeyQuestionModel
+  - StoryCADLib.Models.Tools.PlotPatternModel
+  - StoryCADLib.Models.Tools.PlotPatternScene
+  - StoryCADLib.Models.Tools.PreferencesModel
+  - StoryCADLib.Models.Tools.SubTopicModel
+  - StoryCADLib.Models.Tools.ToolsData
+  - StoryCADLib.Models.Tools.TopicModel
+  - StoryCADLib.Models.Tools.TopicTypeEnum
+  langs:
+  - csharp
+  - vb
+  name: StoryCADLib.Models.Tools
+  nameWithType: StoryCADLib.Models.Tools
+  fullName: StoryCADLib.Models.Tools
+  type: Namespace
+  assemblies:
+  - StoryCADLib
+references:
+- uid: StoryCADLib.Models.Tools.ConflictCategoryModel
+  commentId: T:StoryCADLib.Models.Tools.ConflictCategoryModel
+  isExternal: true
+  href: StoryCADLib.Models.Tools.ConflictCategoryModel.html
+  name: ConflictCategoryModel
+  nameWithType: ConflictCategoryModel
+  fullName: StoryCADLib.Models.Tools.ConflictCategoryModel
+- uid: StoryCADLib.Models.Tools.DramaticSituationModel
+  commentId: T:StoryCADLib.Models.Tools.DramaticSituationModel
+  isExternal: true
+  href: StoryCADLib.Models.Tools.DramaticSituationModel.html
+  name: DramaticSituationModel
+  nameWithType: DramaticSituationModel
+  fullName: StoryCADLib.Models.Tools.DramaticSituationModel
+- uid: StoryCADLib.Models.Tools.KeyQuestionModel
+  commentId: T:StoryCADLib.Models.Tools.KeyQuestionModel
+  isExternal: true
+  href: StoryCADLib.Models.Tools.KeyQuestionModel.html
+  name: KeyQuestionModel
+  nameWithType: KeyQuestionModel
+  fullName: StoryCADLib.Models.Tools.KeyQuestionModel
+- uid: StoryCADLib.Models.Tools.PlotPatternModel
+  commentId: T:StoryCADLib.Models.Tools.PlotPatternModel
+  isExternal: true
+  href: StoryCADLib.Models.Tools.PlotPatternModel.html
+  name: PlotPatternModel
+  nameWithType: PlotPatternModel
+  fullName: StoryCADLib.Models.Tools.PlotPatternModel
+- uid: StoryCADLib.Models.Tools.PlotPatternScene
+  commentId: T:StoryCADLib.Models.Tools.PlotPatternScene
+  isExternal: true
+  href: StoryCADLib.Models.Tools.PlotPatternScene.html
+  name: PlotPatternScene
+  nameWithType: PlotPatternScene
+  fullName: StoryCADLib.Models.Tools.PlotPatternScene
+- uid: StoryCADLib.Models.Tools.PreferencesModel
+  commentId: T:StoryCADLib.Models.Tools.PreferencesModel
+  isExternal: true
+  href: StoryCADLib.Models.Tools.PreferencesModel.html
+  name: PreferencesModel
+  nameWithType: PreferencesModel
+  fullName: StoryCADLib.Models.Tools.PreferencesModel
+- uid: StoryCADLib.Models.Tools.SubTopicModel
+  commentId: T:StoryCADLib.Models.Tools.SubTopicModel
+  isExternal: true
+  href: StoryCADLib.Models.Tools.SubTopicModel.html
+  name: SubTopicModel
+  nameWithType: SubTopicModel
+  fullName: StoryCADLib.Models.Tools.SubTopicModel
+- uid: StoryCADLib.Models.Tools.ToolsData
+  commentId: T:StoryCADLib.Models.Tools.ToolsData
+  parent: StoryCADLib.Models.Tools
+  isExternal: true
+  href: StoryCADLib.Models.Tools.ToolsData.html
+  name: ToolsData
+  nameWithType: ToolsData
+  fullName: StoryCADLib.Models.Tools.ToolsData
+- uid: StoryCADLib.Models.Tools.TopicTypeEnum
+  commentId: T:StoryCADLib.Models.Tools.TopicTypeEnum
+  parent: StoryCADLib.Models.Tools
+  isExternal: true
+  href: StoryCADLib.Models.Tools.TopicTypeEnum.html
+  name: TopicTypeEnum
+  nameWithType: TopicTypeEnum
+  fullName: StoryCADLib.Models.Tools.TopicTypeEnum
+- uid: StoryCADLib.Models.Tools.TopicModel
+  commentId: T:StoryCADLib.Models.Tools.TopicModel
+  isExternal: true
+  href: StoryCADLib.Models.Tools.TopicModel.html
+  name: TopicModel
+  nameWithType: TopicModel
+  fullName: StoryCADLib.Models.Tools.TopicModel
+- uid: StoryCADLib.Models.Tools
+  commentId: N:StoryCADLib.Models.Tools
+  isExternal: true
+  href: StoryCADLib.html
+  name: StoryCADLib.Models.Tools
+  nameWithType: StoryCADLib.Models.Tools
+  fullName: StoryCADLib.Models.Tools
+  spec.csharp:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Models
+    name: Models
+    isExternal: true
+    href: StoryCADLib.Models.html
+  - name: .
+  - uid: StoryCADLib.Models.Tools
+    name: Tools
+    isExternal: true
+    href: StoryCADLib.Models.Tools.html
+  spec.vb:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Models
+    name: Models
+    isExternal: true
+    href: StoryCADLib.Models.html
+  - name: .
+  - uid: StoryCADLib.Models.Tools
+    name: Tools
+    isExternal: true
+    href: StoryCADLib.Models.Tools.html

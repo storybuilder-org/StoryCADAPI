@@ -1,0 +1,71 @@
+### YamlMime:ManagedReference
+items:
+- uid: StoryCADLib.Models.Scrivener
+  commentId: N:StoryCADLib.Models.Scrivener
+  id: StoryCADLib.Models.Scrivener
+  children:
+  - StoryCADLib.Models.Scrivener.BinderItem
+  - StoryCADLib.Models.Scrivener.BinderItemType
+  langs:
+  - csharp
+  - vb
+  name: StoryCADLib.Models.Scrivener
+  nameWithType: StoryCADLib.Models.Scrivener
+  fullName: StoryCADLib.Models.Scrivener
+  type: Namespace
+  assemblies:
+  - StoryCADLib
+references:
+- uid: StoryCADLib.Models.Scrivener.BinderItem
+  commentId: T:StoryCADLib.Models.Scrivener.BinderItem
+  parent: StoryCADLib.Models.Scrivener
+  isExternal: true
+  href: StoryCADLib.Models.Scrivener.BinderItem.html
+  name: BinderItem
+  nameWithType: BinderItem
+  fullName: StoryCADLib.Models.Scrivener.BinderItem
+- uid: StoryCADLib.Models.Scrivener.BinderItemType
+  commentId: T:StoryCADLib.Models.Scrivener.BinderItemType
+  parent: StoryCADLib.Models.Scrivener
+  isExternal: true
+  href: StoryCADLib.Models.Scrivener.BinderItemType.html
+  name: BinderItemType
+  nameWithType: BinderItemType
+  fullName: StoryCADLib.Models.Scrivener.BinderItemType
+- uid: StoryCADLib.Models.Scrivener
+  commentId: N:StoryCADLib.Models.Scrivener
+  isExternal: true
+  href: StoryCADLib.html
+  name: StoryCADLib.Models.Scrivener
+  nameWithType: StoryCADLib.Models.Scrivener
+  fullName: StoryCADLib.Models.Scrivener
+  spec.csharp:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Models
+    name: Models
+    isExternal: true
+    href: StoryCADLib.Models.html
+  - name: .
+  - uid: StoryCADLib.Models.Scrivener
+    name: Scrivener
+    isExternal: true
+    href: StoryCADLib.Models.Scrivener.html
+  spec.vb:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Models
+    name: Models
+    isExternal: true
+    href: StoryCADLib.Models.html
+  - name: .
+  - uid: StoryCADLib.Models.Scrivener
+    name: Scrivener
+    isExternal: true
+    href: StoryCADLib.Models.Scrivener.html
