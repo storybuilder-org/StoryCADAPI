@@ -254,21 +254,6 @@
             Called by Collaborator after updates are applied (disables action buttons).
             </summary>
         </member>
-        <member name="M:StoryCADLib.Collaborator.Views.CollaboratorHostRoot.InitializeComponent">
-            <summary>
-            InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Collaborator.Views.CollaboratorHostRoot.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Collaborator.Views.CollaboratorHostRoot.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
-            </summary>
-        </member>
         <member name="T:StoryCADLib.Collaborator.Views.ElementPicker">
             <summary>
                 A simple picker allowing a user to pick the
@@ -278,21 +263,6 @@
         <member name="M:StoryCADLib.Collaborator.Views.ElementPicker.Selector_OnSelectionChanged(System.Object,Microsoft.UI.Xaml.Controls.SelectionChangedEventArgs)">
             <summary>
                 This just handles the UI when the type Combobox is changed
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Collaborator.Views.ElementPicker.InitializeComponent">
-            <summary>
-            InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Collaborator.Views.ElementPicker.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Collaborator.Views.ElementPicker.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:StoryCADLib.Collaborator.Views.WorkflowPage">
@@ -321,21 +291,6 @@
             Extract WorkflowModel from navigation data and initialize ViewModel.
             </summary>
         </member>
-        <member name="M:StoryCADLib.Collaborator.Views.WorkflowPage.InitializeComponent">
-            <summary>
-            InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Collaborator.Views.WorkflowPage.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Collaborator.Views.WorkflowPage.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
-            </summary>
-        </member>
         <member name="T:StoryCADLib.Collaborator.Views.WorkflowShell">
             <summary>
                 The shell page that contains the workflow navigation menu and content frame.
@@ -348,66 +303,6 @@
             DataContext is set by Uno Navigation framework when navigating to "Shell" route.
             </summary>
         </member>
-        <member name="M:StoryCADLib.Collaborator.Views.WorkflowShell.InitializeComponent">
-            <summary>
-            InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Collaborator.Views.WorkflowShell.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Collaborator.Views.WorkflowShell.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Controls.BrowseTextBox.InitializeComponent">
-            <summary>
-            InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Controls.BrowseTextBox.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Controls.BrowseTextBox.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Controls.Conflict.InitializeComponent">
-            <summary>
-            InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Controls.Conflict.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Controls.Conflict.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Controls.Flaw.InitializeComponent">
-            <summary>
-            InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Controls.Flaw.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Controls.Flaw.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
-            </summary>
-        </member>
         <member name="M:StoryCADLib.Controls.RelationshipView.RemoveRelationship(System.Object,Microsoft.UI.Xaml.Input.PointerRoutedEventArgs)">
             <summary>
             This removes a relationship from the 'master' character.
@@ -415,34 +310,10 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
-        <member name="M:StoryCADLib.Controls.RelationshipView.InitializeComponent">
+        <member name="T:StoryCADLib.Converters.HasContentToFontWeightConverter">
             <summary>
-            InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Controls.RelationshipView.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Controls.RelationshipView.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Controls.Traits.InitializeComponent">
-            <summary>
-            InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Controls.Traits.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Controls.Traits.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
+            Converts a string value to FontWeight: Bold (700) if non-empty, Normal (400) if empty/null.
+            Used by Expander headers to indicate when RichEditBox fields have content.
             </summary>
         </member>
         <member name="T:StoryCADLib.DAL.EmptyGuidConverter">
@@ -639,6 +510,18 @@
                 - A debugger i.e. VS2022 is attached.
                 - .ENV is missing.
                 Usually it's all or none of the above.
+            </summary>
+        </member>
+        <member name="P:StoryCADLib.Models.AppState.IsBetaDistribution">
+            <summary>
+                Compile-time flag indicating this is a beta distribution.
+                Set by passing -p:IsBetaBuild=true at build time.
+            </summary>
+        </member>
+        <member name="P:StoryCADLib.Models.AppState.ManualBaseUrl">
+            <summary>
+                Base URL for the user manual. Uses the UseBetaDocumentation preference
+                (which defaults to IsBetaDistribution but can be overridden by the user).
             </summary>
         </member>
         <member name="P:StoryCADLib.Models.AppState.Version">
@@ -1278,10 +1161,21 @@
                 Should the file picker be shown on startup
             </summary>
         </member>
+        <member name="P:StoryCADLib.Models.Tools.PreferencesModel.UseBetaDocumentation">
+            <summary>
+                When true, help links point to the beta manual (BetaManual repo).
+                Defaults to IsBetaDistribution at construction; user can override in Preferences.
+            </summary>
+        </member>
         <member name="T:StoryCADLib.Models.Tools.ToolsData">
             <summary>
                 This stores the tools for StoryCAD's Tools.json.
                 Previously tools were stored in GlobalData.
+            </summary>
+        </member>
+        <member name="M:StoryCADLib.Models.Tools.ToolsData.ResolveTopicPath(System.String)">
+            <summary>
+            Returns the original path if rooted, otherwise combines with temp directory.
             </summary>
         </member>
         <member name="T:StoryCADLib.Models.TrashCanModel">
@@ -1468,13 +1362,13 @@
             </summary>
             <typeparam name="T"></typeparam>
         </member>
-        <member name="T:StoryCADLib.Services.API.SemanticKernelApi">
+        <member name="T:StoryCADLib.Services.API.StoryCADApi">
              <summary>
                  This class is designed for integration with Semantic Kernel, if you are writing
                  something that's not AI, you probably want to use OutlineService directly.
             
                  For detailed documentation on using the StoryCAD API, please refer to:
-                 https://storybuilder-org.github.io/StoryCAD/docs/For%20Developers/Using_the_API.html
+                 https://manual.storybuilder.org/docs/For%20Developers/Using_the_API.html
             
                  Usage:
                  - State Handling: The API operates on a CurrentModel property which holds the active StoryModel instance.
@@ -1485,13 +1379,13 @@
                      pattern with IsSuccess flags and descriptive ErrorMessage strings.
              </summary>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.#ctor(StoryCADLib.Services.Outline.OutlineService,StoryCADLib.Models.ListData,StoryCADLib.ViewModels.ControlData,StoryCADLib.Models.Tools.ToolsData)">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.#ctor(StoryCADLib.Services.Outline.OutlineService,StoryCADLib.Models.ListData,StoryCADLib.ViewModels.ControlData,StoryCADLib.Models.Tools.ToolsData)">
              <summary>
                  This class is designed for integration with Semantic Kernel, if you are writing
                  something that's not AI, you probably want to use OutlineService directly.
             
                  For detailed documentation on using the StoryCAD API, please refer to:
-                 https://storybuilder-org.github.io/StoryCAD/docs/For%20Developers/Using_the_API.html
+                 https://manual.storybuilder.org/docs/For%20Developers/Using_the_API.html
             
                  Usage:
                  - State Handling: The API operates on a CurrentModel property which holds the active StoryModel instance.
@@ -1502,18 +1396,16 @@
                      pattern with IsSuccess flags and descriptive ErrorMessage strings.
              </summary>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.CreateEmptyOutline(System.String,System.String,System.String)">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.CreateEmptyOutline(System.String,System.String,System.String)">
             <summary>
                 Creates a new empty story outline based on a template.
-                Parameters:
-                filePath - full path to the file that will back the outline
-                name - the name to use for the outline's Overview element
-                author - the author name for the overview
-                templateIndex - index (as a string) specifying the template to use
-                Returns a JSON-serialized OperationResult payload containing a list of the StoryElement Guids.
             </summary>
+            <param name="name">The name to use for the outline's Overview element.</param>
+            <param name="author">The author name for the overview.</param>
+            <param name="templateIndex">Index (as a string) specifying the template to use.</param>
+            <returns>An OperationResult containing a list of the StoryElement Guids.</returns>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.WriteOutline(System.String)">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.WriteOutline(System.String)">
             <summary>
                 Writes an updated story outline to disk.
                 Parameters:
@@ -1522,7 +1414,7 @@
                 Returns an OperationResult indicating IsSuccess or error.
             </summary>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.GetStoryWorld">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.GetStoryWorld">
             <summary>
                 Gets the StoryWorld element from the current model.
                 StoryWorld is a singleton element (at most one per story) used for worldbuilding content.
@@ -1532,14 +1424,14 @@
                 or success with null payload if no StoryWorld exists in the story.
             </returns>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.UpdateStoryElement(System.Object,System.Guid)">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.UpdateStoryElement(System.Object,System.Guid)">
             <summary>
                 Updates a story model element.
             </summary>
             <param name="newElement">Element source</param>
             <param name="guid">UUID of element that will be updated.</param>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.UpdateElementProperties(System.Guid,System.Collections.Generic.Dictionary{System.String,System.Object})">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.UpdateElementProperties(System.Guid,System.Collections.Generic.Dictionary{System.String,System.Object})">
             <summary>
                 Updates specified properties for a story element identified by its GUID.
                 A dictionary is used to specify the properties to update, where keys are
@@ -1550,13 +1442,13 @@
             <param name="properties">A Dictionary where keys are property names and values are the new values.</param>
             <returns>void if all properties are updated successfully, exception otherwise.</returns>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.GetStoryElement(System.Guid)">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.GetStoryElement(System.Guid)">
             <summary>
                 Implementation of IStoryCADAPI.GetStoryElement.
                 This is an alias for GetStoryElementByGuid.
             </summary>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.StoryCADLib#Services#Collaborator#Contracts#IStoryCADAPI#UpdateElementProperty(System.Guid,System.String,System.Object)">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.StoryCADLib#Services#Collaborator#Contracts#IStoryCADAPI#UpdateElementProperty(System.Guid,System.String,System.Object)">
             <summary>
                 Updates the specified property of a StoryElement identified by its UUID.
                 Only properties decorated with [JsonInclude] are allowed to be updated.
@@ -1565,7 +1457,7 @@
                 If the property is not found, is read-only, or is missing the attribute, an error is returned.
             </summary>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.SetCurrentModel(StoryCADLib.Models.StoryModel)">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.SetCurrentModel(StoryCADLib.Models.StoryModel)">
             <summary>
                 Sets the current StoryModel to work with (for Collaborator integration)
                 An open outline in StoryCAD is represented by a StoryModel and ShellViewModel
@@ -1574,41 +1466,41 @@
             </summary>
             <param name="model">The active StoryModel from ShellViewModel</param>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.DeleteStoryElement(System.String)">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.DeleteStoryElement(System.String)">
             <summary>
                 Deletes a story element from the current StoryModel.
             </summary>
             <remarks>Element is just moved to trashcan</remarks>
             <param name="uuid"></param>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.OpenOutline(System.String)">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.OpenOutline(System.String)">
             <summary>
                 Opens new outline from file.
             </summary>
             <param name="path">Outline to open</param>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.SearchForText(System.String)">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.SearchForText(System.String)">
             <summary>
                 Searches for story elements containing the specified text.
             </summary>
             <param name="searchText">The text to search for (case-insensitive)</param>
             <returns>A list of element GUIDs and names that contain the search text</returns>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.SearchForReferences(System.Guid)">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.SearchForReferences(System.Guid)">
             <summary>
                 Searches for story elements that reference a specific UUID.
             </summary>
             <param name="targetUuid">The UUID to search for references to</param>
             <returns>A list of elements that reference the specified UUID</returns>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.RemoveReferences(System.Guid)">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.RemoveReferences(System.Guid)">
             <summary>
                 Removes all references to a specified UUID from the story model.
             </summary>
             <param name="targetUuid">The UUID to remove references to</param>
             <returns>The number of elements that had references removed</returns>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.SearchInSubtree(System.Guid,System.String)">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.SearchInSubtree(System.Guid,System.String)">
             <summary>
                 Searches for story elements within a specific subtree.
             </summary>
@@ -1616,40 +1508,40 @@
             <param name="searchText">The text to search for (case-insensitive)</param>
             <returns>A list of elements in the subtree that contain the search text</returns>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.RestoreFromTrash(System.Guid)">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.RestoreFromTrash(System.Guid)">
             <summary>
                 Restores a story element from the trash back to its original location.
             </summary>
             <param name="elementToRestore">The GUID of the element to restore from trash</param>
             <returns>An OperationResult indicating success or failure</returns>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.EmptyTrash">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.EmptyTrash">
             <summary>
                 Empties the trash, permanently removing all items.
             </summary>
             <returns>An OperationResult indicating success or failure</returns>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.GetExamples(System.String)">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.GetExamples(System.String)">
             <summary>
             Gets examples for a property from Lists.json
             </summary>
             <param name="propertyName">Property name matching a list key</param>
             <returns>Result containing the list values, or error if key not found</returns>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.GetConflictCategories">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.GetConflictCategories">
             <summary>
             Gets all conflict categories from Controls.json
             </summary>
             <returns>Result containing the list of conflict categories</returns>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.GetConflictSubcategories(System.String)">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.GetConflictSubcategories(System.String)">
             <summary>
             Gets subcategories for a conflict category
             </summary>
             <param name="category">The conflict category name</param>
             <returns>Result containing the list of subcategories, or error if category not found</returns>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.GetConflictExamples(System.String,System.String)">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.GetConflictExamples(System.String,System.String)">
             <summary>
             Gets examples for a conflict category and subcategory
             </summary>
@@ -1657,7 +1549,7 @@
             <param name="subcategory">The subcategory name within the category</param>
             <returns>Result containing the list of examples, or error if not found</returns>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.ApplyConflictToProtagonist(System.Guid,System.String)">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.ApplyConflictToProtagonist(System.Guid,System.String)">
             <summary>
             Applies a conflict description to a Problem's protagonist conflict field
             </summary>
@@ -1665,7 +1557,7 @@
             <param name="conflictText">The conflict description text</param>
             <returns>Result indicating success or failure</returns>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.ApplyConflictToAntagonist(System.Guid,System.String)">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.ApplyConflictToAntagonist(System.Guid,System.String)">
             <summary>
             Applies a conflict description to a Problem's antagonist conflict field
             </summary>
@@ -1673,108 +1565,113 @@
             <param name="conflictText">The conflict description text</param>
             <returns>Result indicating success or failure</returns>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.GetKeyQuestionElements">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.GetKeyQuestionElements">
             <summary>
             Gets all element types that have key questions available
             </summary>
             <returns>Result containing the list of element types</returns>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.GetKeyQuestions(System.String)">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.GetKeyQuestions(System.String)">
             <summary>
             Gets key questions for an element type
             </summary>
             <param name="elementType">The element type (e.g., Character, Problem, Scene)</param>
             <returns>Result containing tuples of (Topic, Question), or error if element type not found</returns>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.GetMasterPlotNames">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.GetMasterPlotNames">
             <summary>
             Gets all master plot names
             </summary>
             <returns>Result containing the list of master plot names</returns>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.GetMasterPlotNotes(System.String)">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.GetMasterPlotNotes(System.String)">
             <summary>
             Gets notes for a master plot
             </summary>
             <param name="plotName">The master plot name</param>
             <returns>Result containing the plot notes, or error if plot not found</returns>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.GetMasterPlotScenes(System.String)">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.GetMasterPlotScenes(System.String)">
             <summary>
             Gets the scene breakdown for a master plot
             </summary>
             <param name="plotName">The master plot name</param>
             <returns>Result containing tuples of (SceneTitle, Notes), or error if plot not found</returns>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.GetStockSceneCategories">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.GetStockSceneCategories">
             <summary>
             Gets all stock scene categories
             </summary>
             <returns>Result containing the list of category names</returns>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.GetStockScenes(System.String)">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.GetStockScenes(System.String)">
             <summary>
             Gets stock scenes for a category
             </summary>
             <param name="category">The stock scene category name</param>
             <returns>Result containing the list of scenes, or error if category not found</returns>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.GetBeatSheetNames">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.GetBeatSheetNames">
             <summary>
             Gets all beat sheet template names
             </summary>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.GetBeatSheet(System.String)">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.GetBeatSheet(System.String)">
             <summary>
             Gets a beat sheet template by name
             </summary>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.ApplyBeatSheetToProblem(System.Guid,System.String)">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.ApplyBeatSheetToProblem(System.Guid,System.String)">
             <summary>
             Applies a beat sheet template to a Problem's structure
             </summary>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.GetProblemStructure(System.Guid)">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.GetProblemStructure(System.Guid)">
             <summary>
             Gets the current structure of a Problem
             </summary>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.AssignElementToBeat(System.Guid,System.Int32,System.Guid)">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.AssignElementToBeat(System.Guid,System.Int32,System.Guid)">
             <summary>
             Assigns a Scene or Problem element to a beat
             </summary>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.ClearBeatAssignment(System.Guid,System.Int32)">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.ClearBeatAssignment(System.Guid,System.Int32)">
             <summary>
             Clears the element assignment from a beat
             </summary>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.CreateBeat(System.Guid,System.String,System.String)">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.CreateBeat(System.Guid,System.String,System.String)">
             <summary>
             Creates a new beat in a Problem's structure
             </summary>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.UpdateBeat(System.Guid,System.Int32,System.String,System.String)">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.UpdateBeat(System.Guid,System.Int32,System.String,System.String)">
             <summary>
             Updates a beat's title and description
             </summary>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.DeleteBeat(System.Guid,System.Int32)">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.DeleteBeat(System.Guid,System.Int32)">
             <summary>
             Deletes a beat from a Problem's structure
             </summary>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.MoveBeat(System.Guid,System.Int32,System.Int32)">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.MoveBeat(System.Guid,System.Int32,System.Int32)">
             <summary>
             Moves a beat from one position to another
             </summary>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.SaveBeatSheet(System.Guid,System.String)">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.MoveElement(System.Guid,System.Guid)">
+            <summary>
+            Moves a story element from its current parent to a new parent node.
+            </summary>
+        </member>
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.SaveBeatSheet(System.Guid,System.String)">
             <summary>
             Saves a Problem's beat sheet structure to a .stbeat file
             </summary>
         </member>
-        <member name="M:StoryCADLib.Services.API.SemanticKernelApi.LoadBeatSheet(System.Guid,System.String)">
+        <member name="M:StoryCADLib.Services.API.StoryCADApi.LoadBeatSheet(System.Guid,System.String)">
             <summary>
             Loads a beat sheet from a .stbeat file into a Problem's structure
             </summary>
@@ -2038,7 +1935,7 @@
                 The plugin is self-contained and handles all workflow operations internally.
             </summary>
         </member>
-        <member name="M:StoryCADLib.Services.Collaborator.Contracts.ICollaborator.OpenAsync(StoryCADLib.Services.Collaborator.Contracts.IStoryCADAPI,StoryCADLib.Models.StoryModel,Microsoft.UI.Xaml.Window,Microsoft.UI.Xaml.Controls.Frame,System.String)">
+        <member name="M:StoryCADLib.Services.Collaborator.Contracts.ICollaborator.OpenAsync(StoryCADLib.Services.Collaborator.Contracts.IStoryCADAPI,StoryCADLib.Models.StoryModel,Microsoft.UI.Xaml.Window,Microsoft.UI.Xaml.Controls.Frame,System.String,StoryCADLib.Services.Logging.ILogService)">
             <summary>
                 Opens a Collaborator session for the provided story using a host-supplied frame for navigation.
             </summary>
@@ -2047,6 +1944,7 @@
             <param name="hostWindow">Host-created window for Collaborator UI</param>
             <param name="hostFrame">Host-created frame (with region) for navigation</param>
             <param name="filePath">Path to the story file for saving via API</param>
+            <param name="logger">StoryCAD's logger for high-level audit events (null if unavailable)</param>
             <returns>The window hosting Collaborator's UI</returns>
         </member>
         <member name="M:StoryCADLib.Services.Collaborator.Contracts.ICollaborator.Close">
@@ -2073,7 +1971,7 @@
         </member>
         <member name="T:StoryCADLib.Services.Collaborator.Contracts.IStoryCADAPI">
             <summary>
-                Interface for existing SemanticKernelAPI methods that Collaborator uses
+                Interface for existing StoryCADAPI methods that Collaborator uses
             </summary>
         </member>
         <member name="P:StoryCADLib.Services.Collaborator.Contracts.IStoryCADAPI.CurrentModel">
@@ -2305,21 +2203,6 @@
                 The dependent types (WorkflowModel, WorkflowResult, WorkflowValidation) have been removed.
             </summary>
         </member>
-        <member name="M:StoryCADLib.Services.Dialogs.BackupNow.InitializeComponent">
-            <summary>
-            InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.BackupNow.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.BackupNow.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
-            </summary>
-        </member>
         <member name="T:StoryCADLib.Services.Dialogs.Changelog">
             <summary>
                 This class handles showing Change logs for the app
@@ -2352,104 +2235,14 @@
                 This just handles the UI when the type Combobox is changed
             </summary>
         </member>
-        <member name="M:StoryCADLib.Services.Dialogs.ElementPicker.InitializeComponent">
-            <summary>
-            InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.ElementPicker.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.ElementPicker.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.FeedbackDialog.InitializeComponent">
-            <summary>
-            InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.FeedbackDialog.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.FeedbackDialog.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
-            </summary>
-        </member>
         <member name="T:StoryCADLib.Services.Dialogs.FileOpenMenuPage">
             <summary>
                 File open menu page, allows user to open and create outlines/samples
             </summary>
         </member>
-        <member name="M:StoryCADLib.Services.Dialogs.FileOpenMenuPage.InitializeComponent">
-            <summary>
-            InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.FileOpenMenuPage.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.FileOpenMenuPage.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
-            </summary>
-        </member>
         <member name="M:StoryCADLib.Services.Dialogs.HelpPage.Clicked(System.Object,Microsoft.UI.Xaml.RoutedEventArgs)">
             <summary>
                 Update preferences to hide/show menu
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.HelpPage.InitializeComponent">
-            <summary>
-            InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.HelpPage.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.HelpPage.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.NewRelationshipPage.InitializeComponent">
-            <summary>
-            InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.NewRelationshipPage.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.NewRelationshipPage.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.SaveAsDialog.InitializeComponent">
-            <summary>
-            InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.SaveAsDialog.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.SaveAsDialog.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:StoryCADLib.Services.Dialogs.Tools.CopyElementsDialog">
@@ -2462,81 +2255,6 @@
             <summary>
             Handles filter ComboBox selection change.
             Delegates to ViewModel for list refresh.
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.Tools.CopyElementsDialog.InitializeComponent">
-            <summary>
-            InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.Tools.CopyElementsDialog.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.Tools.CopyElementsDialog.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.Tools.DramaticSituationsDialog.InitializeComponent">
-            <summary>
-            InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.Tools.DramaticSituationsDialog.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.Tools.DramaticSituationsDialog.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.Tools.KeyQuestionsDialog.InitializeComponent">
-            <summary>
-            InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.Tools.KeyQuestionsDialog.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.Tools.KeyQuestionsDialog.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.Tools.MasterPlotsDialog.InitializeComponent">
-            <summary>
-            InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.Tools.MasterPlotsDialog.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.Tools.MasterPlotsDialog.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.Tools.NarrativeTool.InitializeComponent">
-            <summary>
-            InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.Tools.NarrativeTool.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.Tools.NarrativeTool.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="M:StoryCADLib.Services.Dialogs.Tools.PreferencesDialog.ShowInfo">
@@ -2577,21 +2295,6 @@
                 they clicked in the about page.
             </summary>
         </member>
-        <member name="M:StoryCADLib.Services.Dialogs.Tools.PreferencesDialog.InitializeComponent">
-            <summary>
-            InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.Tools.PreferencesDialog.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.Tools.PreferencesDialog.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
-            </summary>
-        </member>
         <member name="M:StoryCADLib.Services.Dialogs.Tools.PrintReportsDialog.UpdateSelection(System.Object,Microsoft.UI.Xaml.Controls.SelectionChangedEventArgs)">
             <summary>
                 You can't bind selected items so when the values change
@@ -2602,51 +2305,6 @@
             <summary>
                 This will show the user a warning if synopsis is checked but
                 narrative view, which is used to build a synopsis, is empty.
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.Tools.PrintReportsDialog.InitializeComponent">
-            <summary>
-            InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.Tools.PrintReportsDialog.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.Tools.PrintReportsDialog.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.Tools.StockScenesDialog.InitializeComponent">
-            <summary>
-            InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.Tools.StockScenesDialog.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.Tools.StockScenesDialog.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.Tools.TopicsDialog.InitializeComponent">
-            <summary>
-            InitializeComponent()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.Tools.TopicsDialog.Connect(System.Int32,System.Object)">
-            <summary>
-            Connect()
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Dialogs.Tools.TopicsDialog.GetBindingConnector(System.Int32,System.Object)">
-            <summary>
-            GetBindingConnector(int connectionId, object target)
             </summary>
         </member>
         <member name="T:StoryCADLib.Services.Dialogs.ToolValidationService">
@@ -2769,16 +2427,6 @@
             Gets the macOS version (e.g., "15.0.1")
             </summary>
         </member>
-        <member name="M:StoryCADLib.Services.Logging.LogService.GetWindowsCpuName">
-            <summary>
-            Gets the Windows CPU name from registry
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.Services.Logging.LogService.GetWindowsVersion">
-            <summary>
-            Gets the Windows OS version (e.g., "Windows 11 23H2")
-            </summary>
-        </member>
         <member name="M:StoryCADLib.Services.Logging.LogService.SystemInfo">
             <summary>
                 Compiles a small report about the users device, StoryCAD information etc.
@@ -2858,9 +2506,9 @@
                 a specified frame.
                 Depending on the platforms, the navigation service might
                 have to be configured with a key/page list.
-                <param name="frame"> The frame or subframe on which to display the page </param>
-                <param name="pageKey">The key corresponding to the page that should be displayed.</param>
             </summary>
+            <param name="frame">The frame or subframe on which to display the page.</param>
+            <param name="pageKey">The key corresponding to the page that should be displayed.</param>
         </member>
         <member name="M:StoryCADLib.Services.Navigation.INavigationService.NavigateTo(Microsoft.UI.Xaml.Controls.Frame,System.String,System.Object)">
             <summary>
@@ -3036,10 +2684,10 @@
             <summary>
                 Add beat to a ProblemModel.
             </summary>
-            <param name="Parent"></param>
-            <param name="Title"></param>
-            <param name="Description"></param>
-            <exception cref="T:System.ArgumentNullException"></exception>
+            <param name="Parent">The problem model to add the beat to.</param>
+            <param name="Title">The title of the beat.</param>
+            <param name="Description">The description of the beat.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when Parent is null.</exception>
         </member>
         <member name="M:StoryCADLib.Services.Outline.OutlineService.DeleteBeat(StoryCADLib.Models.StoryModel,StoryCADLib.Models.ProblemModel,System.Int32)">
             <summary>
@@ -3578,6 +3226,25 @@
                 etc.
             </summary>
         </member>
+        <member name="T:StoryCADLib.ViewModels.HelpPageViewModel">
+            <summary>
+                ViewModel for HelpPage. Computes manual URLs from AppState.ManualBaseUrl
+                and a constant table of relative paths.
+            </summary>
+        </member>
+        <member name="T:StoryCADLib.ViewModels.ListNavigator`1">
+            <summary>
+            Generic list navigation helper for StoryWorld entry lists.
+            Manages index tracking, Previous/Next/Add/Remove commands,
+            and fires callbacks for change detection and proxy property re-notification.
+            </summary>
+        </member>
+        <member name="M:StoryCADLib.ViewModels.ListNavigator`1.Reset">
+            <summary>
+            Resets the navigator to the first entry and notifies all properties.
+            Called during LoadModel to sync after collection replacement.
+            </summary>
+        </member>
         <member name="T:StoryCADLib.ViewModels.OverviewViewModel">
             <summary>
                 OverviewModel contains overview information for the entire story, such as title, author, and so on.
@@ -3983,36 +3650,8 @@
             </summary>
             <returns>BinderItem for current node, then for each child in a loop</returns>
         </member>
-        <member name="P:StoryCADLib.ViewModels.StoryWorldViewModel.CurrentPhysicalWorldIndex">
-            <summary>
-            Index of the currently displayed Physical World entry.
-            </summary>
-        </member>
-        <member name="P:StoryCADLib.ViewModels.StoryWorldViewModel.HasPhysicalWorlds">
-            <summary>
-            True if there are any Physical World entries.
-            </summary>
-        </member>
-        <member name="P:StoryCADLib.ViewModels.StoryWorldViewModel.HasPreviousPhysicalWorld">
-            <summary>
-            True if there's a previous entry to navigate to.
-            </summary>
-        </member>
-        <member name="P:StoryCADLib.ViewModels.StoryWorldViewModel.HasNextPhysicalWorld">
-            <summary>
-            True if there's a next entry to navigate to.
-            </summary>
-        </member>
-        <member name="P:StoryCADLib.ViewModels.StoryWorldViewModel.PhysicalWorldPositionDisplay">
-            <summary>
-            Display string showing position (e.g., "1 of 3" or "0 of 0").
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.ViewModels.StoryWorldViewModel.HasRtfContent(System.String)">
-            <summary>
-            Helper to check if RTF content has meaningful text.
-            RichEditBoxExtended normalizes empty content to empty string.
-            </summary>
+        <member name="T:StoryCADLib.ViewModels.StoryWorldViewModel">
+            <inheritdoc/>
         </member>
         <member name="P:StoryCADLib.ViewModels.StoryWorldViewModel.WorldTypeDescription">
             <summary>
@@ -4045,7 +3684,7 @@
             Remove button is only visible when there are entries to remove in the current list tab.
             </summary>
         </member>
-        <member name="P:StoryCADLib.ViewModels.StoryWorldViewModel.AddEntryCommand">
+        <member name="M:StoryCADLib.ViewModels.StoryWorldViewModel.AddEntry">
             <summary>
             Unified Add command that adds to the appropriate list based on selected tab.
             </summary>
@@ -4080,6 +3719,12 @@
             <summary>
             Helper class to hold axis values for mapping.
             </summary>
+        </member>
+        <member name="F:StoryCADLib.ViewModels.StoryWorldViewModel.addEntryCommand">
+            <summary>The backing field for <see cref="P:StoryCADLib.ViewModels.StoryWorldViewModel.AddEntryCommand"/>.</summary>
+        </member>
+        <member name="P:StoryCADLib.ViewModels.StoryWorldViewModel.AddEntryCommand">
+            <summary>Gets an <see cref="T:CommunityToolkit.Mvvm.Input.IRelayCommand"/> instance wrapping <see cref="M:StoryCADLib.ViewModels.StoryWorldViewModel.AddEntry"/>.</summary>
         </member>
         <member name="F:StoryCADLib.ViewModels.SubViewModels.OutlineViewModel._shellVM">
             <summary>
@@ -4479,12 +4124,6 @@
         <member name="M:StoryCADLib.ViewModels.Tools.PrintReportDialogVM.PrintSingleNode(StoryCADLib.ViewModels.StoryNodeItem)">
             <summary>Print only the passed node.</summary>
         </member>
-        <member name="M:StoryCADLib.ViewModels.Tools.PrintReportDialogVM.EnsurePrintManagerCleanup">
-            <summary>
-                Public method to check if PrintManager is registered and clean up if needed.
-                Used during window shutdown to prevent Win32 exceptions.
-            </summary>
-        </member>
         <member name="T:StoryCADLib.ViewModels.Tools.StructureBeatViewModel">
             <summary>
                 Model for how the StructureModelTitle Tab works in problem.
@@ -4518,6 +4157,16 @@
         <member name="P:StoryCADLib.ViewModels.Tools.StructureBeatViewModel.ElementDescription">
             <summary>
                 Element Description
+            </summary>
+        </member>
+        <member name="M:StoryCADLib.ViewModels.TreeViewSelection.ClearBindings">
+            <summary>
+            Obsolete method kept for binary compatibility
+            </summary>
+        </member>
+        <member name="M:StoryCADLib.ViewModels.TreeViewSelection.RestoreBindings">
+            <summary>
+            Obsolete method kept for binary compatibility
             </summary>
         </member>
         <member name="T:StoryCADLib.ViewModels.WebViewModel.RefreshDelegate">
@@ -4566,26 +4215,6 @@
                 This installs the evergreen WebView runtime
             </summary>
         </member>
-        <member name="T:StoryCADLib.StoryCADLib_XamlTypeInfo.XamlMetaDataProvider">
-            <summary>
-            Main class for providing metadata for the app or library
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.StoryCADLib_XamlTypeInfo.XamlMetaDataProvider.GetXamlType(System.Type)">
-            <summary>
-            GetXamlType(Type)
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.StoryCADLib_XamlTypeInfo.XamlMetaDataProvider.GetXamlType(System.String)">
-            <summary>
-            GetXamlType(String)
-            </summary>
-        </member>
-        <member name="M:StoryCADLib.StoryCADLib_XamlTypeInfo.XamlMetaDataProvider.GetXmlnsDefinitions">
-            <summary>
-            GetXmlnsDefinitions()
-            </summary>
-        </member>
         <member name="T:StoryCADLib.WindowExtensions">
             <summary>
             Extension methods for the <see cref="T:Microsoft.UI.Xaml.Window" /> class.
@@ -4595,6 +4224,30 @@
             <summary>
             This will set the Window Icon for the given <see cref="T:Microsoft.UI.Xaml.Window" /> using the provided UnoIcon.
             </summary>
+        </member>
+        <member name="T:StoryCADLib.__Sources__.EmbeddedXamlSourcesProvider">
+            <summary>
+            Provides access to the embedded XAML sources
+            </summary>
+            <remarks>
+            This class is used to provide the embedded XAML sources to the Hot Reload engine.
+            This is not intended to be used directly by application code.
+            WON'T BE GENERATED ON RELEASE BUILDS
+            </remarks>
+        </member>
+        <member name="P:StoryCADLib.__Sources__.EmbeddedXamlSourcesProvider.UpdateCounter">
+            <summary>
+            Gets the current update counter, used to detect changes in the sources.
+            </summary>
+            <remarks>
+            This counter is incremented each time a Hot Reload sources update is detected.
+            </remarks>
+        </member>
+        <member name="T:StoryCADLib.GlobalStaticResources">
+            <summary>
+            Contains all the static resources defined for the application
+            </summary>
+            <exclude />
         </member>
         <member name="T:CommunityToolkit.Mvvm.ComponentModel.__Internals.__ObservableValidatorExtensions">
             <summary>
