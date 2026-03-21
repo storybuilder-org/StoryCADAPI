@@ -18,7 +18,8 @@ BootStrapper.Initialise();
 // Add the StoryCAD SK plugin
 kernel.Plugins.AddFromType<SemanticKernelApi>("StoryCAD");
 
-// Enable planning
+// Enable planning — Auto() lets the LLM call any registered function without user approval.
+// Fine for a sample app, but production code should add filters for destructive operations.
 OpenAIPromptExecutionSettings openAiPromptExecutionSettings = new()
 {
     FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
@@ -34,6 +35,8 @@ do
     // Collect user input
     Console.Write("User > ");
     userInput = Console.ReadLine();
+    if (string.IsNullOrWhiteSpace(userInput))
+        continue;
 
     // Add user input
     history.AddUserMessage(userInput);
