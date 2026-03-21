@@ -221,6 +221,48 @@ if (result.IsSuccess)
 
 ---
 
+### AddElement (with properties)
+
+Creates a new story element with initial properties and an optional GUID override.
+
+```csharp
+public OperationResult<Guid> AddElement(
+    StoryItemType typeToAdd,
+    string parentGUID,
+    string name,
+    Dictionary<string, object> properties,
+    string GUIDOverride = "")
+```
+
+**Parameters:**
+| Name | Type | Description |
+|------|------|-------------|
+| `typeToAdd` | StoryItemType | Type of element to create |
+| `parentGUID` | string | GUID of parent element (as string) |
+| `name` | string | Name for the new element |
+| `properties` | Dictionary | Initial property values to set |
+| `GUIDOverride` | string | Optional: specify a GUID for the new element (must be unique) |
+
+**Returns:** `OperationResult<Guid>` - GUID of created element
+
+**Example:**
+```csharp
+var props = new Dictionary<string, object>
+{
+    { "Role", "Protagonist" },
+    { "Age", "28" },
+    { "Archetype", "The Hero" }
+};
+
+var result = api.AddElement(
+    StoryItemType.Character,
+    rootGuid,
+    "Elena",
+    props);
+```
+
+---
+
 ### UpdateElementProperty
 
 Updates a single property on an element.
@@ -297,6 +339,85 @@ public Task<OperationResult<bool>> DeleteElement(Guid elementToDelete)
 
 ---
 
+### GetElement
+
+Returns a single element with all its fields as a serialized object. Unlike `GetStoryElement` which returns a typed `StoryElement`, this returns the full serialized representation including all fields.
+
+```csharp
+public OperationResult<object> GetElement(Guid guid)
+```
+
+**Parameters:**
+| Name | Type | Description |
+|------|------|-------------|
+| `guid` | Guid | The element's unique identifier |
+
+**Returns:** `OperationResult<object>` - Serialized element with all fields
+
+**Example:**
+```csharp
+var result = api.GetElement(characterGuid);
+if (result.IsSuccess)
+{
+    Console.WriteLine(result.Payload); // Full serialized element
+}
+```
+
+---
+
+### UpdateStoryElement
+
+Replaces an entire story element by deserializing a new element and updating it in the model. For updating individual properties, prefer `UpdateElementProperty` or `UpdateElementProperties`.
+
+```csharp
+public OperationResult<bool> UpdateStoryElement(object newElement, Guid guid)
+```
+
+**Parameters:**
+| Name | Type | Description |
+|------|------|-------------|
+| `newElement` | object | Serialized element data (will be deserialized via `StoryElement.Deserialize`) |
+| `guid` | Guid | The GUID of the element to replace |
+
+**Returns:** `OperationResult<bool>` - true on success
+
+---
+
+### MoveElement
+
+Moves an element to a new parent in the outline's ExplorerView tree. Validates against circular references, moving the root element, and moving the TrashCan.
+
+```csharp
+public OperationResult<bool> MoveElement(Guid elementGuid, Guid newParentGuid)
+```
+
+**Parameters:**
+| Name | Type | Description |
+|------|------|-------------|
+| `elementGuid` | Guid | GUID of the element to move |
+| `newParentGuid` | Guid | GUID of the new parent element |
+
+**Returns:** `OperationResult<bool>` - true on success
+
+**Validation:**
+- Cannot move an element to itself
+- Cannot move the root element
+- Cannot move the TrashCan
+- Cannot move an element to one of its own descendants (circular reference check)
+
+**Example:**
+```csharp
+// Move a scene under a different folder
+var result = api.MoveElement(sceneGuid, newFolderGuid);
+if (result.IsSuccess)
+{
+    Console.WriteLine("Element moved successfully");
+    await api.WriteOutline("my-story.stbx"); // Save changes
+}
+```
+
+---
+
 ## Search Operations
 
 ### SearchForText
@@ -330,6 +451,23 @@ public OperationResult<List<Dictionary<string, object>>> SearchInSubtree(
     Guid rootNodeGuid,
     string searchText)
 ```
+
+---
+
+### RemoveReferences
+
+Removes all references to a target element from other elements in the outline.
+
+```csharp
+public OperationResult<int> RemoveReferences(Guid targetUuid)
+```
+
+**Parameters:**
+| Name | Type | Description |
+|------|------|-------------|
+| `targetUuid` | Guid | GUID of the element whose references should be removed |
+
+**Returns:** `OperationResult<int>` - Number of references removed
 
 ---
 
@@ -420,3 +558,41 @@ Gets key question prompts for story development.
 ```csharp
 public OperationResult<IEnumerable<string>> GetKeyQuestionElements()
 ```
+
+---
+
+## Internal / Advanced Methods
+
+These methods are used internally by StoryCAD and the Collaborator plugin. They are available in the public API but most consumers should use the standard methods above.
+
+### SetCurrentModel
+
+Sets the active StoryModel. Used by the Collaborator plugin to synchronize the API with StoryCAD's active outline.
+
+```csharp
+public void SetCurrentModel(StoryModel model)
+```
+
+**Parameters:**
+| Name | Type | Description |
+|------|------|-------------|
+| `model` | StoryModel | The active StoryModel from ShellViewModel |
+
+> **Note:** This is one of the few API methods that does not return `OperationResult<T>`.
+
+---
+
+### DeleteStoryElement
+
+Moves an element to the trash. This is an older variant that accepts a string GUID. Prefer `DeleteElement(Guid)` for new code.
+
+```csharp
+public OperationResult<bool> DeleteStoryElement(string uuid)
+```
+
+**Parameters:**
+| Name | Type | Description |
+|------|------|-------------|
+| `uuid` | string | The element's GUID as a string |
+
+**Returns:** `OperationResult<bool>` - true on success

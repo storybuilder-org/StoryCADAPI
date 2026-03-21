@@ -28,6 +28,11 @@ This section documents the StoryCADLib public API.
 | `UpdateElementProperty` | Update a single property |
 | `UpdateElementProperties` | Update multiple properties |
 | `DeleteElement` | Move element to trash |
+| `GetElement` | Get element with all fields as serialized object |
+| `UpdateStoryElement` | Replace an entire element |
+| `MoveElement` | Move element to a new parent in the outline tree |
+
+> `AddElement` has a second overload that accepts a properties dictionary and optional GUID override. See [SemanticKernelApi](semantic-kernel-api.md) for details.
 
 ### Search Operations
 | Method | Description |
@@ -35,6 +40,13 @@ This section documents the StoryCADLib public API.
 | `SearchForText` | Full-text search across all elements |
 | `SearchForReferences` | Find elements referencing a target |
 | `SearchInSubtree` | Search within a subtree |
+| `RemoveReferences` | Remove all references to an element |
+
+### Internal / Advanced
+| Method | Description |
+|--------|-------------|
+| `SetCurrentModel` | Set the active StoryModel (used by Collaborator) |
+| `DeleteStoryElement` | Move element to trash (string GUID variant) |
 
 ### Relationship Operations
 | Method | Description |
