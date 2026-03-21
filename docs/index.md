@@ -15,7 +15,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 
 // Initialize in headless mode (no UI required)
 BootStrapper.Initialise(headless: true);
-var api = Ioc.Default.GetRequiredService<SemanticKernelApi>();
+var api = Ioc.Default.GetRequiredService<StoryCADApi>();
 
 // Create a new outline
 var result = await api.CreateEmptyOutline("My Story", "Author Name", "0");

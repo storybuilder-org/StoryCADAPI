@@ -1,13 +1,13 @@
 # Semantic Kernel Integration
 
-The StoryCAD API is designed for use with [Microsoft Semantic Kernel](https://learn.microsoft.com/en-us/semantic-kernel/overview/). Every public method on `SemanticKernelApi` is decorated with `[KernelFunction]` and `[Description]` attributes, making the API directly registerable as an SK plugin.
+The StoryCAD API is designed for use with [Microsoft Semantic Kernel](https://learn.microsoft.com/en-us/semantic-kernel/overview/). Every public method on `StoryCADApi` is decorated with `[KernelFunction]` and `[Description]` attributes, making the API directly registerable as an SK plugin.
 
 ## How It Works
 
 Semantic Kernel uses `[KernelFunction]` attributes to discover methods that an LLM can invoke via function calling. The `[Description]` attributes provide the LLM with documentation about what each method does, its parameters, and its constraints.
 
 ```csharp
-// From SemanticKernelApi.cs — every method looks like this:
+// From StoryCADAPI.cs — every method looks like this:
 [KernelFunction]
 [Description("Creates a new empty story outline from a template.")]
 public async Task<OperationResult<List<Guid>>> CreateEmptyOutline(
@@ -28,7 +28,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 BootStrapper.Initialise(headless: true);
 
 // 2. Get the API instance
-var api = Ioc.Default.GetRequiredService<SemanticKernelApi>();
+var api = Ioc.Default.GetRequiredService<StoryCADApi>();
 
 // 3. Build the Semantic Kernel
 var builder = Kernel.CreateBuilder();
@@ -70,7 +70,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 
 // Initialize
 BootStrapper.Initialise(headless: true);
-var api = Ioc.Default.GetRequiredService<SemanticKernelApi>();
+var api = Ioc.Default.GetRequiredService<StoryCADApi>();
 
 // Build kernel with plugin
 var builder = Kernel.CreateBuilder();

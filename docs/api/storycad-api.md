@@ -1,16 +1,16 @@
-# SemanticKernelApi Class
+# StoryCADApi Class
 
 The main entry point for StoryCADLib API operations.
 
 ```csharp
 namespace StoryCADLib.Services.API
 
-public class SemanticKernelApi : IStoryCADAPI
+public class StoryCADApi : IStoryCADAPI
 ```
 
 ## Overview
 
-`SemanticKernelApi` provides methods for creating, reading, updating, and deleting story elements. All methods are decorated with `[KernelFunction]` for Semantic Kernel integration, but can also be called directly.
+`StoryCADApi` provides methods for creating, reading, updating, and deleting story elements. All methods are decorated with `[KernelFunction]` for Semantic Kernel integration, but can also be called directly.
 
 **Key Concepts:**
 - All methods return `OperationResult<T>` - check `IsSuccess` before using `Payload`
@@ -28,7 +28,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 ServiceLocator.Initialize(headless: true);
 
 // Get the API instance
-var api = Ioc.Default.GetRequiredService<SemanticKernelApi>();
+var api = Ioc.Default.GetRequiredService<StoryCADApi>();
 ```
 
 ---
