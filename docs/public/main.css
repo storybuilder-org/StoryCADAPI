@@ -1,0 +1,13 @@
+/* Constrain content width and ensure text wraps on all viewports */
+article {
+    max-width: 900px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+/* Landing page: restore normal block flow so images left-align */
+body[data-layout="landing"] article {
+    display: block;
+    margin-left: 0;
+    margin-right: auto;
+}

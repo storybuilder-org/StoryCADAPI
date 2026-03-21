@@ -1,0 +1,285 @@
+### YamlMime:ManagedReference
+items:
+- uid: StoryCADLib.Models.SavedBeatsheet
+  commentId: T:StoryCADLib.Models.SavedBeatsheet
+  id: SavedBeatsheet
+  parent: StoryCADLib.Models
+  children:
+  - StoryCADLib.Models.SavedBeatsheet.#ctor
+  - StoryCADLib.Models.SavedBeatsheet.Beats
+  - StoryCADLib.Models.SavedBeatsheet.Description
+  langs:
+  - csharp
+  - vb
+  name: SavedBeatsheet
+  nameWithType: SavedBeatsheet
+  fullName: StoryCADLib.Models.SavedBeatsheet
+  type: Class
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  summary: Beatsheet model that is able to be saved/loaded from a file.
+  example: []
+  syntax:
+    content: public class SavedBeatsheet
+    content.vb: Public Class SavedBeatsheet
+  inheritance:
+  - System.Object
+- uid: StoryCADLib.Models.SavedBeatsheet.#ctor
+  commentId: M:StoryCADLib.Models.SavedBeatsheet.#ctor
+  id: '#ctor'
+  parent: StoryCADLib.Models.SavedBeatsheet
+  langs:
+  - csharp
+  - vb
+  name: SavedBeatsheet()
+  nameWithType: SavedBeatsheet.SavedBeatsheet()
+  fullName: StoryCADLib.Models.SavedBeatsheet.SavedBeatsheet()
+  type: Constructor
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  syntax:
+    content: public SavedBeatsheet()
+    content.vb: Public Sub New()
+  overload: StoryCADLib.Models.SavedBeatsheet.#ctor*
+  nameWithType.vb: SavedBeatsheet.New()
+  fullName.vb: StoryCADLib.Models.SavedBeatsheet.New()
+  name.vb: New()
+- uid: StoryCADLib.Models.SavedBeatsheet.Description
+  commentId: P:StoryCADLib.Models.SavedBeatsheet.Description
+  id: Description
+  parent: StoryCADLib.Models.SavedBeatsheet
+  langs:
+  - csharp
+  - vb
+  name: Description
+  nameWithType: SavedBeatsheet.Description
+  fullName: StoryCADLib.Models.SavedBeatsheet.Description
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  summary: Descritpion of beatsheet.
+  example: []
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      public string Description { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: >-
+      <JsonInclude>
+
+      Public Property Description As String
+  overload: StoryCADLib.Models.SavedBeatsheet.Description*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+- uid: StoryCADLib.Models.SavedBeatsheet.Beats
+  commentId: P:StoryCADLib.Models.SavedBeatsheet.Beats
+  id: Beats
+  parent: StoryCADLib.Models.SavedBeatsheet
+  langs:
+  - csharp
+  - vb
+  name: Beats
+  nameWithType: SavedBeatsheet.Beats
+  fullName: StoryCADLib.Models.SavedBeatsheet.Beats
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  summary: Story beats
+  example: []
+  syntax:
+    content: >-
+      [JsonInclude]
+
+      public List<StructureBeatViewModel> Beats { get; set; }
+    parameters: []
+    return:
+      type: System.Collections.Generic.List{StoryCADLib.ViewModels.Tools.StructureBeatViewModel}
+    content.vb: >-
+      <JsonInclude>
+
+      Public Property Beats As List(Of StructureBeatViewModel)
+  overload: StoryCADLib.Models.SavedBeatsheet.Beats*
+  attributes:
+  - type: System.Text.Json.Serialization.JsonIncludeAttribute
+    ctor: System.Text.Json.Serialization.JsonIncludeAttribute.#ctor
+    arguments: []
+references:
+- uid: StoryCADLib.Models
+  commentId: N:StoryCADLib.Models
+  isExternal: true
+  href: StoryCADLib.html
+  name: StoryCADLib.Models
+  nameWithType: StoryCADLib.Models
+  fullName: StoryCADLib.Models
+  spec.csharp:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Models
+    name: Models
+    isExternal: true
+    href: StoryCADLib.Models.html
+  spec.vb:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Models
+    name: Models
+    isExternal: true
+    href: StoryCADLib.Models.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: StoryCADLib.Models.SavedBeatsheet.#ctor*
+  commentId: Overload:StoryCADLib.Models.SavedBeatsheet.#ctor
+  isExternal: true
+  href: StoryCADLib.Models.SavedBeatsheet.html#StoryCADLib_Models_SavedBeatsheet__ctor
+  name: SavedBeatsheet
+  nameWithType: SavedBeatsheet.SavedBeatsheet
+  fullName: StoryCADLib.Models.SavedBeatsheet.SavedBeatsheet
+  nameWithType.vb: SavedBeatsheet.New
+  fullName.vb: StoryCADLib.Models.SavedBeatsheet.New
+  name.vb: New
+- uid: StoryCADLib.Models.SavedBeatsheet.Description*
+  commentId: Overload:StoryCADLib.Models.SavedBeatsheet.Description
+  isExternal: true
+  href: StoryCADLib.Models.SavedBeatsheet.html#StoryCADLib_Models_SavedBeatsheet_Description
+  name: Description
+  nameWithType: SavedBeatsheet.Description
+  fullName: StoryCADLib.Models.SavedBeatsheet.Description
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: StoryCADLib.Models.SavedBeatsheet.Beats*
+  commentId: Overload:StoryCADLib.Models.SavedBeatsheet.Beats
+  isExternal: true
+  href: StoryCADLib.Models.SavedBeatsheet.html#StoryCADLib_Models_SavedBeatsheet_Beats
+  name: Beats
+  nameWithType: SavedBeatsheet.Beats
+  fullName: StoryCADLib.Models.SavedBeatsheet.Beats
+- uid: System.Collections.Generic.List{StoryCADLib.ViewModels.Tools.StructureBeatViewModel}
+  commentId: T:System.Collections.Generic.List{StoryCADLib.ViewModels.Tools.StructureBeatViewModel}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.List`1
+  name: List<StructureBeatViewModel>
+  nameWithType: List<StructureBeatViewModel>
+  fullName: System.Collections.Generic.List<StoryCADLib.ViewModels.Tools.StructureBeatViewModel>
+  nameWithType.vb: List(Of StructureBeatViewModel)
+  fullName.vb: System.Collections.Generic.List(Of StoryCADLib.ViewModels.Tools.StructureBeatViewModel)
+  name.vb: List(Of StructureBeatViewModel)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+  - name: <
+  - uid: StoryCADLib.ViewModels.Tools.StructureBeatViewModel
+    name: StructureBeatViewModel
+    isExternal: true
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: StoryCADLib.ViewModels.Tools.StructureBeatViewModel
+    name: StructureBeatViewModel
+    isExternal: true
+  - name: )
+- uid: System.Collections.Generic.List`1
+  commentId: T:System.Collections.Generic.List`1
+  isExternal: true
+  name: List<T>
+  nameWithType: List<T>
+  fullName: System.Collections.Generic.List<T>
+  nameWithType.vb: List(Of T)
+  fullName.vb: System.Collections.Generic.List(Of T)
+  name.vb: List(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.List`1
+    name: List
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic

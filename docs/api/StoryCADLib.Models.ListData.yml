@@ -1,0 +1,328 @@
+### YamlMime:ManagedReference
+items:
+- uid: StoryCADLib.Models.ListData
+  commentId: T:StoryCADLib.Models.ListData
+  id: ListData
+  parent: StoryCADLib.Models
+  children:
+  - StoryCADLib.Models.ListData.#ctor(StoryCADLib.Services.Logging.ILogService,StoryCADLib.DAL.JSONResourceLoader)
+  - StoryCADLib.Models.ListData.ListControlSource
+  langs:
+  - csharp
+  - vb
+  name: ListData
+  nameWithType: ListData
+  fullName: StoryCADLib.Models.ListData
+  type: Class
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  summary: >-
+    This stores the lists for StoryCAD's Lists.json.
+
+    Previously lists were stored in GlobalData.
+  example: []
+  syntax:
+    content: public class ListData
+    content.vb: Public Class ListData
+  inheritance:
+  - System.Object
+- uid: StoryCADLib.Models.ListData.ListControlSource
+  commentId: F:StoryCADLib.Models.ListData.ListControlSource
+  id: ListControlSource
+  parent: StoryCADLib.Models.ListData
+  langs:
+  - csharp
+  - vb
+  name: ListControlSource
+  nameWithType: ListData.ListControlSource
+  fullName: StoryCADLib.Models.ListData.ListControlSource
+  type: Field
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  example: []
+  syntax:
+    content: public Dictionary<string, ObservableCollection<string>> ListControlSource
+    return:
+      type: System.Collections.Generic.Dictionary{System.String,System.Collections.ObjectModel.ObservableCollection{System.String}}
+    content.vb: Public ListControlSource As Dictionary(Of String, ObservableCollection(Of String))
+- uid: StoryCADLib.Models.ListData.#ctor(StoryCADLib.Services.Logging.ILogService,StoryCADLib.DAL.JSONResourceLoader)
+  commentId: M:StoryCADLib.Models.ListData.#ctor(StoryCADLib.Services.Logging.ILogService,StoryCADLib.DAL.JSONResourceLoader)
+  id: '#ctor(StoryCADLib.Services.Logging.ILogService,StoryCADLib.DAL.JSONResourceLoader)'
+  parent: StoryCADLib.Models.ListData
+  langs:
+  - csharp
+  - vb
+  name: ListData(ILogService, JSONResourceLoader)
+  nameWithType: ListData.ListData(ILogService, JSONResourceLoader)
+  fullName: StoryCADLib.Models.ListData.ListData(StoryCADLib.Services.Logging.ILogService, StoryCADLib.DAL.JSONResourceLoader)
+  type: Constructor
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  syntax:
+    content: public ListData(ILogService log, JSONResourceLoader resourceLoader)
+    parameters:
+    - id: log
+      type: StoryCADLib.Services.Logging.ILogService
+    - id: resourceLoader
+      type: StoryCADLib.DAL.JSONResourceLoader
+    content.vb: Public Sub New(log As ILogService, resourceLoader As JSONResourceLoader)
+  overload: StoryCADLib.Models.ListData.#ctor*
+  nameWithType.vb: ListData.New(ILogService, JSONResourceLoader)
+  fullName.vb: StoryCADLib.Models.ListData.New(StoryCADLib.Services.Logging.ILogService, StoryCADLib.DAL.JSONResourceLoader)
+  name.vb: New(ILogService, JSONResourceLoader)
+references:
+- uid: StoryCADLib.Models
+  commentId: N:StoryCADLib.Models
+  isExternal: true
+  href: StoryCADLib.html
+  name: StoryCADLib.Models
+  nameWithType: StoryCADLib.Models
+  fullName: StoryCADLib.Models
+  spec.csharp:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Models
+    name: Models
+    isExternal: true
+    href: StoryCADLib.Models.html
+  spec.vb:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Models
+    name: Models
+    isExternal: true
+    href: StoryCADLib.Models.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Collections.Generic.Dictionary{System.String,System.Collections.ObjectModel.ObservableCollection{System.String}}
+  commentId: T:System.Collections.Generic.Dictionary{System.String,System.Collections.ObjectModel.ObservableCollection{System.String}}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.Dictionary`2
+  name: Dictionary<string, ObservableCollection<string>>
+  nameWithType: Dictionary<string, ObservableCollection<string>>
+  fullName: System.Collections.Generic.Dictionary<string, System.Collections.ObjectModel.ObservableCollection<string>>
+  nameWithType.vb: Dictionary(Of String, ObservableCollection(Of String))
+  fullName.vb: System.Collections.Generic.Dictionary(Of String, System.Collections.ObjectModel.ObservableCollection(Of String))
+  name.vb: Dictionary(Of String, ObservableCollection(Of String))
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Collections.ObjectModel.ObservableCollection`1
+    name: ObservableCollection
+    isExternal: true
+  - name: <
+  - uid: System.String
+    name: string
+    isExternal: true
+  - name: '>'
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+  - name: ','
+  - name: " "
+  - uid: System.Collections.ObjectModel.ObservableCollection`1
+    name: ObservableCollection
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+  - name: )
+  - name: )
+- uid: System.Collections.Generic.Dictionary`2
+  commentId: T:System.Collections.Generic.Dictionary`2
+  isExternal: true
+  name: Dictionary<TKey, TValue>
+  nameWithType: Dictionary<TKey, TValue>
+  fullName: System.Collections.Generic.Dictionary<TKey, TValue>
+  nameWithType.vb: Dictionary(Of TKey, TValue)
+  fullName.vb: System.Collections.Generic.Dictionary(Of TKey, TValue)
+  name.vb: Dictionary(Of TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.Dictionary`2
+    name: Dictionary
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: StoryCADLib.Models.ListData.#ctor*
+  commentId: Overload:StoryCADLib.Models.ListData.#ctor
+  isExternal: true
+  href: StoryCADLib.Models.ListData.html#StoryCADLib_Models_ListData__ctor_StoryCADLib_Services_Logging_ILogService_StoryCADLib_DAL_JSONResourceLoader_
+  name: ListData
+  nameWithType: ListData.ListData
+  fullName: StoryCADLib.Models.ListData.ListData
+  nameWithType.vb: ListData.New
+  fullName.vb: StoryCADLib.Models.ListData.New
+  name.vb: New
+- uid: StoryCADLib.Services.Logging.ILogService
+  commentId: T:StoryCADLib.Services.Logging.ILogService
+  parent: StoryCADLib.Services.Logging
+  isExternal: true
+  name: ILogService
+  nameWithType: ILogService
+  fullName: StoryCADLib.Services.Logging.ILogService
+- uid: StoryCADLib.DAL.JSONResourceLoader
+  commentId: T:StoryCADLib.DAL.JSONResourceLoader
+  parent: StoryCADLib.DAL
+  isExternal: true
+  name: JSONResourceLoader
+  nameWithType: JSONResourceLoader
+  fullName: StoryCADLib.DAL.JSONResourceLoader
+- uid: StoryCADLib.Services.Logging
+  commentId: N:StoryCADLib.Services.Logging
+  isExternal: true
+  href: StoryCADLib.html
+  name: StoryCADLib.Services.Logging
+  nameWithType: StoryCADLib.Services.Logging
+  fullName: StoryCADLib.Services.Logging
+  spec.csharp:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Services
+    name: Services
+    isExternal: true
+    href: StoryCADLib.Services.html
+  - name: .
+  - uid: StoryCADLib.Services.Logging
+    name: Logging
+    isExternal: true
+    href: StoryCADLib.Services.Logging.html
+  spec.vb:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Services
+    name: Services
+    isExternal: true
+    href: StoryCADLib.Services.html
+  - name: .
+  - uid: StoryCADLib.Services.Logging
+    name: Logging
+    isExternal: true
+    href: StoryCADLib.Services.Logging.html
+- uid: StoryCADLib.DAL
+  commentId: N:StoryCADLib.DAL
+  isExternal: true
+  href: StoryCADLib.html
+  name: StoryCADLib.DAL
+  nameWithType: StoryCADLib.DAL
+  fullName: StoryCADLib.DAL
+  spec.csharp:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.DAL
+    name: DAL
+    isExternal: true
+    href: StoryCADLib.DAL.html
+  spec.vb:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.DAL
+    name: DAL
+    isExternal: true
+    href: StoryCADLib.DAL.html

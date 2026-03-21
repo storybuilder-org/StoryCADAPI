@@ -1,0 +1,212 @@
+### YamlMime:ManagedReference
+items:
+- uid: StoryCADLib.Models.PersistableNode
+  commentId: T:StoryCADLib.Models.PersistableNode
+  id: PersistableNode
+  parent: StoryCADLib.Models
+  children:
+  - StoryCADLib.Models.PersistableNode.#ctor
+  - StoryCADLib.Models.PersistableNode.ParentUuid
+  - StoryCADLib.Models.PersistableNode.Uuid
+  langs:
+  - csharp
+  - vb
+  name: PersistableNode
+  nameWithType: PersistableNode
+  fullName: StoryCADLib.Models.PersistableNode
+  type: Class
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  summary: Node that can be persisted to JSON
+  example: []
+  syntax:
+    content: public class PersistableNode
+    content.vb: Public Class PersistableNode
+  inheritance:
+  - System.Object
+- uid: StoryCADLib.Models.PersistableNode.#ctor
+  commentId: M:StoryCADLib.Models.PersistableNode.#ctor
+  id: '#ctor'
+  parent: StoryCADLib.Models.PersistableNode
+  langs:
+  - csharp
+  - vb
+  name: PersistableNode()
+  nameWithType: PersistableNode.PersistableNode()
+  fullName: StoryCADLib.Models.PersistableNode.PersistableNode()
+  type: Constructor
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  syntax:
+    content: public PersistableNode()
+    content.vb: Public Sub New()
+  overload: StoryCADLib.Models.PersistableNode.#ctor*
+  nameWithType.vb: PersistableNode.New()
+  fullName.vb: StoryCADLib.Models.PersistableNode.New()
+  name.vb: New()
+- uid: StoryCADLib.Models.PersistableNode.Uuid
+  commentId: P:StoryCADLib.Models.PersistableNode.Uuid
+  id: Uuid
+  parent: StoryCADLib.Models.PersistableNode
+  langs:
+  - csharp
+  - vb
+  name: Uuid
+  nameWithType: PersistableNode.Uuid
+  fullName: StoryCADLib.Models.PersistableNode.Uuid
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  summary: UUID of node
+  example: []
+  syntax:
+    content: public Guid Uuid { get; set; }
+    parameters: []
+    return:
+      type: System.Guid
+    content.vb: Public Property Uuid As Guid
+  overload: StoryCADLib.Models.PersistableNode.Uuid*
+- uid: StoryCADLib.Models.PersistableNode.ParentUuid
+  commentId: P:StoryCADLib.Models.PersistableNode.ParentUuid
+  id: ParentUuid
+  parent: StoryCADLib.Models.PersistableNode
+  langs:
+  - csharp
+  - vb
+  name: ParentUuid
+  nameWithType: PersistableNode.ParentUuid
+  fullName: StoryCADLib.Models.PersistableNode.ParentUuid
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models
+  summary: UUID of parent node
+  example: []
+  syntax:
+    content: public Guid? ParentUuid { get; set; }
+    parameters: []
+    return:
+      type: System.Nullable{System.Guid}
+    content.vb: Public Property ParentUuid As Guid?
+  overload: StoryCADLib.Models.PersistableNode.ParentUuid*
+references:
+- uid: StoryCADLib.Models
+  commentId: N:StoryCADLib.Models
+  isExternal: true
+  href: StoryCADLib.html
+  name: StoryCADLib.Models
+  nameWithType: StoryCADLib.Models
+  fullName: StoryCADLib.Models
+  spec.csharp:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Models
+    name: Models
+    isExternal: true
+    href: StoryCADLib.Models.html
+  spec.vb:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Models
+    name: Models
+    isExternal: true
+    href: StoryCADLib.Models.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: StoryCADLib.Models.PersistableNode.#ctor*
+  commentId: Overload:StoryCADLib.Models.PersistableNode.#ctor
+  isExternal: true
+  href: StoryCADLib.Models.PersistableNode.html#StoryCADLib_Models_PersistableNode__ctor
+  name: PersistableNode
+  nameWithType: PersistableNode.PersistableNode
+  fullName: StoryCADLib.Models.PersistableNode.PersistableNode
+  nameWithType.vb: PersistableNode.New
+  fullName.vb: StoryCADLib.Models.PersistableNode.New
+  name.vb: New
+- uid: StoryCADLib.Models.PersistableNode.Uuid*
+  commentId: Overload:StoryCADLib.Models.PersistableNode.Uuid
+  isExternal: true
+  href: StoryCADLib.Models.PersistableNode.html#StoryCADLib_Models_PersistableNode_Uuid
+  name: Uuid
+  nameWithType: PersistableNode.Uuid
+  fullName: StoryCADLib.Models.PersistableNode.Uuid
+- uid: System.Guid
+  commentId: T:System.Guid
+  parent: System
+  isExternal: true
+  name: Guid
+  nameWithType: Guid
+  fullName: System.Guid
+- uid: StoryCADLib.Models.PersistableNode.ParentUuid*
+  commentId: Overload:StoryCADLib.Models.PersistableNode.ParentUuid
+  isExternal: true
+  href: StoryCADLib.Models.PersistableNode.html#StoryCADLib_Models_PersistableNode_ParentUuid
+  name: ParentUuid
+  nameWithType: PersistableNode.ParentUuid
+  fullName: StoryCADLib.Models.PersistableNode.ParentUuid
+- uid: System.Nullable{System.Guid}
+  commentId: T:System.Nullable{System.Guid}
+  parent: System
+  definition: System.Nullable`1
+  name: Guid?
+  nameWithType: Guid?
+  fullName: System.Guid?
+  spec.csharp:
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+  - name: '?'
+  spec.vb:
+  - uid: System.Guid
+    name: Guid
+    isExternal: true
+  - name: '?'
+- uid: System.Nullable`1
+  commentId: T:System.Nullable`1
+  isExternal: true
+  name: Nullable<T>
+  nameWithType: Nullable<T>
+  fullName: System.Nullable<T>
+  nameWithType.vb: Nullable(Of T)
+  fullName.vb: System.Nullable(Of T)
+  name.vb: Nullable(Of T)
+  spec.csharp:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )

@@ -1,0 +1,235 @@
+### YamlMime:ManagedReference
+items:
+- uid: StoryCADLib.Models.Tools.KeyQuestionModel
+  commentId: T:StoryCADLib.Models.Tools.KeyQuestionModel
+  id: KeyQuestionModel
+  parent: StoryCADLib.Models.Tools
+  children:
+  - StoryCADLib.Models.Tools.KeyQuestionModel.#ctor
+  - StoryCADLib.Models.Tools.KeyQuestionModel.Element
+  - StoryCADLib.Models.Tools.KeyQuestionModel.Key
+  - StoryCADLib.Models.Tools.KeyQuestionModel.Question
+  - StoryCADLib.Models.Tools.KeyQuestionModel.Topic
+  langs:
+  - csharp
+  - vb
+  name: KeyQuestionModel
+  nameWithType: KeyQuestionModel
+  fullName: StoryCADLib.Models.Tools.KeyQuestionModel
+  type: Class
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  syntax:
+    content: 'public class KeyQuestionModel : ObservableObject'
+    content.vb: Public Class KeyQuestionModel Inherits ObservableObject
+  inheritance:
+  - System.Object
+- uid: StoryCADLib.Models.Tools.KeyQuestionModel.#ctor
+  commentId: M:StoryCADLib.Models.Tools.KeyQuestionModel.#ctor
+  id: '#ctor'
+  parent: StoryCADLib.Models.Tools.KeyQuestionModel
+  langs:
+  - csharp
+  - vb
+  name: KeyQuestionModel()
+  nameWithType: KeyQuestionModel.KeyQuestionModel()
+  fullName: StoryCADLib.Models.Tools.KeyQuestionModel.KeyQuestionModel()
+  type: Constructor
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  syntax:
+    content: public KeyQuestionModel()
+    content.vb: Public Sub New()
+  overload: StoryCADLib.Models.Tools.KeyQuestionModel.#ctor*
+  nameWithType.vb: KeyQuestionModel.New()
+  fullName.vb: StoryCADLib.Models.Tools.KeyQuestionModel.New()
+  name.vb: New()
+- uid: StoryCADLib.Models.Tools.KeyQuestionModel.Key
+  commentId: P:StoryCADLib.Models.Tools.KeyQuestionModel.Key
+  id: Key
+  parent: StoryCADLib.Models.Tools.KeyQuestionModel
+  langs:
+  - csharp
+  - vb
+  name: Key
+  nameWithType: KeyQuestionModel.Key
+  fullName: StoryCADLib.Models.Tools.KeyQuestionModel.Key
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  syntax:
+    content: public string Key { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property Key As String
+  overload: StoryCADLib.Models.Tools.KeyQuestionModel.Key*
+- uid: StoryCADLib.Models.Tools.KeyQuestionModel.Element
+  commentId: P:StoryCADLib.Models.Tools.KeyQuestionModel.Element
+  id: Element
+  parent: StoryCADLib.Models.Tools.KeyQuestionModel
+  langs:
+  - csharp
+  - vb
+  name: Element
+  nameWithType: KeyQuestionModel.Element
+  fullName: StoryCADLib.Models.Tools.KeyQuestionModel.Element
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  syntax:
+    content: public string Element { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property Element As String
+  overload: StoryCADLib.Models.Tools.KeyQuestionModel.Element*
+- uid: StoryCADLib.Models.Tools.KeyQuestionModel.Topic
+  commentId: P:StoryCADLib.Models.Tools.KeyQuestionModel.Topic
+  id: Topic
+  parent: StoryCADLib.Models.Tools.KeyQuestionModel
+  langs:
+  - csharp
+  - vb
+  name: Topic
+  nameWithType: KeyQuestionModel.Topic
+  fullName: StoryCADLib.Models.Tools.KeyQuestionModel.Topic
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  syntax:
+    content: public string Topic { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property Topic As String
+  overload: StoryCADLib.Models.Tools.KeyQuestionModel.Topic*
+- uid: StoryCADLib.Models.Tools.KeyQuestionModel.Question
+  commentId: P:StoryCADLib.Models.Tools.KeyQuestionModel.Question
+  id: Question
+  parent: StoryCADLib.Models.Tools.KeyQuestionModel
+  langs:
+  - csharp
+  - vb
+  name: Question
+  nameWithType: KeyQuestionModel.Question
+  fullName: StoryCADLib.Models.Tools.KeyQuestionModel.Question
+  type: Property
+  assemblies:
+  - StoryCADLib
+  namespace: StoryCADLib.Models.Tools
+  syntax:
+    content: public string Question { get; set; }
+    parameters: []
+    return:
+      type: System.String
+    content.vb: Public Property Question As String
+  overload: StoryCADLib.Models.Tools.KeyQuestionModel.Question*
+references:
+- uid: StoryCADLib.Models.Tools
+  commentId: N:StoryCADLib.Models.Tools
+  isExternal: true
+  href: StoryCADLib.html
+  name: StoryCADLib.Models.Tools
+  nameWithType: StoryCADLib.Models.Tools
+  fullName: StoryCADLib.Models.Tools
+  spec.csharp:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Models
+    name: Models
+    isExternal: true
+    href: StoryCADLib.Models.html
+  - name: .
+  - uid: StoryCADLib.Models.Tools
+    name: Tools
+    isExternal: true
+    href: StoryCADLib.Models.Tools.html
+  spec.vb:
+  - uid: StoryCADLib
+    name: StoryCADLib
+    isExternal: true
+    href: StoryCADLib.html
+  - name: .
+  - uid: StoryCADLib.Models
+    name: Models
+    isExternal: true
+    href: StoryCADLib.Models.html
+  - name: .
+  - uid: StoryCADLib.Models.Tools
+    name: Tools
+    isExternal: true
+    href: StoryCADLib.Models.Tools.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: StoryCADLib.Models.Tools.KeyQuestionModel.#ctor*
+  commentId: Overload:StoryCADLib.Models.Tools.KeyQuestionModel.#ctor
+  isExternal: true
+  href: StoryCADLib.Models.Tools.KeyQuestionModel.html#StoryCADLib_Models_Tools_KeyQuestionModel__ctor
+  name: KeyQuestionModel
+  nameWithType: KeyQuestionModel.KeyQuestionModel
+  fullName: StoryCADLib.Models.Tools.KeyQuestionModel.KeyQuestionModel
+  nameWithType.vb: KeyQuestionModel.New
+  fullName.vb: StoryCADLib.Models.Tools.KeyQuestionModel.New
+  name.vb: New
+- uid: StoryCADLib.Models.Tools.KeyQuestionModel.Key*
+  commentId: Overload:StoryCADLib.Models.Tools.KeyQuestionModel.Key
+  isExternal: true
+  href: StoryCADLib.Models.Tools.KeyQuestionModel.html#StoryCADLib_Models_Tools_KeyQuestionModel_Key
+  name: Key
+  nameWithType: KeyQuestionModel.Key
+  fullName: StoryCADLib.Models.Tools.KeyQuestionModel.Key
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: StoryCADLib.Models.Tools.KeyQuestionModel.Element*
+  commentId: Overload:StoryCADLib.Models.Tools.KeyQuestionModel.Element
+  isExternal: true
+  href: StoryCADLib.Models.Tools.KeyQuestionModel.html#StoryCADLib_Models_Tools_KeyQuestionModel_Element
+  name: Element
+  nameWithType: KeyQuestionModel.Element
+  fullName: StoryCADLib.Models.Tools.KeyQuestionModel.Element
+- uid: StoryCADLib.Models.Tools.KeyQuestionModel.Topic*
+  commentId: Overload:StoryCADLib.Models.Tools.KeyQuestionModel.Topic
+  isExternal: true
+  href: StoryCADLib.Models.Tools.KeyQuestionModel.html#StoryCADLib_Models_Tools_KeyQuestionModel_Topic
+  name: Topic
+  nameWithType: KeyQuestionModel.Topic
+  fullName: StoryCADLib.Models.Tools.KeyQuestionModel.Topic
+- uid: StoryCADLib.Models.Tools.KeyQuestionModel.Question*
+  commentId: Overload:StoryCADLib.Models.Tools.KeyQuestionModel.Question
+  isExternal: true
+  href: StoryCADLib.Models.Tools.KeyQuestionModel.html#StoryCADLib_Models_Tools_KeyQuestionModel_Question
+  name: Question
+  nameWithType: KeyQuestionModel.Question
+  fullName: StoryCADLib.Models.Tools.KeyQuestionModel.Question

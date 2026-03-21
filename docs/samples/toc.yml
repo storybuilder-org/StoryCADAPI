@@ -1,0 +1,12 @@
+- name: Overview
+  href: index.md
+- name: Story Graph Basics
+  href: story-graph-basics.md
+- name: Story Metrics
+  href: story-metrics.md
+- name: Consistency Validation
+  href: consistency-validation.md
+- name: Story Diagnostic Agent
+  href: story-diagnostic-agent.md
+- name: Automated Critique
+  href: automated-critique.md

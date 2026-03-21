@@ -4,8 +4,11 @@ using Microsoft.SemanticKernel.Connectors.OpenAI;
 using StoryCAD.Services.API;
 using StoryCAD.Services.IoC;
 
-// Set Model and Key
-var builder = Kernel.CreateBuilder().AddOpenAIChatCompletion("gpt-4o-mini", "API Key");
+// Set Model and Key from environment variables
+var apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+    ?? throw new InvalidOperationException("OPENAI_API_KEY environment variable is required. Set it before running.");
+var modelId = Environment.GetEnvironmentVariable("OPENAI_MODEL") ?? "gpt-4o-mini";
+var builder = Kernel.CreateBuilder().AddOpenAIChatCompletion(modelId, apiKey);
 
 // Build the kernel
 Kernel kernel = builder.Build();

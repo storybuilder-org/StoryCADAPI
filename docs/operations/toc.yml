@@ -1,0 +1,6 @@
+- name: Search Operations
+  href: search.md
+- name: Resource Workflows
+  href: resource-workflows.md
+- name: Beat Sheet Operations
+  href: beat-sheets.md
