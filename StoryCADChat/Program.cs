@@ -1,8 +1,8 @@
 ﻿using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
-using StoryCAD.Services.API;
-using StoryCAD.Services.IoC;
+using StoryCADLib.Services.API;
+using StoryCADLib.Services.IoC;
 
 // Set Model and Key from environment variables
 var apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY")
@@ -13,10 +13,11 @@ var builder = Kernel.CreateBuilder().AddOpenAIChatCompletion(modelId, apiKey);
 // Build the kernel
 Kernel kernel = builder.Build();
 var chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
-BootStrapper.Initialise();
+BootStrapper.Initialise(headless: true);
+var api = CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<StoryCADApi>();
 
 // Add the StoryCAD SK plugin
-kernel.Plugins.AddFromType<SemanticKernelApi>("StoryCAD");
+kernel.ImportPluginFromObject(api, "StoryCAD");
 
 // Enable planning — Auto() lets the LLM call any registered function without user approval.
 // Fine for a sample app, but production code should add filters for destructive operations.
@@ -35,8 +36,8 @@ do
     // Collect user input
     Console.Write("User > ");
     userInput = Console.ReadLine();
-    if (string.IsNullOrWhiteSpace(userInput))
-        continue;
+    if (userInput == null) break;
+    if (userInput.Trim().Length == 0) continue;
 
     // Add user input
     history.AddUserMessage(userInput);
