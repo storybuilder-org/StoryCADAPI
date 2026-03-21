@@ -6,7 +6,7 @@ This section documents the StoryCADLib public API.
 
 | Class | Description |
 |-------|-------------|
-| [SemanticKernelApi](semantic-kernel-api.md) | Main API for story outline operations |
+| [StoryCADApi](storycad-api.md) | Main API for story outline operations |
 | [OperationResult\<T\>](operation-result.md) | Result wrapper for all API calls |
 
 ## Quick Reference by Category
@@ -32,7 +32,7 @@ This section documents the StoryCADLib public API.
 | `UpdateStoryElement` | Replace an entire element |
 | `MoveElement` | Move element to a new parent in the outline tree |
 
-> `AddElement` has a second overload that accepts a properties dictionary and optional GUID override. See [SemanticKernelApi](semantic-kernel-api.md) for details.
+> `AddElement` has a second overload that accepts a properties dictionary and optional GUID override. See [StoryCADApi](storycad-api.md) for details.
 
 ### Search Operations
 | Method | Description |

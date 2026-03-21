@@ -13,7 +13,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 BootStrapper.Initialise(headless: true);
 
 // 2. Get the API instance
-var api = Ioc.Default.GetRequiredService<SemanticKernelApi>();
+var api = Ioc.Default.GetRequiredService<StoryCADApi>();
 
 // 3. Create an empty outline
 var result = await api.CreateEmptyOutline("Hello World", "Developer", "0");
@@ -45,10 +45,10 @@ This sets up the dependency injection container with all StoryCADLib services. T
 ### Getting the API
 
 ```csharp
-var api = Ioc.Default.GetRequiredService<SemanticKernelApi>();
+var api = Ioc.Default.GetRequiredService<StoryCADApi>();
 ```
 
-The `SemanticKernelApi` class is the main entry point for all API operations. It's registered in the DI container by `BootStrapper.Initialise()`.
+The `StoryCADApi` class is the main entry point for all API operations. It's registered in the DI container by `BootStrapper.Initialise()`.
 
 ### Creating an Outline
 

@@ -7,7 +7,7 @@ This guide covers breaking changes when upgrading from StoryCADLib 3.x to 4.x.
 | Area | 3.x | 4.x | Action |
 |------|-----|-----|--------|
 | Namespace | `StoryCAD.Services.API` | `StoryCADLib.Services.API` | Update `using` statements |
-| Class name | `SemanticKernelAPI` | `SemanticKernelApi` | Rename (lowercase `pi`) |
+| Class name | `SemanticKernelAPI` | `StoryCADApi` | Renamed class |
 | Target framework | `net8.0-windows10.0.22621` | `net10.0-desktop` or `net10.0-windows10.0.22621` | Update TFM |
 | Platform | Windows only | Windows, macOS, Linux | No code change (but more options) |
 | New element type | — | `StoryWorld` | Handle in element iteration |
@@ -35,7 +35,7 @@ using StoryCADLib.Models;
 
 ## Class Rename
 
-The API class was renamed for .NET naming conventions.
+The API class was renamed from `SemanticKernelAPI` to `StoryCADApi`. The original name was misleading — the API manipulates story outlines and does not call Semantic Kernel. Semantic Kernel is one consumer of the API (via `[KernelFunction]` attributes), not a dependency.
 
 **Before (3.x)**:
 
@@ -46,7 +46,7 @@ var api = Ioc.Default.GetRequiredService<SemanticKernelAPI>();
 **After (4.x)**:
 
 ```csharp
-var api = Ioc.Default.GetRequiredService<SemanticKernelApi>();
+var api = Ioc.Default.GetRequiredService<StoryCADApi>();
 ```
 
 ## Target Framework
@@ -148,7 +148,7 @@ If you need to share files between 3.x and 4.x users, avoid adding `StoryWorld` 
 ## Migration Checklist
 
 - [ ] Update all `using StoryCAD.` statements to `using StoryCADLib.`
-- [ ] Rename `SemanticKernelAPI` to `SemanticKernelApi`
+- [ ] Rename `SemanticKernelAPI` to `StoryCADApi`
 - [ ] Update `.csproj` target framework to `net10.0-desktop` or `net10.0-windows10.0.22621`
 - [ ] Update `PackageReference` to `StoryCADLib` version `4.*`
 - [ ] Add `StoryItemType.StoryWorld` case to any element type switches

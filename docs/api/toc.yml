@@ -1,6 +1,6 @@
 - name: Overview
   href: index.md
-- name: SemanticKernelApi
-  href: semantic-kernel-api.md
+- name: StoryCADApi
+  href: storycad-api.md
 - name: OperationResult<T>
   href: operation-result.md

@@ -200,7 +200,7 @@ Build a full story structure from a beat sheet template:
 ```csharp
 // Initialize
 BootStrapper.Initialise(headless: true);
-var api = Ioc.Default.GetRequiredService<SemanticKernelApi>();
+var api = Ioc.Default.GetRequiredService<StoryCADApi>();
 
 // Create outline
 var outline = await api.CreateEmptyOutline("Mystery Novel", "Author", "0");

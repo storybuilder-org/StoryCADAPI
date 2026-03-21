@@ -38,7 +38,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 BootStrapper.Initialise(headless: true);
 
 // Get the API instance from the DI container
-var api = Ioc.Default.GetRequiredService<SemanticKernelApi>();
+var api = Ioc.Default.GetRequiredService<StoryCADApi>();
 ```
 
 ### Headless Mode

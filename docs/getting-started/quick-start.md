@@ -26,7 +26,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 
 // Initialize StoryCADLib
 BootStrapper.Initialise(headless: true);
-var api = Ioc.Default.GetRequiredService<SemanticKernelApi>();
+var api = Ioc.Default.GetRequiredService<StoryCADApi>();
 
 // Create a new outline
 var outlineResult = await api.CreateEmptyOutline("The Hero's Journey", "Your Name", "0");
