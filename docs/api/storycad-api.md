@@ -221,9 +221,11 @@ if (result.IsSuccess)
 
 ---
 
-### AddElement (with properties)
+### AddElementWithProperties
 
 Creates a new story element with initial properties and an optional GUID override.
+
+> **Semantic Kernel name:** This method is registered as `AddElementWithProperties` via `[KernelFunction("AddElementWithProperties")]` to distinguish it from the basic `AddElement` overload in SK plugin registration.
 
 ```csharp
 public OperationResult<Guid> AddElement(

@@ -25,14 +25,13 @@ This section documents the StoryCADLib public API.
 | `GetElementsByType` | Get elements of a specific type |
 | `GetStoryElement` | Get a specific element by GUID |
 | `AddElement` | Create a new story element |
+| `AddElementWithProperties` | Create element with initial properties and optional GUID override |
 | `UpdateElementProperty` | Update a single property |
 | `UpdateElementProperties` | Update multiple properties |
 | `DeleteElement` | Move element to trash |
 | `GetElement` | Get element with all fields as serialized object |
 | `UpdateStoryElement` | Replace an entire element |
 | `MoveElement` | Move element to a new parent in the outline tree |
-
-> `AddElement` has a second overload that accepts a properties dictionary and optional GUID override. See [StoryCADApi](storycad-api.md) for details.
 
 ### Search Operations
 | Method | Description |

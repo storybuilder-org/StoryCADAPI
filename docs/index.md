@@ -35,6 +35,7 @@ await api.WriteOutline("my-story.stbx");
 - **Structure Tools** - Beat sheets, master plots, dramatic situations
 - **Headless Mode** - Use in console apps, web APIs, batch processing
 - **Semantic Kernel Ready** - Pre-built functions for AI agent integration
+- **MCP Server** - Expose the API to Claude Desktop, Claude Code, and other MCP clients
 
 ## Getting Started
 
@@ -47,7 +48,7 @@ await api.WriteOutline("my-story.stbx");
 - [Concepts](concepts/story-model.md) - Understand the story model, element types, and resource data
 - [Operations](operations/search.md) - Search, resource workflows, and beat sheet operations
 - [Samples](samples/index.md) - Working code examples
-- [Advanced](advanced/semantic-kernel.md) - Semantic Kernel integration and migration guide
+- [Advanced](advanced/semantic-kernel.md) - Semantic Kernel integration, MCP server, and migration guide
 - [API Reference](api/index.md) - Complete technical documentation
 
 ## About StoryCAD

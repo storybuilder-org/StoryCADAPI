@@ -1,4 +1,6 @@
 - name: Semantic Kernel Integration
   href: semantic-kernel.md
+- name: MCP Server
+  href: mcp-server.md
 - name: "Migration Guide: 3.x to 4.x"
   href: migration-3x-to-4x.md
