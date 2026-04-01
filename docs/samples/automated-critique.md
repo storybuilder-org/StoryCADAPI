@@ -5,7 +5,7 @@ Uses Semantic Kernel and an LLM to evaluate a story outline against five craft c
 > [!NOTE]
 > This sample requires an OpenAI API key. Set the `OPENAI_API_KEY` environment variable before running.
 
-[View source on GitHub](https://github.com/storybuilder-org/StoryCADAPI/tree/main/AutomatedCritique)
+[View source on GitHub](https://github.com/storybuilder-org/StoryCADAPI/tree/main/samples/AutomatedCritique)
 
 ## What It Demonstrates
 
@@ -51,7 +51,7 @@ This sample introduces two API methods not used elsewhere: `GetKeyQuestionElemen
 ```bash
 export OPENAI_API_KEY="your-key-here"
 
-cd AutomatedCritique
+cd samples/AutomatedCritique
 dotnet build -f net10.0-desktop
 dotnet run -f net10.0-desktop
 ```

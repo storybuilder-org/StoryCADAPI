@@ -88,16 +88,16 @@ await api.WriteOutline("my-story.stbx");
 
 | Sample | Description |
 |--------|-------------|
-| [StoryGraphBasics](StoryGraphBasics/) | Create, populate, link, save and reload an outline (10 API methods) |
-| [StoryMetrics](StoryMetrics/) | Analytics dashboard: element counts, character appearances, setting usage |
-| [ConsistencyValidation](ConsistencyValidation/) | 6 validation checks detecting story issues (orphan characters, unused settings, etc.) |
+| [StoryGraphBasics](samples/StoryGraphBasics/) | Create, populate, link, save and reload an outline (10 API methods) |
+| [StoryMetrics](samples/StoryMetrics/) | Analytics dashboard: element counts, character appearances, setting usage |
+| [ConsistencyValidation](samples/ConsistencyValidation/) | 6 validation checks detecting story issues (orphan characters, unused settings, etc.) |
 
 ### Semantic Kernel Samples (require `OPENAI_API_KEY`)
 
 | Sample | Description |
 |--------|-------------|
-| [StoryDiagnosticAgent](StoryDiagnosticAgent/) | LLM-powered diagnosis of pacing, passive protagonist, plot holes |
-| [AutomatedCritique](AutomatedCritique/) | LLM scores an outline against 5 craft criteria with rubric |
+| [StoryDiagnosticAgent](samples/StoryDiagnosticAgent/) | LLM-powered diagnosis of pacing, passive protagonist, plot holes |
+| [AutomatedCritique](samples/AutomatedCritique/) | LLM scores an outline against 5 craft criteria with rubric |
 
 ### Other
 
@@ -106,12 +106,13 @@ await api.WriteOutline("my-story.stbx");
 | [StoryCADChat](StoryCADChat/) | Console app for natural language interaction with outlines via LLM |
 | [HeadlessTest](HeadlessTest/) | Verification harness: 7-step round-trip test of headless API |
 
+
 ### Building and Running Samples
 
 All samples target `net10.0-desktop` and use Uno SDK:
 
 ```bash
-cd StoryGraphBasics
+cd samples/StoryGraphBasics
 dotnet build -f net10.0-desktop
 dotnet run -f net10.0-desktop
 ```

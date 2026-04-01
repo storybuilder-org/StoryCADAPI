@@ -5,7 +5,7 @@ The foundational "hello world" for the StoryCADLib API. This sample walks throug
 > [!TIP]
 > If you're new to StoryCADLib, start here. Every other sample builds on the patterns introduced in this one.
 
-[View source on GitHub](https://github.com/storybuilder-org/StoryCADAPI/tree/main/StoryGraphBasics)
+[View source on GitHub](https://github.com/storybuilder-org/StoryCADAPI/tree/main/samples/StoryGraphBasics)
 
 ## What It Demonstrates
 
@@ -33,7 +33,7 @@ This covers the core create-link-query-persist workflow that every StoryCADLib c
 ## How to Run
 
 ```bash
-cd StoryGraphBasics
+cd samples/StoryGraphBasics
 dotnet build -f net10.0-desktop
 dotnet run -f net10.0-desktop
 ```

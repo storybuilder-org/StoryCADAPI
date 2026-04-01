@@ -27,7 +27,7 @@ The two Semantic Kernel samples also need:
 Same pattern for all of them:
 
 ```bash
-cd <sample-folder>
+cd samples/<sample-folder>
 dotnet build -f net10.0-desktop
 dotnet run -f net10.0-desktop
 ```
@@ -40,14 +40,15 @@ export OPENAI_API_KEY="your-key-here"
 
 ## Repository Layout
 
-Each sample lives in its own folder at the root of the [StoryCADAPI](https://github.com/storybuilder-org/StoryCADAPI) repository. You'll find four files inside:
+Each sample lives in its own folder under the `samples/` directory of the [StoryCADAPI](https://github.com/storybuilder-org/StoryCADAPI) repository. You'll find four files inside:
 
 ```
-SampleName/
-  global.json          # SDK and Uno.Sdk versions
-  SampleName.csproj    # Uno.Sdk console app targeting net10.0-desktop
-  Program.cs           # Complete sample code
-  README.md            # Quick reference
+samples/
+  SampleName/
+    global.json          # SDK and Uno.Sdk versions
+    SampleName.csproj    # Uno.Sdk console app targeting net10.0-desktop
+    Program.cs           # Complete sample code
+    README.md            # Quick reference
 ```
 
 ## API Coverage

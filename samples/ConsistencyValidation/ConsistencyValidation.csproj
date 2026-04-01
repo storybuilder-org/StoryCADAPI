@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../StoryCAD/StoryCADLib/StoryCADLib.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.SemanticKernel" Version="1.70.0" />
+    <ProjectReference Include="../../../StoryCAD/StoryCADLib/StoryCADLib.csproj" />
   </ItemGroup>
 </Project>

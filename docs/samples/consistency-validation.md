@@ -2,7 +2,7 @@
 
 Creates an outline with intentional structural problems and runs six validation checks against it, printing a quality report. This sample demonstrates how to build automated validation tools using the StoryCADLib query APIs.
 
-[View source on GitHub](https://github.com/storybuilder-org/StoryCADAPI/tree/main/ConsistencyValidation)
+[View source on GitHub](https://github.com/storybuilder-org/StoryCADAPI/tree/main/samples/ConsistencyValidation)
 
 ## What It Demonstrates
 
@@ -36,7 +36,7 @@ The validation logic combines `GetElementsByType` to enumerate elements, `GetSto
 ## How to Run
 
 ```bash
-cd ConsistencyValidation
+cd samples/ConsistencyValidation
 dotnet build -f net10.0-desktop
 dotnet run -f net10.0-desktop
 ```

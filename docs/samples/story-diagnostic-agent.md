@@ -5,7 +5,7 @@ Uses Semantic Kernel and an LLM to analyze a story outline and produce a diagnos
 > [!NOTE]
 > This sample requires an OpenAI API key. Set the `OPENAI_API_KEY` environment variable before running.
 
-[View source on GitHub](https://github.com/storybuilder-org/StoryCADAPI/tree/main/StoryDiagnosticAgent)
+[View source on GitHub](https://github.com/storybuilder-org/StoryCADAPI/tree/main/samples/StoryDiagnosticAgent)
 
 ## What It Demonstrates
 
@@ -39,7 +39,7 @@ The key pattern is straightforward: extract structured data from the story graph
 ```bash
 export OPENAI_API_KEY="your-key-here"
 
-cd StoryDiagnosticAgent
+cd samples/StoryDiagnosticAgent
 dotnet build -f net10.0-desktop
 dotnet run -f net10.0-desktop
 ```

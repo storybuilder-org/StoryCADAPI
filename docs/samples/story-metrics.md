@@ -2,7 +2,7 @@
 
 Builds a richer story outline and computes analytics from it, displaying a formatted dashboard of story metrics. This sample shows how to use the query and inspection APIs to extract meaningful statistics from an outline.
 
-[View source on GitHub](https://github.com/storybuilder-org/StoryCADAPI/tree/main/StoryMetrics)
+[View source on GitHub](https://github.com/storybuilder-org/StoryCADAPI/tree/main/samples/StoryMetrics)
 
 ## What It Demonstrates
 
@@ -34,7 +34,7 @@ This demonstrates how to combine `GetElementsByType`, `GetStoryElement`, and `Se
 ## How to Run
 
 ```bash
-cd StoryMetrics
+cd samples/StoryMetrics
 dotnet build -f net10.0-desktop
 dotnet run -f net10.0-desktop
 ```

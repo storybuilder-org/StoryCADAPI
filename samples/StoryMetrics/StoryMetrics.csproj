@@ -7,6 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../StoryCAD/StoryCADLib/StoryCADLib.csproj" />
+    <ProjectReference Include="../../../StoryCAD/StoryCADLib/StoryCADLib.csproj" />
   </ItemGroup>
 </Project>

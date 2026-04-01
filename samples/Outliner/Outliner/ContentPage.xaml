@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="Outliner.ContentPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Width="600"
+    Height="800">
+
+        <!-- Top Area: Existing Controls -->
+        <StackPanel Orientation="Vertical" Margin="10">
+            <!-- Old Buttons -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
+                <Button Content="Read Story" Command="{x:Bind PageVm.ReadStoryCommand}" Margin="5"/>
+                <Button Content="Output File" Command="{x:Bind PageVm.OutputFileCommand}" Margin="5"/>
+                <Button Content="Create Outline" Command="{x:Bind PageVm.CreateOutlineCommand}" Margin="5"/>
+            </StackPanel>
+            <!-- Display area for story content -->
+            <TextBlock Text="Story Content:" FontWeight="Bold" Margin="5"/>
+            <ScrollViewer Height="150" Margin="5" VerticalScrollBarVisibility="Auto">
+                <TextBox Text="{x:Bind PageVm.ContentText, Mode=TwoWay}"
+                         TextWrapping="Wrap"/>
+            </ScrollViewer>
+
+            <!-- AI Output Display (read‑only now) -->
+            <TextBlock Text="AI Output:" FontWeight="Bold" Margin="5,10,0,0"/>
+            <ScrollViewer Height="300" VerticalScrollBarVisibility="Auto">
+                <TextBox 
+                    Text="{x:Bind PageVm.ChatHistoryText, Mode=OneWay}" 
+                    TextWrapping="Wrap"
+                    IsReadOnly="True"
+                    Background="Transparent"
+                    BorderThickness="0"/>
+            </ScrollViewer>
+          
+        </StackPanel>
+</Page>
+
