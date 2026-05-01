@@ -1,10 +1,9 @@
 ﻿using System;
-using Microsoft.UI.Xaml;
-using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
-using StoryCAD.Services.IoC;
-using StoryCAD.Models;
-using StoryCAD.Services.API;
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.ChatCompletion;
+using Microsoft.UI.Xaml;
+using StoryCADLib.Services.IoC;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -31,17 +30,20 @@ namespace Outliner
 
         private void InitializeDependencyInjection()
         {
-            var services = new ServiceCollection();
+            // Register Semantic Kernel services before BootStrapper builds the provider
+            var apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+                ?? throw new InvalidOperationException("OPENAI_API_KEY environment variable is not set.");
 
-            // Register services
-            services.AddSingleton<AppState>();
-            services.AddSingleton<StoryCADApi>();
+            var modelId = Environment.GetEnvironmentVariable("OPENAI_MODEL") ?? "gpt-4o";
 
-            // Build service provider
-            var serviceProvider = services.BuildServiceProvider();
+            var kernel = Kernel.CreateBuilder()
+                .AddOpenAIChatCompletion(modelId, apiKey)
+                .Build();
 
-            // Configure the IoC container
-            Ioc.Default.ConfigureServices(serviceProvider);
+            BootStrapper.Services.AddSingleton(kernel);
+            BootStrapper.Services.AddSingleton(kernel.GetRequiredService<IChatCompletionService>());
+
+            BootStrapper.Initialise(headless: false);
         }
 
         /// <summary>

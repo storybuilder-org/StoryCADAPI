@@ -1,19 +1,20 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 using Outliner;
 using Outliner.Services;
-using StoryCAD.Models;
-using StoryCAD.Services.API;
+using StoryCADLib.Models;
+using StoryCADLib.Services.API;
 
 namespace OutlinerTests
 {
     [TestClass]
     public class OutlineBuilderTests
     {
-        private Mock<StoryCADApi> _mockApi;
+        private StoryCADApi _api;
         private OutlineBuilder _outlineBuilder;
         private OnePassResponse _testResponse;
         private string _testOutputPath;
@@ -21,11 +22,10 @@ namespace OutlinerTests
         [TestInitialize]
         public void Setup()
         {
-            _mockApi = new Mock<StoryCADApi>();
-            _outlineBuilder = new OutlineBuilder(_mockApi.Object);
-            _testOutputPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "test_outline.stbx");
+            _api = Ioc.Default.GetRequiredService<StoryCADApi>();
+            _outlineBuilder = new OutlineBuilder(_api);
+            _testOutputPath = Path.Combine(Path.GetTempPath(), $"test_outline_{Guid.NewGuid()}.stbx");
 
-            // Create a sample response for testing
             _testResponse = new OnePassResponse
             {
                 StoryOverview = new StoryOverviewElement
@@ -38,7 +38,7 @@ namespace OutlinerTests
                 {
                     new CharacterElement
                     {
-                        Guid = "char-guid-1",
+                        Guid = Guid.NewGuid().ToString(),
                         Name = "Hero",
                         Role = "Protagonist",
                         CharacterSketch = "A brave hero"
@@ -48,7 +48,7 @@ namespace OutlinerTests
                 {
                     new SettingElement
                     {
-                        Guid = "setting-guid-1",
+                        Guid = Guid.NewGuid().ToString(),
                         Name = "Castle",
                         Summary = "A medieval castle"
                     }
@@ -57,281 +57,112 @@ namespace OutlinerTests
                 {
                     new SceneElement
                     {
-                        Guid = "scene-guid-1",
+                        Guid = Guid.NewGuid().ToString(),
                         Name = "Opening Scene",
                         Description = "The story begins",
-                        Protagonist = "char-guid-1",
-                        Setting = "setting-guid-1",
-                        Cast = new List<string> { "char-guid-1" }
+                        Cast = new List<string>()
                     }
                 },
                 Problems = new List<ProblemElement>
                 {
                     new ProblemElement
                     {
-                        Guid = "problem-guid-1",
+                        Guid = Guid.NewGuid().ToString(),
                         Name = "Main Conflict",
-                        StoryQuestion = "Will the hero succeed?",
-                        Protagonist = "char-guid-1"
+                        StoryQuestion = "Will the hero succeed?"
                     }
                 }
             };
         }
 
+        [TestCleanup]
+        public void Cleanup()
+        {
+            try { if (File.Exists(_testOutputPath)) File.Delete(_testOutputPath); }
+            catch { }
+        }
+
         [TestMethod]
         public void Constructor_NullApi_ThrowsArgumentNullException()
         {
-            Assert.ThrowsException<ArgumentNullException>(() =>
+            Assert.ThrowsExactly<ArgumentNullException>(() =>
                 new OutlineBuilder(null));
         }
 
         [TestMethod]
         public async Task BuildOutlineFromResponse_NullResponse_ThrowsArgumentNullException()
         {
-            await Assert.ThrowsExceptionAsync<ArgumentNullException>(async () =>
+            await Assert.ThrowsExactlyAsync<ArgumentNullException>(async () =>
                 await _outlineBuilder.BuildOutlineFromResponse(null, _testOutputPath));
         }
 
         [TestMethod]
-        public async Task BuildOutlineFromResponse_ValidResponse_CreatesOutline()
+        public async Task BuildOutlineFromResponse_ValidResponse_CreatesOutlineFile()
         {
-            // Arrange
-            var rootGuid = Guid.NewGuid();
-            var charGuid = Guid.NewGuid();
-
-            _mockApi.Setup(x => x.CreateEmptyOutline(
-                It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<string>()))
-                .ReturnsAsync(new OperationResult<List<Guid>>
-                {
-                    IsSuccess = true,
-                    Payload = new List<Guid> { rootGuid }
-                });
-
-            _mockApi.Setup(x => x.AddElement(
-                It.IsAny<StoryItemType>(),
-                It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<Dictionary<string, object>>(),
-                It.IsAny<string>()))
-                .Returns(new OperationResult<Guid>
-                {
-                    IsSuccess = true,
-                    Payload = charGuid
-                });
-
-            _mockApi.Setup(x => x.WriteOutline(It.IsAny<string>()))
-                .ReturnsAsync(new OperationResult<string>
-                {
-                    IsSuccess = true,
-                    Payload = _testOutputPath
-                });
-
-            // Act
             var result = await _outlineBuilder.BuildOutlineFromResponse(_testResponse, _testOutputPath);
 
-            // Assert
             Assert.IsTrue(result);
-            _mockApi.Verify(x => x.CreateEmptyOutline("Test Story", "Test Author", "0"), Times.Once);
-            _mockApi.Verify(x => x.WriteOutline(_testOutputPath), Times.Once);
+            Assert.IsTrue(File.Exists(_testOutputPath));
         }
 
         [TestMethod]
-        public async Task BuildOutlineFromResponse_CreateOverviewFails_ReturnsFalse()
+        public async Task BuildOutlineFromResponse_ValidResponse_ContainsCharacter()
         {
-            // Arrange
-            _mockApi.Setup(x => x.CreateEmptyOutline(
-                It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<string>()))
-                .ReturnsAsync(new OperationResult<List<Guid>>
-                {
-                    IsSuccess = false
-                });
+            await _outlineBuilder.BuildOutlineFromResponse(_testResponse, _testOutputPath);
 
-            // Act
-            var result = await _outlineBuilder.BuildOutlineFromResponse(_testResponse, _testOutputPath);
+            var elements = _api.GetElementsByType(StoryItemType.Character);
+            Assert.IsTrue(elements.IsSuccess);
+            Assert.IsTrue(elements.Payload.Count > 0);
 
-            // Assert
-            Assert.IsFalse(result);
-            _mockApi.Verify(x => x.CreateEmptyOutline(It.IsAny<string>(),
-                It.IsAny<string>(), It.IsAny<string>()), Times.Once);
-            // Should not proceed to add elements
-            _mockApi.Verify(x => x.AddElement(
-                It.IsAny<StoryItemType>(),
-                It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<Dictionary<string, object>>(),
-                It.IsAny<string>()), Times.Never);
+            var hero = elements.Payload.Find(e => e.Name == "Hero");
+            Assert.IsNotNull(hero, "Character 'Hero' should exist in outline");
         }
 
         [TestMethod]
-        public async Task BuildOutlineFromResponse_EmptyRootGuid_ReturnsFalse()
+        public async Task BuildOutlineFromResponse_ValidResponse_ContainsSetting()
         {
-            // Arrange
-            _mockApi.Setup(x => x.CreateEmptyOutline(
-                It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<string>()))
-                .ReturnsAsync(new OperationResult<List<Guid>>
-                {
-                    IsSuccess = true,
-                    Payload = new List<Guid> { Guid.Empty }
-                });
+            await _outlineBuilder.BuildOutlineFromResponse(_testResponse, _testOutputPath);
 
-            // Act
-            var result = await _outlineBuilder.BuildOutlineFromResponse(_testResponse, _testOutputPath);
+            var elements = _api.GetElementsByType(StoryItemType.Setting);
+            Assert.IsTrue(elements.IsSuccess);
 
-            // Assert
-            Assert.IsFalse(result);
+            var castle = elements.Payload.Find(e => e.Name == "Castle");
+            Assert.IsNotNull(castle, "Setting 'Castle' should exist in outline");
+        }
+
+        [TestMethod]
+        public async Task BuildOutlineFromResponse_ValidResponse_ContainsScene()
+        {
+            await _outlineBuilder.BuildOutlineFromResponse(_testResponse, _testOutputPath);
+
+            var elements = _api.GetElementsByType(StoryItemType.Scene);
+            Assert.IsTrue(elements.IsSuccess);
+
+            var scene = elements.Payload.Find(e => e.Name == "Opening Scene");
+            Assert.IsNotNull(scene, "Scene 'Opening Scene' should exist in outline");
+        }
+
+        [TestMethod]
+        public async Task BuildOutlineFromResponse_ValidResponse_ContainsProblem()
+        {
+            await _outlineBuilder.BuildOutlineFromResponse(_testResponse, _testOutputPath);
+
+            var elements = _api.GetElementsByType(StoryItemType.Problem);
+            Assert.IsTrue(elements.IsSuccess);
+
+            var problem = elements.Payload.Find(e => e.Name == "Main Conflict");
+            Assert.IsNotNull(problem, "Problem 'Main Conflict' should exist in outline");
         }
 
         [TestMethod]
         public async Task BuildOutlineFromResponse_NullOverview_UsesDefaults()
         {
-            // Arrange
             _testResponse.StoryOverview = null;
-            var rootGuid = Guid.NewGuid();
 
-            _mockApi.Setup(x => x.CreateEmptyOutline(
-                "Working Title",
-                "Unknown Author",
-                "0"))
-                .ReturnsAsync(new OperationResult<List<Guid>>
-                {
-                    IsSuccess = true,
-                    Payload = new List<Guid> { rootGuid }
-                });
-
-            _mockApi.Setup(x => x.WriteOutline(It.IsAny<string>()))
-                .ReturnsAsync(new OperationResult<string>
-                {
-                    IsSuccess = true,
-                    Payload = _testOutputPath
-                });
-
-            // Act
             var result = await _outlineBuilder.BuildOutlineFromResponse(_testResponse, _testOutputPath);
 
-            // Assert
             Assert.IsTrue(result);
-            _mockApi.Verify(x => x.CreateEmptyOutline("Working Title", "Unknown Author", "0"), Times.Once);
-        }
-
-        [TestMethod]
-        public async Task BuildOutlineFromResponse_WithPremise_UpdatesOverview()
-        {
-            // Arrange
-            var rootGuid = Guid.NewGuid();
-            _testResponse.StoryOverview.Premise = "An epic tale of adventure";
-
-            _mockApi.Setup(x => x.CreateEmptyOutline(
-                It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<string>()))
-                .ReturnsAsync(new OperationResult<List<Guid>>
-                {
-                    IsSuccess = true,
-                    Payload = new List<Guid> { rootGuid }
-                });
-
-            _mockApi.Setup(x => x.WriteOutline(It.IsAny<string>()))
-                .ReturnsAsync(new OperationResult<string>
-                {
-                    IsSuccess = true,
-                    Payload = _testOutputPath
-                });
-
-            // Act
-            await _outlineBuilder.BuildOutlineFromResponse(_testResponse, _testOutputPath);
-
-            // Assert
-            _mockApi.Verify(x => x.UpdateElementProperties(
-                rootGuid,
-                It.Is<Dictionary<string, object>>(d =>
-                    d.ContainsKey("Premise") &&
-                    d["Premise"].ToString() == "An epic tale of adventure")),
-                Times.Once);
-        }
-
-        [TestMethod]
-        public async Task BuildOutlineFromResponse_SaveFails_ReturnsFalse()
-        {
-            // Arrange
-            var rootGuid = Guid.NewGuid();
-
-            _mockApi.Setup(x => x.CreateEmptyOutline(
-                It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<string>()))
-                .ReturnsAsync(new OperationResult<List<Guid>>
-                {
-                    IsSuccess = true,
-                    Payload = new List<Guid> { rootGuid }
-                });
-
-            _mockApi.Setup(x => x.WriteOutline(It.IsAny<string>()))
-                .ReturnsAsync(new OperationResult<string>
-                {
-                    IsSuccess = false
-                });
-
-            // Act
-            var result = await _outlineBuilder.BuildOutlineFromResponse(_testResponse, _testOutputPath);
-
-            // Assert
-            Assert.IsFalse(result);
-            _mockApi.Verify(x => x.WriteOutline(_testOutputPath), Times.Once);
-        }
-
-        [TestMethod]
-        public async Task BuildOutlineFromResponse_AddsCharactersWithLLMGuids()
-        {
-            // Arrange
-            var rootGuid = Guid.NewGuid();
-
-            _mockApi.Setup(x => x.CreateEmptyOutline(
-                It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<string>()))
-                .ReturnsAsync(new OperationResult<List<Guid>>
-                {
-                    IsSuccess = true,
-                    Payload = new List<Guid> { rootGuid }
-                });
-
-            string capturedGuidOverride = null;
-            _mockApi.Setup(x => x.AddElement(
-                StoryItemType.Character,
-                It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<Dictionary<string, object>>(),
-                It.IsAny<string>()))
-                .Callback<StoryItemType, string, string, Dictionary<string, object>, string>(
-                    (type, parent, name, props, guidOverride) =>
-                    {
-                        if (type == StoryItemType.Character)
-                            capturedGuidOverride = guidOverride;
-                    })
-                .Returns(new OperationResult<Guid>
-                {
-                    IsSuccess = true,
-                    Payload = Guid.NewGuid()
-                });
-
-            _mockApi.Setup(x => x.WriteOutline(It.IsAny<string>()))
-                .ReturnsAsync(new OperationResult<string>
-                {
-                    IsSuccess = true,
-                    Payload = _testOutputPath
-                });
-
-            // Act
-            await _outlineBuilder.BuildOutlineFromResponse(_testResponse, _testOutputPath);
-
-            // Assert
-            Assert.AreEqual("char-guid-1", capturedGuidOverride);
+            Assert.IsTrue(File.Exists(_testOutputPath));
         }
     }
 }

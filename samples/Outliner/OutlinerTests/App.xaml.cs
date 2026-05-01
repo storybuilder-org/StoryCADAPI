@@ -2,7 +2,7 @@
 using System.IO;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.UI.Xaml;
-using StoryCAD.Models;
+using StoryCADLib.Models;
 
 namespace OutlinerTests;
 

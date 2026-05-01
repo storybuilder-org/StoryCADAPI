@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using DocumentFormat.OpenXml.Packaging;
-using StoryCAD.Services.API;
+using StoryCADLib.Services.API;
 using UglyToad.PdfPig;
 using UglyToad.PdfPig.Content;
 using Outliner.Services;
@@ -40,8 +40,8 @@ namespace Outliner
         public IAsyncRelayCommand OutputFileCommand { get; }  // Alias for SelectOutputFileCommand
         public IAsyncRelayCommand CreateOutlineCommand { get; }
 
-        // Window handle for file picker initialization
-        public IntPtr WindowHandle { get; set; }
+        // Window handle for file picker initialization (read lazily from App)
+        public IntPtr WindowHandle => App.MWindowHandle;
 
         #region Observable Properties
 

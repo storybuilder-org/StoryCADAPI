@@ -64,12 +64,4 @@
   <ItemGroup>
     <ProjectReference Include="..\Outliner\Outliner.csproj" />
   </ItemGroup>
-
-  <!-- Workaround for StoryCADLib content files being in wrong location in package -->
-  <Target Name="RemoveStoryCADLibContentFiles" BeforeTargets="_CopyOutOfDateSourceItemsToOutputDirectory">
-    <ItemGroup>
-      <_SourceItemsToCopyToOutputDirectory Remove="@(_SourceItemsToCopyToOutputDirectory)"
-        Condition="$([System.String]::Copy('%(_SourceItemsToCopyToOutputDirectory.Identity)').Contains('StoryCADLib\Assets\Install'))" />
-    </ItemGroup>
-  </Target>
 </Project>

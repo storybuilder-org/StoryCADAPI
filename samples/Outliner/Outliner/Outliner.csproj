@@ -41,10 +41,10 @@
     <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.72.0" />
     <PackageReference Include="DocumentFormat.OpenXml" Version="3.3.0" />
     <PackageReference Include="PdfPig" Version="0.1.10" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="../../../../StoryCAD/StoryCADLib/StoryCADLib.csproj" />
+    <ProjectReference Include="../../../../StoryCAD/StoryCADLib/StoryCADLib.csproj"
+                      Condition="'$(UseStoryCADLibNuGet)' != 'true'" />
+    <PackageReference Include="StoryCADLib" Version="$(StoryCADLibVersion)" ExcludeAssets="contentFiles"
+                      Condition="'$(UseStoryCADLibNuGet)' == 'true'" />
   </ItemGroup>
 
   <ItemGroup>
@@ -58,16 +58,4 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-
-  <!-- Workaround for StoryCADLib content files being in wrong location in package -->
-  <Target Name="RemoveStoryCADLibContentFiles" BeforeTargets="_CopyOutOfDateSourceItemsToOutputDirectory;_GetPackageFiles">
-    <ItemGroup>
-      <_SourceItemsToCopyToOutputDirectory Remove="@(_SourceItemsToCopyToOutputDirectory)"
-        Condition="$([System.String]::Copy('%(_SourceItemsToCopyToOutputDirectory.Identity)').Contains('StoryCADLib\Assets\Install'))" />
-      <PackagingOutputs Remove="@(PackagingOutputs)"
-        Condition="$([System.String]::Copy('%(PackagingOutputs.Identity)').Contains('StoryCADLib\Assets\Install'))" />
-      <_PackagingOutputsFromOtherProjectReferences Remove="@(_PackagingOutputsFromOtherProjectReferences)"
-        Condition="$([System.String]::Copy('%(_PackagingOutputsFromOtherProjectReferences.Identity)').Contains('StoryCADLib\Assets\Install'))" />
-    </ItemGroup>
-  </Target>
 </Project>

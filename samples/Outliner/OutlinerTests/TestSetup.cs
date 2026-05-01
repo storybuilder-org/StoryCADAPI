@@ -1,9 +1,5 @@
-﻿using CommunityToolkit.Mvvm.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using StoryCAD.Models;
-using StoryCAD.Services.API;
-using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using StoryCADLib.Services.IoC;
 using System.IO;
 
 namespace OutlinerTests
@@ -21,22 +17,7 @@ namespace OutlinerTests
         [AssemblyInitialize]
         public static void Initialize(TestContext context)
         {
-            // Initialize DI container for tests
-            var services = new ServiceCollection();
-
-            // Register services required for testing
-            services.AddSingleton<AppState>();
-            services.AddSingleton<StoryCADApi>();
-
-            // Build service provider
-            var serviceProvider = services.BuildServiceProvider();
-
-            // Configure the IoC container
-            Ioc.Default.ConfigureServices(serviceProvider);
-
-            // Set up AppState for testing
-            var appState = Ioc.Default.GetRequiredService<AppState>();
-            appState.Headless = true;
+            BootStrapper.Initialise(headless: true);
 
             // Create test directories
             Directory.CreateDirectory(App.InputDir);

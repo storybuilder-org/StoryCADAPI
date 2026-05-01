@@ -1,8 +1,8 @@
 ﻿using System;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using StoryCAD.Models;
-using StoryCAD.Services.API;
+using StoryCADLib.Models;
+using StoryCADLib.Services.API;
 
 namespace OutlinerTests
 {

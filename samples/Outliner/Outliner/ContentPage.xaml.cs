@@ -15,10 +15,7 @@ namespace Outliner
 
         public ContentPage()
         {
-            PageVm = new ContentPageViewModel
-            {
-                WindowHandle = App.MWindowHandle
-            };
+            PageVm = new ContentPageViewModel();
             this.InitializeComponent();
             DataContext = PageVm;
         }
