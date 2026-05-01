@@ -163,6 +163,104 @@ public static class WriteTools
         }, JsonOptions);
     }
 
+    [McpServerTool(Name = "add_collection_entry")]
+    [Description("Appends an entry to a list-typed property on a story element (e.g. PhysicalWorlds, Cultures, Species, Governments, Religions on a StoryWorld). The entry is supplied as a JSON object string and is converted to the collection's element type by the API. Returns the index of the newly added entry. Call save_outline after to persist.")]
+    public static string AddCollectionEntry(
+        StoryCADApi api,
+        [Description("GUID of the element that owns the collection")] string elementGuid,
+        [Description("Name of the list-typed property (e.g. PhysicalWorlds, Cultures)")] string propertyName,
+        [Description("JSON object representing the entry (e.g. {\"Name\":\"Earth\",\"Geography\":\"Varied\"})")] string entryJson)
+    {
+        if (api.CurrentModel == null)
+            return "Error: No outline is currently open. Call open_outline first.";
+
+        if (!Guid.TryParse(elementGuid, out var parsedGuid))
+            return $"Error: Invalid element GUID: {elementGuid}";
+
+        JsonElement entry;
+        try
+        {
+            entry = JsonSerializer.Deserialize<JsonElement>(entryJson);
+        }
+        catch (JsonException ex)
+        {
+            return $"Error: Invalid JSON for entry: {ex.Message}";
+        }
+
+        var result = api.AddCollectionEntry(parsedGuid, propertyName, entry);
+        if (!result.IsSuccess) return $"Error: {result.ErrorMessage}";
+
+        return JsonSerializer.Serialize(new
+        {
+            elementGuid,
+            propertyName,
+            index = result.Payload
+        }, JsonOptions);
+    }
+
+    [McpServerTool(Name = "update_collection_entry")]
+    [Description("Replaces an existing entry at the given index in a list-typed property on a story element. The entry is supplied as a JSON object string and is converted to the collection's element type by the API. Call save_outline after to persist.")]
+    public static string UpdateCollectionEntry(
+        StoryCADApi api,
+        [Description("GUID of the element that owns the collection")] string elementGuid,
+        [Description("Name of the list-typed property (e.g. PhysicalWorlds, Cultures)")] string propertyName,
+        [Description("Zero-based index of the entry to replace")] int index,
+        [Description("JSON object representing the replacement entry")] string entryJson)
+    {
+        if (api.CurrentModel == null)
+            return "Error: No outline is currently open. Call open_outline first.";
+
+        if (!Guid.TryParse(elementGuid, out var parsedGuid))
+            return $"Error: Invalid element GUID: {elementGuid}";
+
+        JsonElement entry;
+        try
+        {
+            entry = JsonSerializer.Deserialize<JsonElement>(entryJson);
+        }
+        catch (JsonException ex)
+        {
+            return $"Error: Invalid JSON for entry: {ex.Message}";
+        }
+
+        var result = api.UpdateCollectionEntry(parsedGuid, propertyName, index, entry);
+        if (!result.IsSuccess) return $"Error: {result.ErrorMessage}";
+
+        return JsonSerializer.Serialize(new
+        {
+            elementGuid,
+            propertyName,
+            index,
+            updated = true
+        }, JsonOptions);
+    }
+
+    [McpServerTool(Name = "remove_collection_entry")]
+    [Description("Removes the entry at the given index from a list-typed property on a story element. Call save_outline after to persist.")]
+    public static string RemoveCollectionEntry(
+        StoryCADApi api,
+        [Description("GUID of the element that owns the collection")] string elementGuid,
+        [Description("Name of the list-typed property (e.g. PhysicalWorlds, Cultures)")] string propertyName,
+        [Description("Zero-based index of the entry to remove")] int index)
+    {
+        if (api.CurrentModel == null)
+            return "Error: No outline is currently open. Call open_outline first.";
+
+        if (!Guid.TryParse(elementGuid, out var parsedGuid))
+            return $"Error: Invalid element GUID: {elementGuid}";
+
+        var result = api.RemoveCollectionEntry(parsedGuid, propertyName, index);
+        if (!result.IsSuccess) return $"Error: {result.ErrorMessage}";
+
+        return JsonSerializer.Serialize(new
+        {
+            elementGuid,
+            propertyName,
+            index,
+            removed = true
+        }, JsonOptions);
+    }
+
     [McpServerTool(Name = "move_element")]
     [Description("Moves a story element to a new parent in the outline tree. Call save_outline after to persist.")]
     public static string MoveElement(
