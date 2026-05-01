@@ -4,13 +4,13 @@ StoryCADMcp is a [Model Context Protocol](https://modelcontextprotocol.io/) serv
 
 ## Overview
 
-The server wraps `StoryCADApi` and exposes 18 tools across four categories:
+The server wraps `StoryCADApi` and exposes 21 tools across four categories:
 
 | Category | Tools | Purpose |
 |----------|-------|---------|
 | Outline | 3 | Open, save, and close outline files |
 | Read | 5 | List, search, and inspect elements |
-| Write | 7 | Add, update, delete, move, and link elements |
+| Write | 10 | Add, update, delete, move, link, and edit list-property entries |
 | Resource | 6 | Query writing reference data (plots, beats, conflicts, etc.) |
 
 The server uses **stdio transport**, communicating with the client over standard input/output.
@@ -243,6 +243,49 @@ Applies a named beat sheet template to a Problem element, creating its narrative
 | `beatSheetName` | string | Name of the beat sheet (use `get_beat_sheets` to see available names) |
 
 **Returns:** Confirmation with `{problem, beatSheet, applied}`.
+
+---
+
+#### `add_collection_entry`
+
+Adds an entry to a list-typed property on a story element (for example, adding a `PhysicalWorld` or `Culture` to a `StoryWorld`). The entry is supplied as a JSON object string and is converted to the collection's element type by the API.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `elementGuid` | string | GUID of the element that owns the collection |
+| `propertyName` | string | Name of the list-typed property (e.g. `PhysicalWorlds`, `Cultures`, `Species`, `Governments`, `Religions`) |
+| `entryJson` | string | JSON object representing the entry to add |
+
+**Returns:** JSON with `{elementGuid, propertyName, index}` where `index` is the zero-based position of the new entry.
+
+---
+
+#### `update_collection_entry`
+
+Replaces an existing entry at the given index in a list-typed property on a story element.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `elementGuid` | string | GUID of the element that owns the collection |
+| `propertyName` | string | Name of the list-typed property |
+| `index` | int | Zero-based index of the entry to replace |
+| `entryJson` | string | JSON object representing the replacement entry |
+
+**Returns:** Confirmation with `{elementGuid, propertyName, index, updated}`.
+
+---
+
+#### `remove_collection_entry`
+
+Removes the entry at the given index from a list-typed property on a story element.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `elementGuid` | string | GUID of the element that owns the collection |
+| `propertyName` | string | Name of the list-typed property |
+| `index` | int | Zero-based index of the entry to remove |
+
+**Returns:** Confirmation with `{elementGuid, propertyName, index, removed}`.
 
 ---
 
