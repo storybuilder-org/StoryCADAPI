@@ -8,5 +8,5 @@
   href: consistency-validation.md
 - name: Story Diagnostic Agent
   href: story-diagnostic-agent.md
-- name: Automated Critique
-  href: automated-critique.md
+- name: StoryCADCritter
+  href: storycad-critter.md

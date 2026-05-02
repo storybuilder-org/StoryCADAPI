@@ -8,7 +8,7 @@ Five self-contained console applications that show you the StoryCADLib API in ac
 | [Story Metrics](story-metrics.md) | Core | Query an outline for analytics and statistics |
 | [Consistency Validation](consistency-validation.md) | Core | Detect structural issues in an outline |
 | [Story Diagnostic Agent](story-diagnostic-agent.md) | Semantic Kernel | LLM-powered structural diagnosis |
-| [Automated Critique](automated-critique.md) | Semantic Kernel | LLM-scored craft evaluation with rubric |
+| [StoryCADCritter](storycad-critter.md) | Semantic Kernel | LLM-scored craft evaluation with rubric |
 
 ## Prerequisites
 
@@ -64,10 +64,10 @@ Here's which API methods each sample exercises, so you can jump straight to the 
 | `AddRelationship` | Story Graph Basics |
 | `GetAllElements` | All |
 | `GetElementsByType` | Story Graph Basics, Story Metrics, Consistency Validation |
-| `GetElement` | Story Graph Basics, Diagnostic Agent, Automated Critique |
+| `GetElement` | Story Graph Basics, Diagnostic Agent, StoryCADCritter |
 | `GetStoryElement` | Story Metrics, Consistency Validation |
 | `WriteOutline` | Story Graph Basics |
 | `OpenOutline` | Story Graph Basics |
 | `SearchForReferences` | Story Metrics, Consistency Validation |
-| `GetKeyQuestionElements` | Automated Critique |
-| `GetKeyQuestions` | Automated Critique |
+| `GetKeyQuestionElements` | StoryCADCritter |
+| `GetKeyQuestions` | StoryCADCritter |

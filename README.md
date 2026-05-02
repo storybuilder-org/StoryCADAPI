@@ -97,7 +97,7 @@ await api.WriteOutline("my-story.stbx");
 | Sample | Description |
 |--------|-------------|
 | [StoryDiagnosticAgent](samples/StoryDiagnosticAgent/) | LLM-powered diagnosis of pacing, passive protagonist, plot holes |
-| [AutomatedCritique](samples/AutomatedCritique/) | LLM scores an outline against 5 craft criteria with rubric |
+| [StoryCADCritter](samples/StoryCADCritter/) | LLM scores an outline against 5 craft criteria with rubric |
 
 ### Other
 

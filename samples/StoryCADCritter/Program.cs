@@ -5,7 +5,7 @@ using StoryCADLib.Models;
 using StoryCADLib.Services.API;
 using StoryCADLib.Services.IoC;
 
-Console.WriteLine("=== AutomatedCritique: AI-Scored Story Evaluation ===");
+Console.WriteLine("=== StoryCADCritter: AI-Scored Story Evaluation ===");
 Console.WriteLine();
 
 // Step 1: Read API key from environment (fail fast if missing)
@@ -236,5 +236,5 @@ Console.WriteLine("╚═══════════════════�
 Console.WriteLine();
 Console.WriteLine(response.Content);
 Console.WriteLine();
-Console.WriteLine("=== AutomatedCritique complete! ===");
+Console.WriteLine("=== StoryCADCritter complete! ===");
 return 0;

@@ -1,11 +1,11 @@
-# Automated Critique
+# StoryCADCritter
 
 Uses Semantic Kernel and an LLM to evaluate a story outline against five craft criteria, producing a scored checklist with recommendations. This is the most advanced sample, combining the full breadth of StoryCADLib's query APIs with structured LLM prompting.
 
 > [!NOTE]
 > This sample requires an OpenAI API key. Set the `OPENAI_API_KEY` environment variable before running.
 
-[View source on GitHub](https://github.com/storybuilder-org/StoryCADAPI/tree/main/samples/AutomatedCritique)
+[View source on GitHub](https://github.com/storybuilder-org/StoryCADAPI/tree/main/samples/StoryCADCritter)
 
 ## What It Demonstrates
 
@@ -51,7 +51,7 @@ This sample introduces two API methods not used elsewhere: `GetKeyQuestionElemen
 ```bash
 export OPENAI_API_KEY="your-key-here"
 
-cd samples/AutomatedCritique
+cd samples/StoryCADCritter
 dotnet build -f net10.0-desktop
 dotnet run -f net10.0-desktop
 ```

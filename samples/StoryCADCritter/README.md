@@ -1,4 +1,4 @@
-# AutomatedCritique
+# StoryCADCritter
 
 Uses Semantic Kernel + an LLM to evaluate a story outline against craft principles with a scored checklist.
 
