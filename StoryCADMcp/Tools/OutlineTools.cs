@@ -57,4 +57,32 @@ public static class OutlineTools
         _openedPath = null;
         return "Outline closed.";
     }
+
+    [McpServerTool(Name = "new_outline")]
+    [Description("Creates a new empty story outline from a template. If a path is provided, also writes the outline to disk and tracks it so a subsequent parameterless save_outline round-trips to the same path.")]
+    public static async Task<string> NewOutline(
+        StoryCADApi api,
+        [Description("Display name of the new outline")] string name,
+        [Description("Author name to record in the outline")] string author,
+        [Description("Template index (numeric string) selecting the starting template")] string templateIndex,
+        [Description("Optional: absolute path to write the outline to. If supplied, save_outline will round-trip to this path.")] string? path = null)
+    {
+        var result = await api.CreateEmptyOutline(name, author, templateIndex);
+        if (!result.IsSuccess) return $"Error: {result.ErrorMessage}";
+
+        var elementCount = result.Payload?.Count ?? 0;
+
+        if (string.IsNullOrEmpty(path))
+        {
+            _openedPath = null;
+            return $"Outline created in memory ({elementCount} elements). Call save_outline with a path to persist.";
+        }
+
+        var writeResult = await api.WriteOutline(path);
+        if (!writeResult.IsSuccess)
+            return $"Error: outline created but write failed: {writeResult.ErrorMessage}";
+
+        _openedPath = path;
+        return $"Outline created and written to {path} ({elementCount} elements).";
+    }
 }

@@ -266,7 +266,8 @@ public static class WriteTools
     public static string MoveElement(
         StoryCADApi api,
         [Description("GUID of the element to move")] string guid,
-        [Description("GUID of the new parent element")] string newParentGuid)
+        [Description("GUID of the new parent element")] string newParentGuid,
+        [Description("Optional 0-based position in the new parent's children; omit to append.")] int? index = null)
     {
         if (api.CurrentModel == null)
             return "Error: No outline is currently open. Call open_outline first.";
@@ -277,13 +278,14 @@ public static class WriteTools
         if (!Guid.TryParse(newParentGuid, out var parentGuid))
             return $"Error: Invalid parent GUID: {newParentGuid}";
 
-        var result = api.MoveElement(elementGuid, parentGuid);
+        var result = api.MoveElement(elementGuid, parentGuid, index);
         if (!result.IsSuccess) return $"Error: {result.ErrorMessage}";
 
         return JsonSerializer.Serialize(new
         {
             guid,
             newParent = newParentGuid,
+            index,
             moved = true
         }, JsonOptions);
     }
