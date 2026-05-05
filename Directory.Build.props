@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup>
+    <UseStoryCADLibNuGet Condition="'$(UseStoryCADLibNuGet)' == ''">false</UseStoryCADLibNuGet>
+    <StoryCADLibVersion>4.0.2</StoryCADLibVersion>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Outlilner (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "Outliner (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

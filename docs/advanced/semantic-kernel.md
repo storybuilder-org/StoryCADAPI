@@ -171,4 +171,4 @@ For OpenAI specifically:
 <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.*" />
 ```
 
-See the [Story Diagnostic Agent](../samples/story-diagnostic-agent.md) and [Automated Critique](../samples/automated-critique.md) samples for complete working examples.
+See the [Story Diagnostic Agent](../samples/story-diagnostic-agent.md) and [StoryCADCritter](../samples/storycad-critter.md) samples for complete working examples.

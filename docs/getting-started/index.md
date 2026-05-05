@@ -59,5 +59,4 @@ This is the recommended mode for:
 
 ## Next Steps
 
-- [Quick Start Tutorial](quick-start.md) - Build your first outline
-- [Hello World Sample](hello-world.md) - Minimal working example
+- [Quick Start Tutorial](quick-start.md) - Build your first outline (Hello World)
