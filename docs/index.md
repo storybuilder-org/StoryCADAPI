@@ -40,8 +40,7 @@ await api.WriteOutline("my-story.stbx");
 ## Getting Started
 
 - [Installation](getting-started/index.md) - Install the NuGet package
-- [Quick Start](getting-started/quick-start.md) - Build your first outline in 5 minutes
-- [Hello World Sample](getting-started/hello-world.md) - Minimal working example
+- [Quick Start](getting-started/quick-start.md) - Build your first outline (Hello World) in 5 minutes
 
 ## Documentation
 

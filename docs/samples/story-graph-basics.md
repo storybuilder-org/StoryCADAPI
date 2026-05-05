@@ -1,9 +1,9 @@
 # Story Graph Basics
 
-The foundational "hello world" for the StoryCADLib API. This sample walks through the complete lifecycle of a story outline: creating it, populating it with elements, linking those elements together, saving to disk, and reloading to verify the round-trip.
+The foundational walkthrough of the StoryCADLib API. This sample takes you through the complete lifecycle of a story outline: creating it, populating it with elements, linking those elements together, saving to disk, and reloading to verify the round-trip.
 
 > [!TIP]
-> If you're new to StoryCADLib, start here. Every other sample builds on the patterns introduced in this one.
+> If you haven't already, run through the [Quick Start](../getting-started/quick-start.md) first — it's a copy-paste Hello World that gets you up and running in five minutes. Once that works, come back here. Every other sample builds on the patterns introduced in this one.
 
 [View source on GitHub](https://github.com/storybuilder-org/StoryCADAPI/tree/main/samples/StoryGraphBasics)
 
