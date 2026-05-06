@@ -16,6 +16,7 @@
                     SelectionChanged="NavView_SelectionChanged">
         <NavigationView.MenuItems>
             <NavigationViewItem Tag="Single" Content="Single" Icon="Document"/>
+            <NavigationViewItem Tag="Batch"  Content="Batch"  Icon="AllApps"/>
         </NavigationView.MenuItems>
 
         <Frame x:Name="ContentFrame"/>

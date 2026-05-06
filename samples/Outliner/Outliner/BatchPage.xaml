@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="Outliner.BatchPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Outliner"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel Margin="20" Spacing="10">
+
+        <TextBlock Text="Batch outline generation" FontSize="20" FontWeight="Bold"/>
+        <TextBlock TextWrapping="Wrap" Foreground="Gray">
+            Pick a folder of prose files (.docx, .pdf, .txt). Each file is processed end-to-end;
+            outputs land in a sibling Outlines/ subfolder.
+        </TextBlock>
+
+        <StackPanel Orientation="Horizontal" Spacing="10">
+            <Button Content="Pick Input Folder…" Command="{x:Bind PageVm.PickInputFolderCommand}"/>
+            <TextBlock Text="{x:Bind PageVm.InputFolder, Mode=OneWay}" VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Spacing="10">
+            <TextBlock Text="Outputs:" Width="120"/>
+            <TextBlock Text="{x:Bind PageVm.OutputFolder, Mode=OneWay}" VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <Button Content="Run Batch"
+                Command="{x:Bind PageVm.RunBatchCommand}"
+                HorizontalAlignment="Left"
+                Margin="0,10,0,0"/>
+
+        <ListView ItemsSource="{x:Bind PageVm.Items}" Height="320" SelectionMode="None">
+            <ListView.HeaderTemplate>
+                <DataTemplate>
+                    <Grid Padding="10,5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="100"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="File"   FontWeight="Bold"/>
+                        <TextBlock Grid.Column="1" Text="Status" FontWeight="Bold"/>
+                        <TextBlock Grid.Column="2" Text="Cost"   FontWeight="Bold"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.HeaderTemplate>
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="local:BatchItem">
+                    <Grid Padding="0,2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="100"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="{x:Bind FileName}"               TextTrimming="CharacterEllipsis"/>
+                        <TextBlock Grid.Column="1" Text="{x:Bind Status,      Mode=OneWay}"/>
+                        <TextBlock Grid.Column="2" Text="{x:Bind CostDisplay, Mode=OneWay}"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <TextBlock Text="{x:Bind PageVm.Summary, Mode=OneWay}"
+                   FontWeight="Bold"
+                   Margin="0,5,0,0"/>
+    </StackPanel>
+</Page>
