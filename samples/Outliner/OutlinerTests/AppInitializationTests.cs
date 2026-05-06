@@ -88,8 +88,8 @@ namespace OutlinerTests
             // Assert
             Assert.IsTrue(System.IO.Directory.Exists(App.InputDir),
                 $"Test input directory should exist at {App.InputDir}");
-            Assert.IsTrue(System.IO.Directory.Exists(App.ResultsDir),
-                $"Test results directory should exist at {App.ResultsDir}");
+            Assert.IsTrue(System.IO.Directory.Exists(App.OutputDir),
+                $"Test output directory should exist at {App.OutputDir}");
         }
     }
 }

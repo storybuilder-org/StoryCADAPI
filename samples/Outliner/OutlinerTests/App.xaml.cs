@@ -11,8 +11,19 @@ namespace OutlinerTests;
 /// </summary>
 public partial class App : Application
 {
-    public static string InputDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestInputs");
-    public static string ResultsDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestResults");
+    public static string InputDir = Path.Combine(FindProjectDir(), "TestInputs");
+    public static string OutputDir = Path.Combine(FindProjectDir(), "TestOutputs");
+
+    private static string FindProjectDir()
+    {
+        var dir = new DirectoryInfo(AppContext.BaseDirectory);
+        while (dir != null && !File.Exists(Path.Combine(dir.FullName, "OutlinerTests.csproj")))
+            dir = dir.Parent;
+        if (dir == null)
+            throw new InvalidOperationException(
+                $"OutlinerTests.csproj not found walking up from {AppContext.BaseDirectory}");
+        return dir.FullName;
+    }
 
     /// <summary>
     /// Initializes the singleton application object.  This is the first line of authored code
@@ -25,7 +36,7 @@ public partial class App : Application
 
         // Create test directories if they don't exist
         Directory.CreateDirectory(InputDir);
-        Directory.CreateDirectory(ResultsDir);
+        Directory.CreateDirectory(OutputDir);
 
         InitializeComponent();
     }

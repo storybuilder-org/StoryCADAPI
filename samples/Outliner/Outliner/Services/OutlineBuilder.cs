@@ -89,17 +89,14 @@ namespace Outliner.Services
             if (_rootGuid == Guid.Empty)
                 return false;
 
-            // Update the story overview with all properties from LLM
+            // Update the story overview. Title is the element's Name (already
+            // set by CreateEmptyOutline); OverviewModel has no Title property,
+            // so passing Title would fail and bail the whole properties update.
             if (overview != null)
             {
                 var props = new Dictionary<string, object>();
-
-                if (!string.IsNullOrWhiteSpace(overview.Title))
-                    props["Title"] = overview.Title;
-                if (!string.IsNullOrWhiteSpace(overview.Author))
-                    props["Author"] = overview.Author;
-                if (!string.IsNullOrWhiteSpace(overview.Premise))
-                    props["Premise"] = overview.Premise;
+                AddIfPresent(props, "Author",  overview.Author);
+                AddIfPresent(props, "Premise", overview.Premise);
 
                 if (props.Count > 0)
                 {
@@ -136,33 +133,47 @@ namespace Outliner.Services
 
         /// <summary>
         /// Builds property dictionary for a character element.
+        /// Uses only fields the StoryCAD CharacterModel actually has. Name is
+        /// set by AddElement separately and should not be in the dictionary.
+        /// CharacterSketch (LLM-only) is folded into Notes.
+        /// Relationships is a string from the LLM; the StoryCAD field is
+        /// RelationshipList (a List), which requires AddCollectionEntry — not
+        /// settable via UpdateElementProperties — so we surface the LLM string
+        /// in Notes for now.
         /// </summary>
         private Dictionary<string, object> BuildCharacterProperties(CharacterElement character)
         {
-            return new Dictionary<string, object>
-            {
-                ["Name"] = character.Name ?? "",
-                ["Description"] = character.CharacterSketch ?? "",
-                ["Role"] = character.Role ?? "",
-                ["Age"] = character.Age ?? "",
-                ["Sex"] = character.Sex ?? "",
-                ["Eyes"] = character.Eyes ?? "",
-                ["Hair"] = character.Hair ?? "",
-                ["Weight"] = character.Weight ?? "",
-                ["Health"] = character.Health ?? "",
-                ["PhysNotes"] = character.PhysNotes ?? "",
-                ["Appearance"] = character.Appearance ?? "",
-                ["Ethnic"] = character.Ethnic ?? "",
-                ["Religion"] = character.Religion ?? "",
-                ["Education"] = character.Education ?? "",
-                ["Focus"] = character.Focus ?? "",
-                ["PsychNotes"] = character.PsychNotes ?? "",
-                ["Flaw"] = character.Flaw ?? "",
-                ["BackStory"] = character.BackStory ?? ""
-                // Relationships is a collection (RelationshipList on CharacterModel)
-                // and is not settable via UpdateElementProperty. Skipped here; needs
-                // AddCollectionEntry if/when we want to round-trip it.
-            };
+            var props = new Dictionary<string, object>();
+            AddIfPresent(props, "Role",       character.Role);
+            AddIfPresent(props, "Age",        character.Age);
+            AddIfPresent(props, "Sex",        character.Sex);
+            AddIfPresent(props, "Eyes",       character.Eyes);
+            AddIfPresent(props, "Hair",       character.Hair);
+            AddIfPresent(props, "Weight",     character.Weight);
+            AddIfPresent(props, "Health",     character.Health);
+            AddIfPresent(props, "PhysNotes",  character.PhysNotes);
+            AddIfPresent(props, "Appearance", character.Appearance);
+            AddIfPresent(props, "Ethnic",     character.Ethnic);
+            AddIfPresent(props, "Religion",   character.Religion);
+            AddIfPresent(props, "Education",  character.Education);
+            AddIfPresent(props, "Focus",      character.Focus);
+            AddIfPresent(props, "PsychNotes", character.PsychNotes);
+            AddIfPresent(props, "Flaw",       character.Flaw);
+            AddIfPresent(props, "BackStory",  character.BackStory);
+
+            var sketchAndRelationships = string.Join("\n\n",
+                new[] { character.CharacterSketch, character.Relationships }
+                    .Where(s => !string.IsNullOrWhiteSpace(s)));
+            if (!string.IsNullOrWhiteSpace(sketchAndRelationships))
+                props["Notes"] = sketchAndRelationships;
+
+            return props;
+        }
+
+        private static void AddIfPresent(Dictionary<string, object> props, string key, string? value)
+        {
+            if (!string.IsNullOrWhiteSpace(value))
+                props[key] = value;
         }
 
         /// <summary>
@@ -191,22 +202,21 @@ namespace Outliner.Services
 
         /// <summary>
         /// Builds property dictionary for a setting element.
+        /// SettingModel has no Summary field; the LLM's summary is folded into Notes.
         /// </summary>
         private Dictionary<string, object> BuildSettingProperties(SettingElement setting)
         {
-            return new Dictionary<string, object>
-            {
-                ["Name"] = setting.Name ?? "",
-                ["Description"] = setting.Summary ?? "",
-                ["Locale"] = setting.Locale ?? "",
-                ["Season"] = setting.Season ?? "",
-                ["Period"] = setting.Period ?? "",
-                ["Lighting"] = setting.Lighting ?? "",
-                ["Sights"] = setting.Sights ?? "",
-                ["Sounds"] = setting.Sounds ?? "",
-                ["Touch"] = setting.Touch ?? "",
-                ["SmellTaste"] = setting.SmellTaste ?? ""
-            };
+            var props = new Dictionary<string, object>();
+            AddIfPresent(props, "Locale",     setting.Locale);
+            AddIfPresent(props, "Season",     setting.Season);
+            AddIfPresent(props, "Period",     setting.Period);
+            AddIfPresent(props, "Lighting",   setting.Lighting);
+            AddIfPresent(props, "Sights",     setting.Sights);
+            AddIfPresent(props, "Sounds",     setting.Sounds);
+            AddIfPresent(props, "Touch",      setting.Touch);
+            AddIfPresent(props, "SmellTaste", setting.SmellTaste);
+            AddIfPresent(props, "Notes",      setting.Summary);
+            return props;
         }
 
         /// <summary>
@@ -241,29 +251,29 @@ namespace Outliner.Services
 
         /// <summary>
         /// Builds property dictionary for a problem element.
+        /// ProblemModel has no StoryQuestion or Significance fields; the LLM's
+        /// StoryQuestion is folded into Notes.
         /// </summary>
         private Dictionary<string, object> BuildProblemProperties(ProblemElement problem)
         {
-            return new Dictionary<string, object>
-            {
-                ["Name"] = problem.Name ?? "",
-                ["Description"] = problem.StoryQuestion ?? "",
-                ["ProblemType"] = problem.ProblemType ?? "",
-                ["ConflictType"] = problem.ConflictType ?? "",
-                ["ProblemCategory"] = problem.ProblemCategory ?? "",
-                ["ProblemSource"] = problem.ProblemSource ?? "",
-                ["ProtGoal"] = problem.ProtGoal ?? "",
-                ["ProtMotive"] = problem.Significance ?? "",
-                ["AntagGoal"] = problem.AntagGoal ?? "",
-                ["AntagMotive"] = problem.AntagMotive ?? "",
-                ["Outcome"] = problem.Outcome ?? ""
-            };
+            var props = new Dictionary<string, object>();
+            AddIfPresent(props, "ProblemType",      problem.ProblemType);
+            AddIfPresent(props, "ConflictType",     problem.ConflictType);
+            AddIfPresent(props, "ProblemCategory",  problem.ProblemCategory);
+            AddIfPresent(props, "ProblemSource",    problem.ProblemSource);
+            AddIfPresent(props, "ProtGoal",         problem.ProtGoal);
+            AddIfPresent(props, "AntagGoal",        problem.AntagGoal);
+            AddIfPresent(props, "AntagMotive",      problem.AntagMotive);
+            AddIfPresent(props, "Outcome",          problem.Outcome);
+            AddIfPresent(props, "Notes",            problem.StoryQuestion);
+            return props;
         }
 
 
         /// <summary>
         /// Adds all scenes to the outline.
-        /// Cross-references use LLM-provided GUIDs directly.
+        /// CastMembers is List<Guid> on SceneModel and must be populated via
+        /// AddCollectionEntry rather than UpdateElementProperties.
         /// </summary>
         private void AddScenes(List<SceneElement> scenes)
         {
@@ -271,50 +281,54 @@ namespace Outliner.Services
             {
                 var props = BuildSceneProperties(scene);
 
-                // Add all cross-references using LLM GUIDs directly
-                if (!string.IsNullOrEmpty(scene.Protagonist))
-                    props["Protagonist"] = scene.Protagonist;
-                if (!string.IsNullOrEmpty(scene.Antagonist))
-                    props["Antagonist"] = scene.Antagonist;
-                if (!string.IsNullOrEmpty(scene.ViewpointCharacter))
-                    props["ViewpointCharacter"] = scene.ViewpointCharacter;
-                if (!string.IsNullOrEmpty(scene.Setting))
-                    props["Setting"] = scene.Setting;
-                // Cast (SceneModel.CastMembers) is a collection and is not settable via
-                // UpdateElementProperty. Skipped here; needs AddCollectionEntry to
-                // round-trip the cast list.
+                AddIfPresent(props, "Protagonist",        scene.Protagonist);
+                AddIfPresent(props, "Antagonist",         scene.Antagonist);
+                AddIfPresent(props, "ViewpointCharacter", scene.ViewpointCharacter);
+                AddIfPresent(props, "Setting",            scene.Setting);
 
                 var result = _api.AddElement(
                     StoryItemType.Scene,
                     _rootGuid.ToString(),
                     scene.Name ?? "Unnamed Scene",
                     props,
-                    scene.Guid);  // Use the LLM-provided GUID
+                    scene.Guid);
 
                 if (result != null && result.IsSuccess)
                 {
                     _guidMapping[scene.Guid] = Guid.Parse(scene.Guid);
+
+                    if (scene.Cast != null)
+                    {
+                        foreach (var castGuid in scene.Cast)
+                        {
+                            if (!string.IsNullOrWhiteSpace(castGuid))
+                                _api.AddCollectionEntry(Guid.Parse(scene.Guid), "CastMembers", castGuid);
+                        }
+                    }
                 }
             }
         }
 
         /// <summary>
         /// Builds property dictionary for a scene element.
+        /// SceneModel uses ProtagGoal (not ProtGoal); has no Significance or
+        /// AntagMotive fields, so those LLM values are folded into Notes.
         /// </summary>
         private Dictionary<string, object> BuildSceneProperties(SceneElement scene)
         {
-            return new Dictionary<string, object>
-            {
-                ["Name"] = scene.Name ?? "",
-                ["Description"] = scene.Description ?? "",
-                ["ProtagGoal"] = scene.ProtGoal ?? "",
-                ["Significance"] = scene.Significance ?? "",
-                ["AntagGoal"] = scene.AntagGoal ?? "",
-                // AntagMotive has no equivalent on SceneModel (AntagEmotion is closest
-                // but semantically different). Skipped to avoid short-circuiting the
-                // rest of the property dict.
-                ["Outcome"] = scene.Outcome ?? ""
-            };
+            var props = new Dictionary<string, object>();
+            AddIfPresent(props, "Description", scene.Description);
+            AddIfPresent(props, "ProtagGoal",  scene.ProtGoal);
+            AddIfPresent(props, "AntagGoal",   scene.AntagGoal);
+            AddIfPresent(props, "Outcome",     scene.Outcome);
+
+            var notes = string.Join("\n\n",
+                new[] { scene.Significance, scene.AntagMotive }
+                    .Where(s => !string.IsNullOrWhiteSpace(s)));
+            if (!string.IsNullOrWhiteSpace(notes))
+                props["Notes"] = notes;
+
+            return props;
         }
 
 

@@ -6,14 +6,10 @@ using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.UI.Dispatching;
 using System;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
-using DocumentFormat.OpenXml.Packaging;
 using StoryCADLib.Services.API;
-using UglyToad.PdfPig;
-using UglyToad.PdfPig.Content;
 using Outliner.Services;
 
 namespace Outliner
@@ -28,6 +24,7 @@ namespace Outliner
         // Services
         private readonly ProseAnalyzer _proseAnalyzer;
         private readonly OutlineBuilder _outlineBuilder;
+        private readonly ProseDocumentReader _proseReader;
         private readonly DispatcherQueue _dispatcher;
 
         // File management
@@ -107,6 +104,7 @@ namespace Outliner
 
             _proseAnalyzer = new ProseAnalyzer(kernel, chatService);
             _outlineBuilder = new OutlineBuilder(api);
+            _proseReader = new ProseDocumentReader();
 
             // Initialize commands
             ReadStoryCommand = new AsyncRelayCommand(ReadStoryFileAsync);
@@ -152,13 +150,7 @@ namespace Outliner
                 ProgressStatus = $"Reading {_storyFile.Name}...";
                 IsProcessing = true;
 
-                StoryText = _storyFile.FileType.ToLower() switch
-                {
-                    ".txt" => await Windows.Storage.FileIO.ReadTextAsync(_storyFile),
-                    ".docx" => await ReadDocxAsync(_storyFile),
-                    ".pdf" => await ReadPdfAsync(_storyFile),
-                    _ => string.Empty
-                };
+                StoryText = await _proseReader.ReadAsync(_storyFile.Path);
 
                 if (!string.IsNullOrWhiteSpace(StoryText))
                 {
@@ -282,31 +274,5 @@ namespace Outliner
             }
         }
 
-        /// <summary>
-        /// Reads content from a .docx file.
-        /// </summary>
-        private static async Task<string> ReadDocxAsync(StorageFile file)
-        {
-            using var stream = await file.OpenStreamForReadAsync();
-            using var doc = WordprocessingDocument.Open(stream, false);
-            return doc.MainDocumentPart?.Document.Body?.InnerText ?? string.Empty;
-        }
-
-        /// <summary>
-        /// Reads content from a .pdf file.
-        /// </summary>
-        private static async Task<string> ReadPdfAsync(StorageFile file)
-        {
-            var sb = new StringBuilder();
-            using var stream = await file.OpenStreamForReadAsync();
-            using var pdf = PdfDocument.Open(stream);
-
-            foreach (var page in pdf.GetPages())
-            {
-                sb.AppendLine(page.Text);
-            }
-
-            return sb.ToString();
-        }
     }
 }
