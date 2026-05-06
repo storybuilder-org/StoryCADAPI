@@ -24,7 +24,7 @@ namespace Outliner.Services
     /// </summary>
     public sealed class PreferencesService
     {
-        private static readonly string PrefsPath = Path.Combine(
+        private static readonly string DefaultPrefsPath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
             "Outliner",
             "preferences.json");
@@ -32,14 +32,23 @@ namespace Outliner.Services
         private static readonly JsonSerializerOptions JsonOpts =
             new() { WriteIndented = true };
 
+        private readonly string _prefsPath;
+
+        public PreferencesService() : this(DefaultPrefsPath) { }
+
+        public PreferencesService(string prefsPath)
+        {
+            _prefsPath = prefsPath;
+        }
+
         public OutlinerPreferences Load()
         {
-            if (!File.Exists(PrefsPath))
+            if (!File.Exists(_prefsPath))
                 return new OutlinerPreferences();
 
             try
             {
-                var json = File.ReadAllText(PrefsPath);
+                var json = File.ReadAllText(_prefsPath);
                 return JsonSerializer.Deserialize<OutlinerPreferences>(json)
                        ?? new OutlinerPreferences();
             }
@@ -53,8 +62,8 @@ namespace Outliner.Services
         {
             try
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(PrefsPath)!);
-                File.WriteAllText(PrefsPath, JsonSerializer.Serialize(prefs, JsonOpts));
+                Directory.CreateDirectory(Path.GetDirectoryName(_prefsPath)!);
+                File.WriteAllText(_prefsPath, JsonSerializer.Serialize(prefs, JsonOpts));
             }
             catch
             {

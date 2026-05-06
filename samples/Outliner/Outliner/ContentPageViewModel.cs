@@ -3,7 +3,6 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
-using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using System;
 using System.IO;
@@ -29,7 +28,6 @@ namespace Outliner
         private readonly OutlineRunner _runner;
         private readonly ProseAnalyzer _proseAnalyzer;
         private readonly ProseDocumentReader _proseReader;
-        private readonly DispatcherQueue _dispatcher;
 
         // File management
         private StorageFile? _storyFile;
@@ -43,9 +41,29 @@ namespace Outliner
         public IRelayCommand ThumbsUpCommand { get; }
         public IRelayCommand ThumbsDownCommand { get; }
 
-        // Feedback state — captured after a successful outline creation
+        // Feedback state — captured after a successful outline creation.
+        // Public properties so VM tests can pre-populate them and exercise
+        // SubmitFeedback without driving a full LLM round-trip.
         private OnePassResponse? _lastResponse;
+        public OnePassResponse? LastResponse
+        {
+            get => _lastResponse;
+            set => SetProperty(ref _lastResponse, value);
+        }
+
         private OutlineCost? _lastCost;
+        public OutlineCost? LastCost
+        {
+            get => _lastCost;
+            set => SetProperty(ref _lastCost, value);
+        }
+
+        private string? _lastOutputPath;
+        public string? LastOutputPath
+        {
+            get => _lastOutputPath;
+            set => SetProperty(ref _lastOutputPath, value);
+        }
 
         // Window handle for file picker initialization (read lazily from App)
         public IntPtr WindowHandle => App.MWindowHandle;
@@ -133,8 +151,6 @@ namespace Outliner
 
         public ContentPageViewModel()
         {
-            _dispatcher = DispatcherQueue.GetForCurrentThread();
-
             // Build pipeline components and assemble the shared runner. The
             // analyzer reference is kept so we can validate prose length and
             // surface LastCost on the feedback panel.
@@ -163,21 +179,21 @@ namespace Outliner
         /// thumbs verdict and any free-text feedback. Heuristic auto-rating
         /// is also recorded so we have signal even when feedback is sparse.
         /// </summary>
-        private void SubmitFeedback(string userRating)
+        public void SubmitFeedback(string userRating)
         {
-            if (_lastResponse == null || _outputFile == null)
+            if (LastResponse == null || string.IsNullOrEmpty(LastOutputPath))
                 return;
 
             var rating = OutlineRating.ComputeAuto(
-                _lastResponse,
+                LastResponse,
                 _storyFile?.Name,
-                _lastCost?.ModelId);
+                LastCost?.ModelId);
             rating.UserRating = userRating;
             rating.UserFeedback = string.IsNullOrWhiteSpace(UserFeedback) ? null : UserFeedback;
 
             try
             {
-                var ratingPath = Path.ChangeExtension(_outputFile.Path, ".rating.json");
+                var ratingPath = Path.ChangeExtension(LastOutputPath, ".rating.json");
                 var json = JsonSerializer.Serialize(
                     rating,
                     new JsonSerializerOptions { WriteIndented = true });
@@ -293,8 +309,7 @@ namespace Outliner
                 IsProcessing = true;
                 ProgressValue = 20;
 
-                var progress = new Progress<string>(msg =>
-                    _dispatcher.TryEnqueue(() => ProgressStatus = msg));
+                var progress = new Progress<string>(msg => ProgressStatus = msg);
 
                 var inputName = _storyFile?.Name ?? "loaded prose";
                 var result = await _runner.RunFromTextAsync(
@@ -316,8 +331,9 @@ namespace Outliner
                     ContentText = $"✓ Outline successfully created and saved to:\n{_outputFile.Path}";
                     ProgressStatus = "Complete!";
 
-                    _lastResponse = result.Response;
-                    _lastCost = result.Cost;
+                    LastResponse = result.Response;
+                    LastCost = result.Cost;
+                    LastOutputPath = _outputFile.Path;
                     UserFeedback = string.Empty;
                     FeedbackStatus = string.Empty;
                     ShowFeedbackPanel = true;

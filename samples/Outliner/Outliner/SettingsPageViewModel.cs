@@ -14,9 +14,15 @@ namespace Outliner
         private readonly PreferencesService _prefsService;
 
         public SettingsPageViewModel()
+            : this(
+                Ioc.Default.GetRequiredService<OutlinerPreferences>(),
+                Ioc.Default.GetRequiredService<PreferencesService>())
+        { }
+
+        public SettingsPageViewModel(OutlinerPreferences prefs, PreferencesService prefsService)
         {
-            _prefs = Ioc.Default.GetRequiredService<OutlinerPreferences>();
-            _prefsService = Ioc.Default.GetRequiredService<PreferencesService>();
+            _prefs = prefs;
+            _prefsService = prefsService;
 
             _isStartupSingle = _prefs.StartupMode == "Single";
             _isStartupBatch  = _prefs.StartupMode == "Batch";

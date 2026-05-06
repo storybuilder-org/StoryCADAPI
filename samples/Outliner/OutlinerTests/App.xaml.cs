@@ -11,9 +11,8 @@ namespace OutlinerTests;
 /// </summary>
 public partial class App : Application
 {
-    public static string InputDir    = Path.Combine(FindProjectDir(), "TestInputs");
-    public static string OutputDir   = Path.Combine(FindProjectDir(), "TestOutputs");
-    public static string FixturesDir = Path.Combine(FindProjectDir(), "Fixtures");
+    public static string InputDir  = Path.Combine(FindProjectDir(), "TestInputs");
+    public static string OutputDir = Path.Combine(FindProjectDir(), "TestOutputs");
 
     private static string FindProjectDir()
     {

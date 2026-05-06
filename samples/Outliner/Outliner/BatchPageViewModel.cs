@@ -1,7 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.UI.Dispatching;
 using Outliner.Services;
 using System;
 using System.Collections.ObjectModel;
@@ -22,14 +21,19 @@ namespace Outliner
         private readonly OutlineRunner _runner;
         private readonly OutlinerPreferences _prefs;
         private readonly PreferencesService _prefsService;
-        private readonly DispatcherQueue _dispatcher;
 
         public BatchPageViewModel()
+            : this(
+                new OutlineRunner(),
+                Ioc.Default.GetRequiredService<OutlinerPreferences>(),
+                Ioc.Default.GetRequiredService<PreferencesService>())
+        { }
+
+        public BatchPageViewModel(OutlineRunner runner, OutlinerPreferences prefs, PreferencesService prefsService)
         {
-            _dispatcher = DispatcherQueue.GetForCurrentThread();
-            _runner = new OutlineRunner();
-            _prefs = Ioc.Default.GetRequiredService<OutlinerPreferences>();
-            _prefsService = Ioc.Default.GetRequiredService<PreferencesService>();
+            _runner = runner;
+            _prefs = prefs;
+            _prefsService = prefsService;
 
             PickInputFolderCommand = new AsyncRelayCommand(PickInputFolderAsync);
             RunBatchCommand = new AsyncRelayCommand(RunBatchAsync, () => Items.Count > 0 && !IsRunning);
@@ -102,7 +106,7 @@ namespace Outliner
             Summary = string.Empty;
         }
 
-        private void PopulateItems()
+        public void PopulateItems()
         {
             Items.Clear();
             if (!Directory.Exists(InputFolder)) return;
@@ -146,7 +150,7 @@ namespace Outliner
 
             foreach (var item in Items)
             {
-                _dispatcher.TryEnqueue(() => item.Status = "Processing");
+                item.Status = "Processing";
 
                 var outputPath = Path.Combine(
                     OutputFolder,
@@ -157,31 +161,22 @@ namespace Outliner
                     var result = await _runner.RunAsync(item.FullPath, outputPath);
                     if (result.IsSuccess)
                     {
-                        _dispatcher.TryEnqueue(() =>
-                        {
-                            item.Status = "Done";
-                            if (result.Cost != null) item.Cost = result.Cost.TotalCostUsd;
-                        });
+                        item.Status = "Done";
+                        if (result.Cost != null) item.Cost = result.Cost.TotalCostUsd;
                         succeeded++;
                         if (result.Cost != null) totalCost += result.Cost.TotalCostUsd;
                     }
                     else
                     {
-                        _dispatcher.TryEnqueue(() =>
-                        {
-                            item.Status = "Failed";
-                            item.ErrorMessage = result.ErrorMessage;
-                        });
+                        item.Status = "Failed";
+                        item.ErrorMessage = result.ErrorMessage;
                         failed++;
                     }
                 }
                 catch (Exception ex)
                 {
-                    _dispatcher.TryEnqueue(() =>
-                    {
-                        item.Status = "Failed";
-                        item.ErrorMessage = ex.Message;
-                    });
+                    item.Status = "Failed";
+                    item.ErrorMessage = ex.Message;
                     failed++;
                 }
             }
