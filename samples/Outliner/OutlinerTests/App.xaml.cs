@@ -11,10 +11,14 @@ namespace OutlinerTests;
 /// </summary>
 public partial class App : Application
 {
-    public static string InputDir  = Path.Combine(FindProjectDir(), "TestInputs");
-    public static string OutputDir = Path.Combine(FindProjectDir(), "TestOutputs");
+    public static string InputDir  = Path.Combine(FindOutlinerProjectDir(), "OutlinerInput");
+    public static string OutputDir = Path.Combine(FindOutlinerProjectDir(), "OutlinerOutput");
 
-    private static string FindProjectDir()
+    /// <summary>
+    /// Resolves the sibling Outliner project's directory, where the
+    /// OutlinerInput / OutlinerOutput / OutlinerStories folders live.
+    /// </summary>
+    private static string FindOutlinerProjectDir()
     {
         var dir = new DirectoryInfo(AppContext.BaseDirectory);
         while (dir != null && !File.Exists(Path.Combine(dir.FullName, "OutlinerTests.csproj")))
@@ -22,7 +26,7 @@ public partial class App : Application
         if (dir == null)
             throw new InvalidOperationException(
                 $"OutlinerTests.csproj not found walking up from {AppContext.BaseDirectory}");
-        return dir.FullName;
+        return Path.GetFullPath(Path.Combine(dir.FullName, "..", "Outliner"));
     }
 
     /// <summary>

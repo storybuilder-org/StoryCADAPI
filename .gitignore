@@ -407,7 +407,7 @@ FodyWeavers.xsd
 # docfx build output
 docs/_site/
 
-# Outliner test outputs (.stbx + .raw.json regenerated each run)
-samples/Outliner/OutlinerTests/TestOutputs/
+# Outliner outputs (.stbx + .raw.json + .costs.json + .rating.json regenerated each run)
+samples/Outliner/Outliner/OutlinerOutput/
 
 
