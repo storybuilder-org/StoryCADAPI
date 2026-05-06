@@ -23,9 +23,11 @@ namespace Outliner
     /// </summary>
     public class ContentPageViewModel : ObservableObject
     {
-        // Services
+        // Pipeline + a peek at the analyzer for prose-length validation in
+        // the file-loading step. The runner orchestrates analyze + build +
+        // artifact writes for both single and batch modes.
+        private readonly OutlineRunner _runner;
         private readonly ProseAnalyzer _proseAnalyzer;
-        private readonly OutlineBuilder _outlineBuilder;
         private readonly ProseDocumentReader _proseReader;
         private readonly DispatcherQueue _dispatcher;
 
@@ -133,14 +135,17 @@ namespace Outliner
         {
             _dispatcher = DispatcherQueue.GetForCurrentThread();
 
-            // Initialize services from DI container
+            // Build pipeline components and assemble the shared runner. The
+            // analyzer reference is kept so we can validate prose length and
+            // surface LastCost on the feedback panel.
             var kernel = Ioc.Default.GetRequiredService<Kernel>();
             var chatService = Ioc.Default.GetRequiredService<IChatCompletionService>();
             var api = Ioc.Default.GetRequiredService<StoryCADApi>();
 
             _proseAnalyzer = new ProseAnalyzer(kernel, chatService);
-            _outlineBuilder = new OutlineBuilder(api);
-            _proseReader = new ProseDocumentReader();
+            _proseReader   = new ProseDocumentReader();
+            var builder    = new OutlineBuilder(api);
+            _runner        = new OutlineRunner(_proseReader, _proseAnalyzer, builder);
 
             // Initialize commands
             ReadStoryCommand = new AsyncRelayCommand(ReadStoryFileAsync);
@@ -286,64 +291,42 @@ namespace Outliner
             try
             {
                 IsProcessing = true;
-                ProgressValue = 0;
-
-                // Phase 1: Analyze prose
-                ProgressStatus = "Phase 1: Analyzing story with AI...";
                 ProgressValue = 20;
 
-                var analysisResult = await _proseAnalyzer.AnalyzeProse(StoryText);
+                var progress = new Progress<string>(msg =>
+                    _dispatcher.TryEnqueue(() => ProgressStatus = msg));
 
-                if (analysisResult == null)
-                {
-                    ContentText = "Failed to analyze story. Please try again.";
-                    return;
-                }
-
-                ProgressValue = 50;
-                var analysisText = $"Found: {analysisResult.Characters?.Count ?? 0} characters, " +
-                                   $"{analysisResult.Settings?.Count ?? 0} settings, " +
-                                   $"{analysisResult.Scenes?.Count ?? 0} scenes, " +
-                                   $"{analysisResult.Problems?.Count ?? 0} problems";
-                AnalysisResultText = analysisText;
-                ChatHistoryText = $"Analysis complete:\n{analysisText}";
-
-                // Phase 2: Build outline
-                ProgressStatus = "Phase 2: Building StoryCAD outline...";
-                ProgressValue = 70;
-
-                var success = await _outlineBuilder.BuildOutlineFromResponse(
-                    analysisResult,
-                    _outputFile.Path);
+                var inputName = _storyFile?.Name ?? "loaded prose";
+                var result = await _runner.RunFromTextAsync(
+                    StoryText,
+                    inputName,
+                    _outputFile.Path,
+                    progress);
 
                 ProgressValue = 100;
 
-                if (success)
+                if (result.IsSuccess && result.Response != null)
                 {
+                    AnalysisResultText =
+                        $"Found: {result.Response.Characters?.Count ?? 0} characters, " +
+                        $"{result.Response.Settings?.Count ?? 0} settings, " +
+                        $"{result.Response.Scenes?.Count ?? 0} scenes, " +
+                        $"{result.Response.Problems?.Count ?? 0} problems";
+                    ChatHistoryText = $"Analysis complete:\n{AnalysisResultText}";
                     ContentText = $"✓ Outline successfully created and saved to:\n{_outputFile.Path}";
                     ProgressStatus = "Complete!";
 
-                    _lastResponse = analysisResult;
-                    _lastCost = _proseAnalyzer.LastCost;
+                    _lastResponse = result.Response;
+                    _lastCost = result.Cost;
                     UserFeedback = string.Empty;
                     FeedbackStatus = string.Empty;
                     ShowFeedbackPanel = true;
                 }
                 else
                 {
-                    ContentText = "⚠ Outline was partially created. Some elements may be missing.";
-                    ProgressStatus = "Completed with warnings";
+                    ContentText = result.ErrorMessage ?? "Outline could not be created.";
+                    ProgressStatus = "Failed";
                 }
-            }
-            catch (InvalidOperationException ex)
-            {
-                ContentText = $"Validation error: {ex.Message}";
-                ProgressStatus = "Failed";
-            }
-            catch (Exception ex)
-            {
-                ContentText = $"Error creating outline: {ex.Message}";
-                ProgressStatus = "Failed";
             }
             finally
             {

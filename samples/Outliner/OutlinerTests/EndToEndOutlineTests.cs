@@ -39,60 +39,17 @@ namespace OutlinerTests
             if (string.IsNullOrWhiteSpace(apiKey))
                 Assert.Inconclusive("OPENAI_API_KEY not set; skipping live-LLM end-to-end test.");
 
-            var kernel = Ioc.Default.GetRequiredService<Kernel>();
-            var chatService = Ioc.Default.GetRequiredService<IChatCompletionService>();
-            var api = Ioc.Default.GetRequiredService<StoryCADApi>();
-
-            var reader = new ProseDocumentReader();
-            var analyzer = new ProseAnalyzer(kernel, chatService);
-            var builder = new OutlineBuilder(api);
-
-            var prose = await reader.ReadAsync(inputPath);
-            Assert.IsFalse(string.IsNullOrWhiteSpace(prose),
-                $"Prose extracted from {Path.GetFileName(inputPath)} was empty.");
-
-            var response = await analyzer.AnalyzeProse(prose);
-
-            if (!string.IsNullOrWhiteSpace(analyzer.LastRawResponse))
-            {
-                var rawPath = Path.Combine(
-                    App.OutputDir,
-                    Path.GetFileNameWithoutExtension(inputPath) + ".raw.json");
-                await File.WriteAllTextAsync(rawPath, analyzer.LastRawResponse);
-            }
-
-            if (analyzer.LastCost != null)
-            {
-                var costPath = Path.Combine(
-                    App.OutputDir,
-                    Path.GetFileNameWithoutExtension(inputPath) + ".costs.json");
-                var costJson = System.Text.Json.JsonSerializer.Serialize(
-                    analyzer.LastCost,
-                    new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
-                await File.WriteAllTextAsync(costPath, costJson);
-            }
-
-            var rating = OutlineRating.ComputeAuto(
-                response,
-                Path.GetFileName(inputPath),
-                analyzer.LastCost?.ModelId);
-            var ratingPath = Path.Combine(
-                App.OutputDir,
-                Path.GetFileNameWithoutExtension(inputPath) + ".rating.json");
-            var ratingJson = System.Text.Json.JsonSerializer.Serialize(
-                rating,
-                new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
-            await File.WriteAllTextAsync(ratingPath, ratingJson);
-
-            Assert.IsNotNull(response, "ProseAnalyzer returned null.");
+            var runner = new OutlineRunner();
 
             var outputPath = Path.Combine(
                 App.OutputDir,
                 Path.GetFileNameWithoutExtension(inputPath) + ".stbx");
 
-            var ok = await builder.BuildOutlineFromResponse(response, outputPath);
+            var result = await runner.RunAsync(inputPath, outputPath);
 
-            Assert.IsTrue(ok, "OutlineBuilder reported failure.");
+            Assert.IsNotNull(result.Response, "Pipeline returned null response.");
+            Assert.IsTrue(result.IsSuccess,
+                result.ErrorMessage ?? "Pipeline reported failure.");
             Assert.IsTrue(File.Exists(outputPath),
                 $"Expected outline at {outputPath} was not produced.");
             Assert.IsTrue(new FileInfo(outputPath).Length > 0,
