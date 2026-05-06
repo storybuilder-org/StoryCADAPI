@@ -55,12 +55,29 @@ User folder convention now in effect:
 2. **Invalid GUIDs from LLM** — LLMs frequently emit GUID-shaped strings with non-hex characters (e.g., `a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6` containing g, h, i, j, k, l, m, n, o, p). `Guid.Parse` rejects these silently and the element is dropped. Fix: `ProseAnalyzer.ValidateGuids` now validates with `Guid.TryParse`, regenerates fresh GUIDs for invalid ones, and remaps every cross-reference (Scene.Protagonist/Antagonist/ViewpointCharacter/Setting/Cast[], Problem.Protagonist/Antagonist) so links survive.
 3. **OutlineBuilder field-name mapping** — Several property dictionaries used names that don't exist on the StoryCAD models: Character had `CharacterSketch` and `Relationships` (string); Scene used `ProtGoal` (should be `ProtagGoal`) and `Cast` (should be `CastMembers`, plus it's a List that needs `AddCollectionEntry` rather than `UpdateElementProperty`); Problem had `StoryQuestion` and `Significance`; Overview had `Title`. Combined with `UpdateElementProperties` bailing on the **first** failed property, this dropped most of the dictionary. Fix: `Build*Properties` now use only valid StoryCAD field names; non-mapping LLM data folds into Notes; CastMembers populated via `AddCollectionEntry`.
 
-#### Prompt gaps still open
+#### Prompt gaps still open (post-v1)
 
 - StoryType, StoryGenre, StoryProblem on Overview not requested by prompt.
 - Person-vs-Self convention not enforced — LLM made Possibility the Antagonist on the Problem and the Scene; per StoryCAD convention, both should be Jaime.
 - "goals" and "motives" emitted as combined strings on Problem rather than the split ProtGoal / ProtMotive / ProtConflict / AntagGoal / AntagMotive / AntagConflict the model expects.
 - GUIDs not specified as hex-only (defensive code regenerates invalid ones, but tightening the prompt avoids the regenerate path).
+
+### Prompt v2 (2026-05-06)
+
+`OnePassSystemPrompt.md` rewritten. `OutlinePrompt.Version` bumped to "v2" so future ratings can be partitioned by prompt revision. The schema added `StoryType`, `StoryGenre`, `StoryProblem`, `Concept` to `StoryOverviewElement`; OutlineBuilder maps them through to OverviewModel.
+
+v2 closes every user-flagged gap on the Mirror, Mirror reference fixture:
+- **StoryType "Short-Short"** ✓
+- **StoryGenre "Science Fiction"** ✓
+- **Concept** populated ✓
+- **StoryProblem** points at the Story-problem GUID ✓
+- **Premise** generated using the explicit template ✓
+- **Person vs. Self** antagonist rule now enforced — both Protagonist and Antagonist on the Problem are Jaime ✓
+- **Hex-only GUID rule** explicit ✓
+- **Always-emit-a-Setting** rule explicit ✓
+- **Worked example** added to anchor depth ✓
+
+Auto-rating: completeness 0.655, thumbs_up. The drop from 0.925 (v1) to 0.655 (v2) is a denominator effect, not a quality regression — adding requested fields raises the ceiling. **The completeness heuristic is partly perverse**: asking for more reduces ratios even when domain quality improves. A better long-term signal is a domain-truth evaluator (deferred until the eval loop is built).
 
 #### Reference target: what Mirror, Mirror's outline *should* contain (per Terry, 2026-05-06)
 

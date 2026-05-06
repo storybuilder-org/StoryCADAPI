@@ -27,6 +27,10 @@ namespace Outliner
         public string? Title { get; set; }
         public string? Author { get; set; }
         public string? Premise { get; set; }
+        public string? StoryType { get; set; }
+        public string? StoryGenre { get; set; }
+        public string? StoryProblem { get; set; }
+        public string? Concept { get; set; }
     }
 
     public class CharacterElement
