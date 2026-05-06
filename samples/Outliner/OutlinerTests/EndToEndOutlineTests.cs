@@ -61,6 +61,17 @@ namespace OutlinerTests
                 await File.WriteAllTextAsync(rawPath, analyzer.LastRawResponse);
             }
 
+            if (analyzer.LastCost != null)
+            {
+                var costPath = Path.Combine(
+                    App.OutputDir,
+                    Path.GetFileNameWithoutExtension(inputPath) + ".costs.json");
+                var costJson = System.Text.Json.JsonSerializer.Serialize(
+                    analyzer.LastCost,
+                    new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
+                await File.WriteAllTextAsync(costPath, costJson);
+            }
+
             Assert.IsNotNull(response, "ProseAnalyzer returned null.");
 
             var outputPath = Path.Combine(

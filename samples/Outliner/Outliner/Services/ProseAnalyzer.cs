@@ -16,6 +16,7 @@ namespace Outliner.Services
     public class ProseAnalyzer
     {
         public string? LastRawResponse { get; private set; }
+        public OutlineCost? LastCost { get; private set; }
 
         private readonly Kernel _kernel;
         private readonly IChatCompletionService _chatService;
@@ -79,6 +80,7 @@ namespace Outliner.Services
                     _kernel);
 
                 LastRawResponse = result.Content;
+                LastCost = ExtractCost(result);
 
                 if (string.IsNullOrWhiteSpace(result.Content))
                 {
@@ -282,6 +284,49 @@ namespace Outliner.Services
         {
             if (string.IsNullOrEmpty(value)) return value;
             return remap.TryGetValue(value, out var fresh) ? fresh : value;
+        }
+
+        /// <summary>
+        /// Reads token usage from the SK result's Usage metadata (the OpenAI
+        /// connector populates an OpenAI.Chat.ChatTokenUsage there). Reflection
+        /// keeps us decoupled from a specific OpenAI SDK version.
+        /// </summary>
+        private static OutlineCost ExtractCost(Microsoft.SemanticKernel.ChatMessageContent result)
+        {
+            var modelId = result.ModelId
+                ?? Environment.GetEnvironmentVariable("OPENAI_MODEL")
+                ?? "gpt-4o";
+
+            int inputTokens = 0;
+            int outputTokens = 0;
+
+            try
+            {
+                if (result.Metadata != null
+                    && result.Metadata.TryGetValue("Usage", out var usageObj)
+                    && usageObj != null)
+                {
+                    var t = usageObj.GetType();
+                    inputTokens  = (t.GetProperty("InputTokenCount")?.GetValue(usageObj) as int?) ?? 0;
+                    outputTokens = (t.GetProperty("OutputTokenCount")?.GetValue(usageObj) as int?) ?? 0;
+                }
+            }
+            catch
+            {
+                // Best-effort; unknown metadata shape just yields zero tokens
+            }
+
+            var (inputCost, outputCost) = ModelPriceTable.Compute(modelId, inputTokens, outputTokens);
+
+            return new OutlineCost
+            {
+                ModelId = modelId,
+                InputTokens = inputTokens,
+                OutputTokens = outputTokens,
+                InputCostUsd = inputCost,
+                OutputCostUsd = outputCost,
+                PriceTableValidAsOf = ModelPriceTable.ValidAsOf
+            };
         }
 
         /// <summary>
