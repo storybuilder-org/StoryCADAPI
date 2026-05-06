@@ -1,20 +1,48 @@
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.UI.Xaml;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+using Microsoft.UI.Xaml.Controls;
+using Outliner.Services;
 
 namespace Outliner
 {
     /// <summary>
-    /// An empty window that can be used on its own or navigated to within a Frame.
+    /// Hosts the NavigationView shell and routes selection to the appropriate page
+    /// (Single today, Batch and Settings in following commits). Initial page is
+    /// chosen from OutlinerPreferences.StartupMode.
     /// </summary>
     public sealed partial class MainWindow : Window
     {
         public MainWindow()
         {
             this.InitializeComponent();
-            // Navigate directly to ContentPage.
-            RootFrame.Navigate(typeof(ContentPage));
+
+            var prefs = Ioc.Default.GetService<OutlinerPreferences>() ?? new OutlinerPreferences();
+            var startupTag = string.IsNullOrWhiteSpace(prefs.StartupMode) ? "Single" : prefs.StartupMode;
+
+            // Select the menu item matching the user's preferred startup mode;
+            // fall back to the first item if it isn't present yet.
+            foreach (var item in NavView.MenuItems)
+            {
+                if (item is NavigationViewItem nvi && nvi.Tag is string tag && tag == startupTag)
+                {
+                    NavView.SelectedItem = nvi;
+                    return;
+                }
+            }
+            NavView.SelectedItem = NavView.MenuItems[0];
+        }
+
+        private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+        {
+            if (args.SelectedItemContainer is not NavigationViewItem item)
+                return;
+
+            switch (item.Tag as string)
+            {
+                case "Single":
+                    ContentFrame.Navigate(typeof(ContentPage));
+                    break;
+            }
         }
     }
 }
