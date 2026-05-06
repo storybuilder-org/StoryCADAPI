@@ -129,6 +129,33 @@ namespace Outliner.Services
         }
 
         /// <summary>
+        /// Pre-flight worst-case cost estimate for analyzing the given prose.
+        /// Output tokens are estimated at the configured MaxTokens ceiling, so
+        /// the returned figure is an upper bound — actual cost (LastCost after
+        /// AnalyzeProse) is typically significantly lower. Useful for letting
+        /// the UI warn before a long round-trip.
+        /// </summary>
+        public OutlineCost EstimateCost(string proseText, string? modelId = null)
+        {
+            var actualModel = modelId
+                ?? Environment.GetEnvironmentVariable("OPENAI_MODEL")
+                ?? "gpt-4o";
+            var inputTokens  = EstimateTokenCount(proseText);
+            var outputTokens = _executionSettings.MaxTokens ?? 16000;
+            var (inputCost, outputCost) = ModelPriceTable.Compute(actualModel, inputTokens, outputTokens);
+
+            return new OutlineCost
+            {
+                ModelId = actualModel,
+                InputTokens = inputTokens,
+                OutputTokens = outputTokens,
+                InputCostUsd = inputCost,
+                OutputCostUsd = outputCost,
+                PriceTableValidAsOf = ModelPriceTable.ValidAsOf
+            };
+        }
+
+        /// <summary>
         /// Loads the system prompt from file or returns default.
         /// </summary>
         /// <param name="customPath">Optional custom prompt file path</param>
