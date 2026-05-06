@@ -35,22 +35,26 @@ namespace Outliner
             _prefs = prefs;
             _prefsService = prefsService;
 
-            PickInputFolderCommand = new AsyncRelayCommand(PickInputFolderAsync);
-            RunBatchCommand = new AsyncRelayCommand(RunBatchAsync, () => Items.Count > 0 && !IsRunning);
+            PickInputFolderCommand  = new AsyncRelayCommand(PickInputFolderAsync);
+            PickOutputFolderCommand = new AsyncRelayCommand(PickOutputFolderAsync);
+            RunBatchCommand         = new AsyncRelayCommand(RunBatchAsync, () => Items.Count > 0 && !IsRunning);
 
             // If we remember a folder from last session, populate immediately.
             if (!string.IsNullOrWhiteSpace(_prefs.LastBatchInputFolder)
                 && Directory.Exists(_prefs.LastBatchInputFolder))
             {
                 InputFolder = _prefs.LastBatchInputFolder;
-                OutputFolder = Path.Combine(InputFolder, "Outlines");
+                OutputFolder = !string.IsNullOrWhiteSpace(_prefs.LastBatchOutputFolder)
+                    ? _prefs.LastBatchOutputFolder
+                    : Path.Combine(InputFolder, "Outlines");
                 PopulateItems();
             }
         }
 
         public ObservableCollection<BatchItem> Items { get; } = new();
 
-        public IAsyncRelayCommand PickInputFolderCommand { get; }
+        public IAsyncRelayCommand PickInputFolderCommand  { get; }
+        public IAsyncRelayCommand PickOutputFolderCommand { get; }
         public IAsyncRelayCommand RunBatchCommand { get; }
 
         public IntPtr WindowHandle => App.MWindowHandle;
@@ -99,11 +103,27 @@ namespace Outliner
             InputFolder  = folder.Path;
             OutputFolder = Path.Combine(InputFolder, "Outlines");
 
-            _prefs.LastBatchInputFolder = InputFolder;
+            _prefs.LastBatchInputFolder  = InputFolder;
+            _prefs.LastBatchOutputFolder = OutputFolder;
             _prefsService.Save(_prefs);
 
             PopulateItems();
             Summary = string.Empty;
+        }
+
+        private async Task PickOutputFolderAsync()
+        {
+            var picker = new FolderPicker();
+            WinRT.Interop.InitializeWithWindow.Initialize(picker, WindowHandle);
+            picker.FileTypeFilter.Add("*");
+
+            var folder = await picker.PickSingleFolderAsync();
+            if (folder == null) return;
+
+            OutputFolder = folder.Path;
+
+            _prefs.LastBatchOutputFolder = OutputFolder;
+            _prefsService.Save(_prefs);
         }
 
         public void PopulateItems()

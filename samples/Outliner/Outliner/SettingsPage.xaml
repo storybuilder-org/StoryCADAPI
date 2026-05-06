@@ -26,6 +26,21 @@
                          IsChecked="{x:Bind PageVm.IsStartupBatch, Mode=TwoWay}"/>
         </StackPanel>
 
+        <TextBlock Text="Default folders" FontWeight="SemiBold" Margin="0,20,0,5"/>
+        <TextBlock TextWrapping="Wrap" Foreground="Gray">
+            Where Outliner's file pickers start. Used by both Single and Batch modes.
+        </TextBlock>
+
+        <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,5,0,0">
+            <Button Content="Pick Input Folder…"  Command="{x:Bind PageVm.PickInputFolderCommand}"  Width="170"/>
+            <TextBlock Text="{x:Bind PageVm.DefaultInputFolder, Mode=OneWay}" VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Spacing="10">
+            <Button Content="Pick Output Folder…" Command="{x:Bind PageVm.PickOutputFolderCommand}" Width="170"/>
+            <TextBlock Text="{x:Bind PageVm.DefaultOutputFolder, Mode=OneWay}" VerticalAlignment="Center"/>
+        </StackPanel>
+
         <TextBlock TextWrapping="Wrap" Foreground="Gray" FontStyle="Italic" Margin="0,15,0,0">
             Changes save automatically.
         </TextBlock>

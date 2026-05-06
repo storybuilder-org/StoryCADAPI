@@ -17,12 +17,12 @@
         </TextBlock>
 
         <StackPanel Orientation="Horizontal" Spacing="10">
-            <Button Content="Pick Input Folder…" Command="{x:Bind PageVm.PickInputFolderCommand}"/>
+            <Button Content="Pick Input Folder…"  Command="{x:Bind PageVm.PickInputFolderCommand}"  Width="170"/>
             <TextBlock Text="{x:Bind PageVm.InputFolder, Mode=OneWay}" VerticalAlignment="Center"/>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Spacing="10">
-            <TextBlock Text="Outputs:" Width="120"/>
+            <Button Content="Pick Output Folder…" Command="{x:Bind PageVm.PickOutputFolderCommand}" Width="170"/>
             <TextBlock Text="{x:Bind PageVm.OutputFolder, Mode=OneWay}" VerticalAlignment="Center"/>
         </StackPanel>
 

@@ -13,9 +13,15 @@ namespace Outliner.Services
         /// <summary>Mode the app opens in: "Single" or "Batch".</summary>
         public string StartupMode { get; set; } = "Single";
 
-        public string LastSingleInputFolder  { get; set; } = string.Empty;
-        public string LastSingleOutputFolder { get; set; } = string.Empty;
-        public string LastBatchInputFolder   { get; set; } = string.Empty;
+        /// <summary>Default starting folder for input prose pickers (both modes).</summary>
+        public string DefaultInputFolder  { get; set; } = string.Empty;
+
+        /// <summary>Default starting folder for output outline pickers (both modes).</summary>
+        public string DefaultOutputFolder { get; set; } = string.Empty;
+
+        /// <summary>Last folder the user actually picked in batch mode (drives auto-population).</summary>
+        public string LastBatchInputFolder  { get; set; } = string.Empty;
+        public string LastBatchOutputFolder { get; set; } = string.Empty;
     }
 
     /// <summary>
