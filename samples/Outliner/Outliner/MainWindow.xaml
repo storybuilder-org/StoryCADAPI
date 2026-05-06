@@ -19,6 +19,10 @@
             <NavigationViewItem Tag="Batch"  Content="Batch"  Icon="AllApps"/>
         </NavigationView.MenuItems>
 
+        <NavigationView.FooterMenuItems>
+            <NavigationViewItem Tag="Settings" Content="Settings" Icon="Setting"/>
+        </NavigationView.FooterMenuItems>
+
         <Frame x:Name="ContentFrame"/>
     </NavigationView>
 </Window>

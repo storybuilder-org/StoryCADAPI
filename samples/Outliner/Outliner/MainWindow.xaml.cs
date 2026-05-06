@@ -45,6 +45,9 @@ namespace Outliner
                 case "Batch":
                     ContentFrame.Navigate(typeof(BatchPage));
                     break;
+                case "Settings":
+                    ContentFrame.Navigate(typeof(SettingsPage));
+                    break;
             }
         }
     }
