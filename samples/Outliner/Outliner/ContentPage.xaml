@@ -27,14 +27,39 @@
             <!-- AI Output Display (read‑only now) -->
             <TextBlock Text="AI Output:" FontWeight="Bold" Margin="5,10,0,0"/>
             <ScrollViewer Height="300" VerticalScrollBarVisibility="Auto">
-                <TextBox 
-                    Text="{x:Bind PageVm.ChatHistoryText, Mode=OneWay}" 
+                <TextBox
+                    Text="{x:Bind PageVm.ChatHistoryText, Mode=OneWay}"
                     TextWrapping="Wrap"
                     IsReadOnly="True"
                     Background="Transparent"
                     BorderThickness="0"/>
             </ScrollViewer>
-          
+
+            <!-- Feedback panel (visible after a successful outline) -->
+            <StackPanel Orientation="Vertical"
+                        Margin="5,15,5,5"
+                        Padding="10"
+                        BorderBrush="Gray"
+                        BorderThickness="1"
+                        Visibility="{x:Bind PageVm.FeedbackVisibility, Mode=OneWay}">
+                <TextBlock Text="How was this outline?" FontWeight="Bold" Margin="0,0,0,5"/>
+                <TextBox Text="{x:Bind PageVm.UserFeedback, Mode=TwoWay}"
+                         PlaceholderText="Optional comments..."
+                         AcceptsReturn="True"
+                         TextWrapping="Wrap"
+                         Height="60"
+                         Margin="0,0,0,5"/>
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <Button Content="👍 Thumbs Up"   Command="{x:Bind PageVm.ThumbsUpCommand}"/>
+                    <Button Content="👎 Thumbs Down" Command="{x:Bind PageVm.ThumbsDownCommand}"/>
+                </StackPanel>
+            </StackPanel>
+
+            <TextBlock Text="{x:Bind PageVm.FeedbackStatus, Mode=OneWay}"
+                       Margin="5,5,0,0"
+                       Foreground="Green"
+                       FontStyle="Italic"/>
+
         </StackPanel>
 </Page>
 

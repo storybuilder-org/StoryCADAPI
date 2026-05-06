@@ -4,8 +4,10 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml;
 using System;
 using System.IO;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
@@ -36,6 +38,12 @@ namespace Outliner
         public IAsyncRelayCommand SelectOutputFileCommand { get; }
         public IAsyncRelayCommand OutputFileCommand { get; }  // Alias for SelectOutputFileCommand
         public IAsyncRelayCommand CreateOutlineCommand { get; }
+        public IRelayCommand ThumbsUpCommand { get; }
+        public IRelayCommand ThumbsDownCommand { get; }
+
+        // Feedback state — captured after a successful outline creation
+        private OnePassResponse? _lastResponse;
+        private OutlineCost? _lastCost;
 
         // Window handle for file picker initialization (read lazily from App)
         public IntPtr WindowHandle => App.MWindowHandle;
@@ -91,6 +99,34 @@ namespace Outliner
             set => SetProperty(ref _chatHistoryText, value);
         }
 
+        private bool _showFeedbackPanel;
+        public bool ShowFeedbackPanel
+        {
+            get => _showFeedbackPanel;
+            set
+            {
+                if (SetProperty(ref _showFeedbackPanel, value))
+                    OnPropertyChanged(nameof(FeedbackVisibility));
+            }
+        }
+
+        public Visibility FeedbackVisibility =>
+            _showFeedbackPanel ? Visibility.Visible : Visibility.Collapsed;
+
+        private string _userFeedback = string.Empty;
+        public string UserFeedback
+        {
+            get => _userFeedback;
+            set => SetProperty(ref _userFeedback, value);
+        }
+
+        private string _feedbackStatus = string.Empty;
+        public string FeedbackStatus
+        {
+            get => _feedbackStatus;
+            set => SetProperty(ref _feedbackStatus, value);
+        }
+
         #endregion
 
         public ContentPageViewModel()
@@ -113,6 +149,42 @@ namespace Outliner
             CreateOutlineCommand = new AsyncRelayCommand(
                 CreateOutlineAsync,
                 CanCreateOutline);
+            ThumbsUpCommand = new RelayCommand(() => SubmitFeedback("thumbs_up"));
+            ThumbsDownCommand = new RelayCommand(() => SubmitFeedback("thumbs_down"));
+        }
+
+        /// <summary>
+        /// Writes an OutlineRating beside the .stbx capturing the user's
+        /// thumbs verdict and any free-text feedback. Heuristic auto-rating
+        /// is also recorded so we have signal even when feedback is sparse.
+        /// </summary>
+        private void SubmitFeedback(string userRating)
+        {
+            if (_lastResponse == null || _outputFile == null)
+                return;
+
+            var rating = OutlineRating.ComputeAuto(
+                _lastResponse,
+                _storyFile?.Name,
+                _lastCost?.ModelId);
+            rating.UserRating = userRating;
+            rating.UserFeedback = string.IsNullOrWhiteSpace(UserFeedback) ? null : UserFeedback;
+
+            try
+            {
+                var ratingPath = Path.ChangeExtension(_outputFile.Path, ".rating.json");
+                var json = JsonSerializer.Serialize(
+                    rating,
+                    new JsonSerializerOptions { WriteIndented = true });
+                File.WriteAllText(ratingPath, json);
+                FeedbackStatus = $"Thanks — feedback saved to {Path.GetFileName(ratingPath)}.";
+            }
+            catch (Exception ex)
+            {
+                FeedbackStatus = $"Couldn't save feedback: {ex.Message}";
+            }
+
+            ShowFeedbackPanel = false;
         }
 
         /// <summary>
@@ -250,6 +322,12 @@ namespace Outliner
                 {
                     ContentText = $"✓ Outline successfully created and saved to:\n{_outputFile.Path}";
                     ProgressStatus = "Complete!";
+
+                    _lastResponse = analysisResult;
+                    _lastCost = _proseAnalyzer.LastCost;
+                    UserFeedback = string.Empty;
+                    FeedbackStatus = string.Empty;
+                    ShowFeedbackPanel = true;
                 }
                 else
                 {
