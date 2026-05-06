@@ -11,14 +11,13 @@ namespace OutlinerTests;
 /// </summary>
 public partial class App : Application
 {
+    // Inputs are shared with the app (real prose lives in Outliner/OutlinerInput).
+    // Outputs are test-only — they go inside OutlinerTests so they don't
+    // pollute the user's runtime OutlinerOutput folder.
     public static string InputDir  = Path.Combine(FindOutlinerProjectDir(), "OutlinerInput");
-    public static string OutputDir = Path.Combine(FindOutlinerProjectDir(), "OutlinerOutput");
+    public static string OutputDir = Path.Combine(FindTestsProjectDir(), "TestOutputs");
 
-    /// <summary>
-    /// Resolves the sibling Outliner project's directory, where the
-    /// OutlinerInput / OutlinerOutput / OutlinerStories folders live.
-    /// </summary>
-    private static string FindOutlinerProjectDir()
+    private static string FindTestsProjectDir()
     {
         var dir = new DirectoryInfo(AppContext.BaseDirectory);
         while (dir != null && !File.Exists(Path.Combine(dir.FullName, "OutlinerTests.csproj")))
@@ -26,8 +25,11 @@ public partial class App : Application
         if (dir == null)
             throw new InvalidOperationException(
                 $"OutlinerTests.csproj not found walking up from {AppContext.BaseDirectory}");
-        return Path.GetFullPath(Path.Combine(dir.FullName, "..", "Outliner"));
+        return dir.FullName;
     }
+
+    private static string FindOutlinerProjectDir()
+        => Path.GetFullPath(Path.Combine(FindTestsProjectDir(), "..", "Outliner"));
 
     /// <summary>
     /// Initializes the singleton application object.  This is the first line of authored code

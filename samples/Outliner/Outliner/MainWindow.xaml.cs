@@ -19,25 +19,34 @@ namespace Outliner
             var prefs = Ioc.Default.GetService<OutlinerPreferences>() ?? new OutlinerPreferences();
             var startupTag = string.IsNullOrWhiteSpace(prefs.StartupMode) ? "Single" : prefs.StartupMode;
 
-            // Select the menu item matching the user's preferred startup mode;
-            // fall back to the first item if it isn't present yet.
+            // Navigate to the user's preferred startup page and reflect that
+            // selection in the nav pane.
             foreach (var item in NavView.MenuItems)
             {
                 if (item is NavigationViewItem nvi && nvi.Tag is string tag && tag == startupTag)
                 {
                     NavView.SelectedItem = nvi;
+                    NavigateToTag(tag);
                     return;
                 }
             }
-            NavView.SelectedItem = NavView.MenuItems[0];
+
+            if (NavView.MenuItems.Count > 0 && NavView.MenuItems[0] is NavigationViewItem first)
+            {
+                NavView.SelectedItem = first;
+                NavigateToTag(first.Tag as string);
+            }
         }
 
-        private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+        private void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
-            if (args.SelectedItemContainer is not NavigationViewItem item)
-                return;
+            if (args.InvokedItemContainer is NavigationViewItem item)
+                NavigateToTag(item.Tag as string);
+        }
 
-            switch (item.Tag as string)
+        private void NavigateToTag(string? tag)
+        {
+            switch (tag)
             {
                 case "Single":
                     ContentFrame.Navigate(typeof(ContentPage));

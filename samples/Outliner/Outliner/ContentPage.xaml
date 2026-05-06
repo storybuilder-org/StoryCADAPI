@@ -17,11 +17,18 @@
                 <Button Content="Output File" Command="{x:Bind PageVm.OutputFileCommand}" Margin="5"/>
                 <Button Content="Create Outline" Command="{x:Bind PageVm.CreateOutlineCommand}" Margin="5"/>
             </StackPanel>
-            <!-- Display area for story content -->
+            <!-- Status line (file loaded, output path picked, run result) -->
+            <TextBlock Text="{x:Bind PageVm.ContentText, Mode=OneWay}"
+                       Margin="5"
+                       Foreground="Gray"
+                       TextWrapping="Wrap"/>
+
+            <!-- Display area for the actual prose -->
             <TextBlock Text="Story Content:" FontWeight="Bold" Margin="5"/>
             <ScrollViewer Height="150" Margin="5" VerticalScrollBarVisibility="Auto">
-                <TextBox Text="{x:Bind PageVm.ContentText, Mode=TwoWay}"
-                         TextWrapping="Wrap"/>
+                <TextBox Text="{x:Bind PageVm.StoryText, Mode=TwoWay}"
+                         TextWrapping="Wrap"
+                         AcceptsReturn="True"/>
             </ScrollViewer>
 
             <!-- AI Output Display (read‑only now) -->

@@ -407,7 +407,10 @@ FodyWeavers.xsd
 # docfx build output
 docs/_site/
 
-# Outliner outputs (.stbx + .raw.json + .costs.json + .rating.json regenerated each run)
+# Outliner runtime outputs (user-picked output folder)
 samples/Outliner/Outliner/OutlinerOutput/
+
+# Outliner test outputs (regenerated each test run)
+samples/Outliner/OutlinerTests/TestOutputs/
 
 

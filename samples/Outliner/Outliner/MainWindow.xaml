@@ -13,7 +13,7 @@
                     IsBackButtonVisible="Collapsed"
                     IsSettingsVisible="False"
                     PaneDisplayMode="Left"
-                    SelectionChanged="NavView_SelectionChanged">
+                    ItemInvoked="NavView_ItemInvoked">
         <NavigationView.MenuItems>
             <NavigationViewItem Tag="Single" Content="Single" Icon="Document"/>
             <NavigationViewItem Tag="Batch"  Content="Batch"  Icon="AllApps"/>
