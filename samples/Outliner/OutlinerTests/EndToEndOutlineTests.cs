@@ -12,7 +12,14 @@ using StoryCADLib.Services.API;
 
 namespace OutlinerTests
 {
+    /// <summary>
+    /// Live-LLM smoke tests. Excluded from default CI via the LiveLLM
+    /// category; run locally or nightly with --filter "TestCategory=LiveLLM".
+    /// Costs money per run and produces non-deterministic output. The
+    /// deterministic structural assertions live in StubbedPipelineTests.
+    /// </summary>
     [TestClass]
+    [TestCategory("LiveLLM")]
     public class EndToEndOutlineTests
     {
         public static IEnumerable<object[]> ProseInputs()
