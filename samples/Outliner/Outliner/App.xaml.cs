@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.UI.Xaml;
+using Outliner.Services;
 using StoryCADLib.Services.IoC;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -42,6 +43,11 @@ namespace Outliner
 
             BootStrapper.Services.AddSingleton(kernel);
             BootStrapper.Services.AddSingleton(kernel.GetRequiredService<IChatCompletionService>());
+
+            // Persistent user preferences (mode, last folders, etc.)
+            var prefsService = new PreferencesService();
+            BootStrapper.Services.AddSingleton(prefsService);
+            BootStrapper.Services.AddSingleton(prefsService.Load());
 
             BootStrapper.Initialise(headless: false);
         }
