@@ -72,6 +72,18 @@ namespace OutlinerTests
                 await File.WriteAllTextAsync(costPath, costJson);
             }
 
+            var rating = OutlineRating.ComputeAuto(
+                response,
+                Path.GetFileName(inputPath),
+                analyzer.LastCost?.ModelId);
+            var ratingPath = Path.Combine(
+                App.OutputDir,
+                Path.GetFileNameWithoutExtension(inputPath) + ".rating.json");
+            var ratingJson = System.Text.Json.JsonSerializer.Serialize(
+                rating,
+                new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
+            await File.WriteAllTextAsync(ratingPath, ratingJson);
+
             Assert.IsNotNull(response, "ProseAnalyzer returned null.");
 
             var outputPath = Path.Combine(

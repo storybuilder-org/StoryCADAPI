@@ -40,6 +40,8 @@ namespace OutlinerTests
                 File.Delete(stale);
             foreach (var stale in Directory.GetFiles(App.OutputDir, "*.costs.json"))
                 File.Delete(stale);
+            foreach (var stale in Directory.GetFiles(App.OutputDir, "*.rating.json"))
+                File.Delete(stale);
         }
 
         [AssemblyCleanup]
