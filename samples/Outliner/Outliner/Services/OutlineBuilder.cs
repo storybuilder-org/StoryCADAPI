@@ -264,11 +264,17 @@ namespace Outliner.Services
             AddIfPresent(props, "ProblemType",      problem.ProblemType);
             AddIfPresent(props, "ConflictType",     problem.ConflictType);
             AddIfPresent(props, "ProblemCategory",  problem.ProblemCategory);
+            AddIfPresent(props, "Subject",          problem.Subject);
             AddIfPresent(props, "ProblemSource",    problem.ProblemSource);
             AddIfPresent(props, "ProtGoal",         problem.ProtGoal);
+            AddIfPresent(props, "ProtMotive",       problem.ProtMotive);
+            AddIfPresent(props, "ProtConflict",     problem.ProtConflict);
             AddIfPresent(props, "AntagGoal",        problem.AntagGoal);
             AddIfPresent(props, "AntagMotive",      problem.AntagMotive);
+            AddIfPresent(props, "AntagConflict",    problem.AntagConflict);
             AddIfPresent(props, "Outcome",          problem.Outcome);
+            AddIfPresent(props, "Method",           problem.Method);
+            AddIfPresent(props, "Theme",            problem.Theme);
             AddIfPresent(props, "Notes",            problem.StoryQuestion);
             return props;
         }

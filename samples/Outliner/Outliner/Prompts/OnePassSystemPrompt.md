@@ -73,11 +73,17 @@ Output a single JSON object with this exact shape. All inner property names are 
       "conflictType": "Person vs. Person | Person vs. Self | Person vs. Nature | Person vs. Society | Person vs. Technology | Person vs. Fate",
       "problemCategory": "Story problem | Subplot | Complication | Sequence",
       "problemSource": "brief phrase identifying the source",
+      "subject": "what the conflict is about (e.g. identity, power, survival)",
+      "theme": "the abstract idea at stake (e.g. authenticity vs. conformity)",
+      "method": "how the protagonist approaches or resolves the problem",
       "protagonist": "GUID",
-      "protGoal": "the protagonist's goal",
+      "protGoal": "the protagonist's goal — what they want",
+      "protMotive": "the protagonist's motive — why they want it",
+      "protConflict": "what stands between the protagonist and the goal",
       "antagonist": "GUID",
-      "antagGoal": "the antagonist's goal",
-      "antagMotive": "the antagonist's motive",
+      "antagGoal": "the antagonist's goal — what they want",
+      "antagMotive": "the antagonist's motive — why they want it",
+      "antagConflict": "what stands between the antagonist and the goal",
       "outcome": "..."
     }
   ]
@@ -92,9 +98,15 @@ Output a single JSON object with this exact shape. All inner property names are 
 - Hex characters are **0–9 and a–f only**. Do not use g–z. The string `a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6` is **invalid** because g, h, i, j, k, l, m, n, o, p are not hex.
 - When one element references another (Scene.cast, Scene.protagonist, Problem.antagonist, etc.), use the **exact same GUID string** that you generated for that element.
 
+### The principle of antagonism — fill both sides symmetrically
+
+A problem is a **conflict between two opposing goals**. Every problem has a protagonist side and an antagonist side, and both sides have the same three slots: a **goal** (what they want), a **motive** (why they want it), and a **conflict** (what stands in the way). Fill all six slots — `protGoal`, `protMotive`, `protConflict`, `antagGoal`, `antagMotive`, `antagConflict` — for **every problem**, regardless of conflict type. The protagonist and antagonist sides should be balanced; do not leave the protagonist's motive blank while filling in the antagonist's.
+
+Also fill `subject` (what the conflict is about), `theme` (the abstract idea at stake), and `method` (how the problem is approached) on every problem.
+
 ### Person vs. Self conflicts
 
-If you classify a problem as **Person vs. Self**, the protagonist and the antagonist are the **same character** — set both `protagonist` and `antagonist` to that character's GUID. Do not invent a separate antagonist. The opposing force is internal (self-doubt, addiction, identity crisis, moral choice, etc.).
+If you classify a problem as **Person vs. Self**, the protagonist and the antagonist are the **same character** — set both `protagonist` and `antagonist` to that character's GUID. Do not invent a separate antagonist. The opposing force is internal (self-doubt, addiction, identity crisis, moral choice, etc.). The principle of antagonism above still applies: the same character has two opposing internal goals, each with its own motive and conflict.
 
 ### Settings — always emit at least one
 

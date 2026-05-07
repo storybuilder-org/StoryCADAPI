@@ -98,12 +98,18 @@ namespace Outliner
         public string? ConflictType { get; set; }
         public string? ProblemCategory { get; set; }
         public string? ProblemSource { get; set; }
+        public string? Subject { get; set; }
+        public string? Theme { get; set; }
+        public string? Method { get; set; }
         public string? Protagonist { get; set; }
         public string? ProtGoal { get; set; }
+        public string? ProtMotive { get; set; }
+        public string? ProtConflict { get; set; }
         public string? Significance { get; set; }
         public string? Antagonist { get; set; }
         public string? AntagGoal { get; set; }
         public string? AntagMotive { get; set; }
+        public string? AntagConflict { get; set; }
         public string? Outcome { get; set; }
     }
 }
