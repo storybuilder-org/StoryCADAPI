@@ -165,11 +165,12 @@ namespace Outliner.Services
             AddIfPresent(props, "Flaw",       character.Flaw);
             AddIfPresent(props, "BackStory",  character.BackStory);
 
-            var sketchAndRelationships = string.Join("\n\n",
-                new[] { character.CharacterSketch, character.Relationships }
-                    .Where(s => !string.IsNullOrWhiteSpace(s)));
-            if (!string.IsNullOrWhiteSpace(sketchAndRelationships))
-                props["Notes"] = sketchAndRelationships;
+            // CharacterSketch is the main descriptive textbox on the Character page
+            // ("Character Sketch" label → StoryElement.Description on the base class).
+            AddIfPresent(props, "Description", character.CharacterSketch);
+            // Relationships is LLM free-text with no structured model destination;
+            // surface it in Notes so it isn't lost.
+            AddIfPresent(props, "Notes", character.Relationships);
 
             return props;
         }
@@ -219,7 +220,8 @@ namespace Outliner.Services
             AddIfPresent(props, "Sounds",     setting.Sounds);
             AddIfPresent(props, "Touch",      setting.Touch);
             AddIfPresent(props, "SmellTaste", setting.SmellTaste);
-            AddIfPresent(props, "Notes",      setting.Summary);
+            // "Setting Summary" on the Setting page binds to StoryElement.Description.
+            AddIfPresent(props, "Description", setting.Summary);
             return props;
         }
 
@@ -275,7 +277,8 @@ namespace Outliner.Services
             AddIfPresent(props, "Outcome",          problem.Outcome);
             AddIfPresent(props, "Method",           problem.Method);
             AddIfPresent(props, "Theme",            problem.Theme);
-            AddIfPresent(props, "Notes",            problem.StoryQuestion);
+            // "Story Question" on the Problem page binds to StoryElement.Description.
+            AddIfPresent(props, "Description",      problem.StoryQuestion);
             return props;
         }
 
