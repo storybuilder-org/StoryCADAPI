@@ -12,8 +12,6 @@
 	  <PackageReference Include="Microsoft.SemanticKernel" Version="1.72.0" />
 	  <PackageReference Include="Microsoft.SemanticKernel.Abstractions" Version="1.72.0" />
 	  <PackageReference Include="Microsoft.SemanticKernel.Planners.OpenAI" Version="1.16.0-preview" />
-	  <ProjectReference Include="../../StoryCAD/StoryCADLib/StoryCADLib.csproj"
-	                    Condition="'$(UseStoryCADLibNuGet)' != 'true'" />
 	  <PackageReference Include="StoryCADLib" Version="$(StoryCADLibVersion)" ExcludeAssets="contentFiles"
 	                    Condition="'$(UseStoryCADLibNuGet)' == 'true'" />
   </ItemGroup>

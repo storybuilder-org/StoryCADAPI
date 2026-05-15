@@ -8,8 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../StoryCAD/StoryCADLib/StoryCADLib.csproj"
-                      Condition="'$(UseStoryCADLibNuGet)' != 'true'" />
     <PackageReference Include="StoryCADLib" Version="$(StoryCADLibVersion)" ExcludeAssets="contentFiles"
                       Condition="'$(UseStoryCADLibNuGet)' == 'true'" />
   </ItemGroup>
