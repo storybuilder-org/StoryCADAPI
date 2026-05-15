@@ -164,5 +164,110 @@ namespace OutlinerTests
             Assert.IsTrue(result);
             Assert.IsTrue(File.Exists(_testOutputPath));
         }
+
+        // Issue #15 — the four labelled fields on Problem/Character/Setting/Scene pages
+        // ("Story Question", "Character Sketch", "Setting Summary", "Scene Sketch")
+        // all bind to StoryElement.Description on the base class. The OnePassResponse
+        // fields character_sketch / summary / story_question must land there.
+
+        [TestMethod]
+        public async Task BuildOutlineFromResponse_PopulatesCharacterDescription()
+        {
+            await _outlineBuilder.BuildOutlineFromResponse(_testResponse, _testOutputPath);
+
+            var hero = _api.GetElementsByType(StoryItemType.Character).Payload.Find(e => e.Name == "Hero");
+            Assert.IsNotNull(hero);
+            Assert.AreEqual("A brave hero", hero.Description);
+        }
+
+        [TestMethod]
+        public async Task BuildOutlineFromResponse_PopulatesSettingDescription()
+        {
+            await _outlineBuilder.BuildOutlineFromResponse(_testResponse, _testOutputPath);
+
+            var castle = _api.GetElementsByType(StoryItemType.Setting).Payload.Find(e => e.Name == "Castle");
+            Assert.IsNotNull(castle);
+            Assert.AreEqual("A medieval castle", castle.Description);
+        }
+
+        [TestMethod]
+        public async Task BuildOutlineFromResponse_PopulatesProblemDescription()
+        {
+            await _outlineBuilder.BuildOutlineFromResponse(_testResponse, _testOutputPath);
+
+            var problem = _api.GetElementsByType(StoryItemType.Problem).Payload.Find(e => e.Name == "Main Conflict");
+            Assert.IsNotNull(problem);
+            Assert.AreEqual("Will the hero succeed?", problem.Description);
+        }
+
+        [TestMethod]
+        public async Task BuildOutlineFromResponse_PopulatesSceneDescription()
+        {
+            await _outlineBuilder.BuildOutlineFromResponse(_testResponse, _testOutputPath);
+
+            var scene = _api.GetElementsByType(StoryItemType.Scene).Payload.Find(e => e.Name == "Opening Scene");
+            Assert.IsNotNull(scene);
+            Assert.AreEqual("The story begins", scene.Description);
+        }
+
+        // Issue #15 — non-Description property round-trips. A failure on a key near the
+        // end of OutlineBuilder's property dict is a tell that an earlier key threw and
+        // short-circuited the rest (UpdateElementProperty uses reflection and bails on
+        // any name that doesn't exist on the model).
+
+        [TestMethod]
+        public async Task BuildOutlineFromResponse_PopulatesCharacterAge()
+        {
+            _testResponse.Characters[0].Age = "30";
+            await _outlineBuilder.BuildOutlineFromResponse(_testResponse, _testOutputPath);
+
+            var hero = _api.GetElementsByType(StoryItemType.Character).Payload.Find(e => e.Name == "Hero") as CharacterModel;
+            Assert.IsNotNull(hero);
+            Assert.AreEqual("30", hero.Age);
+        }
+
+        [TestMethod]
+        public async Task BuildOutlineFromResponse_PopulatesSettingLocale()
+        {
+            _testResponse.Settings[0].Locale = "Castle hall";
+            await _outlineBuilder.BuildOutlineFromResponse(_testResponse, _testOutputPath);
+
+            var castle = _api.GetElementsByType(StoryItemType.Setting).Payload.Find(e => e.Name == "Castle") as SettingModel;
+            Assert.IsNotNull(castle);
+            Assert.AreEqual("Castle hall", castle.Locale);
+        }
+
+        [TestMethod]
+        public async Task BuildOutlineFromResponse_PopulatesProblemOutcome()
+        {
+            _testResponse.Problems[0].Outcome = "Hero wins";
+            await _outlineBuilder.BuildOutlineFromResponse(_testResponse, _testOutputPath);
+
+            var problem = _api.GetElementsByType(StoryItemType.Problem).Payload.Find(e => e.Name == "Main Conflict") as ProblemModel;
+            Assert.IsNotNull(problem);
+            Assert.AreEqual("Hero wins", problem.Outcome);
+        }
+
+        [TestMethod]
+        public async Task BuildOutlineFromResponse_PopulatesSceneProtagonistGoal()
+        {
+            _testResponse.Scenes[0].ProtGoal = "Win the battle";
+            await _outlineBuilder.BuildOutlineFromResponse(_testResponse, _testOutputPath);
+
+            var scene = _api.GetElementsByType(StoryItemType.Scene).Payload.Find(e => e.Name == "Opening Scene") as SceneModel;
+            Assert.IsNotNull(scene);
+            Assert.AreEqual("Win the battle", scene.ProtagGoal);
+        }
+
+        [TestMethod]
+        public async Task BuildOutlineFromResponse_PopulatesSceneOutcome()
+        {
+            _testResponse.Scenes[0].Outcome = "Battle won";
+            await _outlineBuilder.BuildOutlineFromResponse(_testResponse, _testOutputPath);
+
+            var scene = _api.GetElementsByType(StoryItemType.Scene).Payload.Find(e => e.Name == "Opening Scene") as SceneModel;
+            Assert.IsNotNull(scene);
+            Assert.AreEqual("Battle won", scene.Outcome);
+        }
     }
 }
