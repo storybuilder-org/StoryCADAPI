@@ -9,6 +9,13 @@ You are provided with the full prose of a short story. Your task is to process t
 
 ## Output Format
 
+Every story element has a main descriptive text field that surfaces in StoryCAD as the largest editable area on that element's page. For each element type, fill it with a substantive paragraph (not a label, not one sentence). The JSON key for this field differs by element:
+
+- `character_sketch` on a character
+- `summary` on a setting
+- `story_question` on a problem (framed as a question, e.g. "Will Marcus escape the maze before nightfall?")
+- `description` on a scene
+
 You must output a single JSON object with the following structure:
 ```json
 {

@@ -142,7 +142,7 @@ namespace Outliner.Services
             return new Dictionary<string, object>
             {
                 ["Name"] = character.Name ?? "",
-                ["CharacterSketch"] = character.CharacterSketch ?? "",
+                ["Description"] = character.CharacterSketch ?? "",
                 ["Role"] = character.Role ?? "",
                 ["Age"] = character.Age ?? "",
                 ["Sex"] = character.Sex ?? "",
@@ -158,8 +158,10 @@ namespace Outliner.Services
                 ["Focus"] = character.Focus ?? "",
                 ["PsychNotes"] = character.PsychNotes ?? "",
                 ["Flaw"] = character.Flaw ?? "",
-                ["BackStory"] = character.BackStory ?? "",
-                ["Relationships"] = character.Relationships ?? ""
+                ["BackStory"] = character.BackStory ?? ""
+                // Relationships is a collection (RelationshipList on CharacterModel)
+                // and is not settable via UpdateElementProperty. Skipped here; needs
+                // AddCollectionEntry if/when we want to round-trip it.
             };
         }
 
@@ -195,7 +197,7 @@ namespace Outliner.Services
             return new Dictionary<string, object>
             {
                 ["Name"] = setting.Name ?? "",
-                ["Summary"] = setting.Summary ?? "",
+                ["Description"] = setting.Summary ?? "",
                 ["Locale"] = setting.Locale ?? "",
                 ["Season"] = setting.Season ?? "",
                 ["Period"] = setting.Period ?? "",
@@ -245,13 +247,13 @@ namespace Outliner.Services
             return new Dictionary<string, object>
             {
                 ["Name"] = problem.Name ?? "",
-                ["StoryQuestion"] = problem.StoryQuestion ?? "",
+                ["Description"] = problem.StoryQuestion ?? "",
                 ["ProblemType"] = problem.ProblemType ?? "",
                 ["ConflictType"] = problem.ConflictType ?? "",
                 ["ProblemCategory"] = problem.ProblemCategory ?? "",
                 ["ProblemSource"] = problem.ProblemSource ?? "",
                 ["ProtGoal"] = problem.ProtGoal ?? "",
-                ["Significance"] = problem.Significance ?? "",
+                ["ProtMotive"] = problem.Significance ?? "",
                 ["AntagGoal"] = problem.AntagGoal ?? "",
                 ["AntagMotive"] = problem.AntagMotive ?? "",
                 ["Outcome"] = problem.Outcome ?? ""
@@ -278,8 +280,9 @@ namespace Outliner.Services
                     props["ViewpointCharacter"] = scene.ViewpointCharacter;
                 if (!string.IsNullOrEmpty(scene.Setting))
                     props["Setting"] = scene.Setting;
-                if (scene.Cast != null && scene.Cast.Count > 0)
-                    props["Cast"] = scene.Cast;
+                // Cast (SceneModel.CastMembers) is a collection and is not settable via
+                // UpdateElementProperty. Skipped here; needs AddCollectionEntry to
+                // round-trip the cast list.
 
                 var result = _api.AddElement(
                     StoryItemType.Scene,
@@ -304,10 +307,12 @@ namespace Outliner.Services
             {
                 ["Name"] = scene.Name ?? "",
                 ["Description"] = scene.Description ?? "",
-                ["ProtGoal"] = scene.ProtGoal ?? "",
+                ["ProtagGoal"] = scene.ProtGoal ?? "",
                 ["Significance"] = scene.Significance ?? "",
                 ["AntagGoal"] = scene.AntagGoal ?? "",
-                ["AntagMotive"] = scene.AntagMotive ?? "",
+                // AntagMotive has no equivalent on SceneModel (AntagEmotion is closest
+                // but semantically different). Skipped to avoid short-circuiting the
+                // rest of the property dict.
                 ["Outcome"] = scene.Outcome ?? ""
             };
         }
