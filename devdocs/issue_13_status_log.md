@@ -71,6 +71,7 @@ Branch: `issue-13-outliner-hardening` — merged to `main` via PR #19 at `a94474
 - Deleted `samples/Outliner/OutlinerTests/EndToEndOutlineTests.cs`. The `LiveLLM` test category went with the file.
 - Replaced it with a manual-test checklist `samples/Outliner/OutlinerTests/ManualTests/Outliner_End_To_End_Test.md` modeled on `StoryCAD/StoryCADTests/ManualTests/Smoke_Test.md`. Covers launch, prose read, outline generation, per-run artifacts, `.stbx` round-trip in StoryCAD, content spot-check, missing-API-key error path.
 - Build clean. Test run: **56/56 passing** (previous 52 + 4 restored stubbed-pipeline tests).
+- Merged via PR #20 at `00947bb` (merge commit); remote and local branches deleted.
 
 ### 2026-05-16 — Prompt v4: ScenePurpose, StoryRole, Person-vs-Self enforcement, Sketch vs Appearance
 - Five gaps surfaced from the manual end-to-end test against "Mirror, Mirror":
@@ -89,6 +90,7 @@ Branch: `issue-13-outliner-hardening` — merged to `main` via PR #19 at `a94474
   - Added three deterministic tests in `StubbedPipelineTests`: `CharacterStoryRoleAndRolePopulated`, `ScenePurposePopulated`, `CharacterSketchDistinctFromAppearance`.
 - Build clean. Test run: **59/59 passing** (was 56; +3 new v4 tests).
 - Live-LLM verification deferred to the next manual run. Schema/builder coverage is deterministic; whether the LLM honors the strengthened prompt rules under the v4 instructions needs an actual run against a real model.
+- Merged via PR #21 at `a771b0e` (merge commit); remote and local branches deleted. Manual re-run against "Mirror, Mirror" verified the five fixes before merge.
 
 ## Carry-forward for #13 completion
 
