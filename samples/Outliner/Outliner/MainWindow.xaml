@@ -8,6 +8,21 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Title="Outliner">
-    
-    <Frame x:Name="RootFrame"/>
+
+    <NavigationView x:Name="NavView"
+                    IsBackButtonVisible="Collapsed"
+                    IsSettingsVisible="False"
+                    PaneDisplayMode="Left"
+                    ItemInvoked="NavView_ItemInvoked">
+        <NavigationView.MenuItems>
+            <NavigationViewItem Tag="Single" Content="Single" Icon="Document"/>
+            <NavigationViewItem Tag="Batch"  Content="Batch"  Icon="AllApps"/>
+        </NavigationView.MenuItems>
+
+        <NavigationView.FooterMenuItems>
+            <NavigationViewItem Tag="Settings" Content="Settings" Icon="Setting"/>
+        </NavigationView.FooterMenuItems>
+
+        <Frame x:Name="ContentFrame"/>
+    </NavigationView>
 </Window>

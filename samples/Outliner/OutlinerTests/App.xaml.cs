@@ -11,8 +11,25 @@ namespace OutlinerTests;
 /// </summary>
 public partial class App : Application
 {
-    public static string InputDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestInputs");
-    public static string ResultsDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestResults");
+    // Inputs are shared with the app (real prose lives in Outliner/OutlinerInput).
+    // Outputs are test-only — they go inside OutlinerTests so they don't
+    // pollute the user's runtime OutlinerOutput folder.
+    public static string InputDir  = Path.Combine(FindOutlinerProjectDir(), "OutlinerInput");
+    public static string OutputDir = Path.Combine(FindTestsProjectDir(), "TestOutputs");
+
+    private static string FindTestsProjectDir()
+    {
+        var dir = new DirectoryInfo(AppContext.BaseDirectory);
+        while (dir != null && !File.Exists(Path.Combine(dir.FullName, "OutlinerTests.csproj")))
+            dir = dir.Parent;
+        if (dir == null)
+            throw new InvalidOperationException(
+                $"OutlinerTests.csproj not found walking up from {AppContext.BaseDirectory}");
+        return dir.FullName;
+    }
+
+    private static string FindOutlinerProjectDir()
+        => Path.GetFullPath(Path.Combine(FindTestsProjectDir(), "..", "Outliner"));
 
     /// <summary>
     /// Initializes the singleton application object.  This is the first line of authored code
@@ -25,7 +42,7 @@ public partial class App : Application
 
         // Create test directories if they don't exist
         Directory.CreateDirectory(InputDir);
-        Directory.CreateDirectory(ResultsDir);
+        Directory.CreateDirectory(OutputDir);
 
         InitializeComponent();
     }

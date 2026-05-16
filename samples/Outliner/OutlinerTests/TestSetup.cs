@@ -1,4 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.ChatCompletion;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StoryCADLib.Services.IoC;
 using System.IO;
 
@@ -10,36 +14,41 @@ namespace OutlinerTests
     [TestClass]
     public static class TestSetup
     {
-        /// <summary>
-        /// Runs once before any tests in the assembly.
-        /// Sets up IoC container and configures test environment.
-        /// </summary>
         [AssemblyInitialize]
         public static void Initialize(TestContext context)
         {
+            var apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
+            if (!string.IsNullOrWhiteSpace(apiKey))
+            {
+                var modelId = Environment.GetEnvironmentVariable("OPENAI_MODEL") ?? "gpt-4o";
+                var kernel = Kernel.CreateBuilder()
+                    .AddOpenAIChatCompletion(modelId, apiKey)
+                    .Build();
+
+                BootStrapper.Services.AddSingleton(kernel);
+                BootStrapper.Services.AddSingleton(kernel.GetRequiredService<IChatCompletionService>());
+            }
+
             BootStrapper.Initialise(headless: true);
 
-            // Create test directories
             Directory.CreateDirectory(App.InputDir);
-            Directory.CreateDirectory(App.ResultsDir);
+            Directory.CreateDirectory(App.OutputDir);
+
+            foreach (var stale in Directory.GetFiles(App.OutputDir, "*.stbx"))
+                File.Delete(stale);
+            foreach (var stale in Directory.GetFiles(App.OutputDir, "*.raw.json"))
+                File.Delete(stale);
+            foreach (var stale in Directory.GetFiles(App.OutputDir, "*.costs.json"))
+                File.Delete(stale);
+            foreach (var stale in Directory.GetFiles(App.OutputDir, "*.rating.json"))
+                File.Delete(stale);
         }
 
-        /// <summary>
-        /// Runs once after all tests in the assembly complete.
-        /// Cleans up resources to ensure clean shutdown.
-        /// </summary>
         [AssemblyCleanup]
         public static void Cleanup()
         {
-            // Clean up test files
-            try
-            {
-                if (Directory.Exists(App.ResultsDir))
-                {
-                    Directory.Delete(App.ResultsDir, true);
-                }
-            }
-            catch { }
+            // TestOutputs are intentionally left on disk so a human can open the
+            // generated .stbx files in StoryCAD and judge the outline quality.
         }
     }
 }

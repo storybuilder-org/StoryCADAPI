@@ -20,11 +20,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="TestInputs\*.stbx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="TestInputs\*.docx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Include="..\Outliner\Prompts\OnePassSystemPrompt.md" Link="Prompts\OnePassSystemPrompt.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
@@ -64,4 +61,5 @@
   <ItemGroup>
     <ProjectReference Include="..\Outliner\Outliner.csproj" />
   </ItemGroup>
+
 </Project>

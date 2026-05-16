@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="Outliner.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Outliner"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel Margin="20" Spacing="10">
+
+        <TextBlock Text="Settings" FontSize="20" FontWeight="Bold"/>
+
+        <TextBlock Text="Startup mode" FontWeight="SemiBold" Margin="0,15,0,5"/>
+        <TextBlock TextWrapping="Wrap" Foreground="Gray">
+            Which page Outliner opens to when launched.
+        </TextBlock>
+
+        <StackPanel Orientation="Vertical" Spacing="5" Margin="0,5,0,0">
+            <RadioButton Content="Single — pick one prose file at a time"
+                         GroupName="StartupMode"
+                         IsChecked="{x:Bind PageVm.IsStartupSingle, Mode=TwoWay}"/>
+            <RadioButton Content="Batch — process a folder of prose files"
+                         GroupName="StartupMode"
+                         IsChecked="{x:Bind PageVm.IsStartupBatch, Mode=TwoWay}"/>
+        </StackPanel>
+
+        <TextBlock Text="Default folders" FontWeight="SemiBold" Margin="0,20,0,5"/>
+        <TextBlock TextWrapping="Wrap" Foreground="Gray">
+            Where Outliner's file pickers start. Used by both Single and Batch modes.
+        </TextBlock>
+
+        <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,5,0,0">
+            <Button Content="Pick Input Folder…"  Command="{x:Bind PageVm.PickInputFolderCommand}"  Width="170"/>
+            <TextBlock Text="{x:Bind PageVm.DefaultInputFolder, Mode=OneWay}" VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Spacing="10">
+            <Button Content="Pick Output Folder…" Command="{x:Bind PageVm.PickOutputFolderCommand}" Width="170"/>
+            <TextBlock Text="{x:Bind PageVm.DefaultOutputFolder, Mode=OneWay}" VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <TextBlock TextWrapping="Wrap" Foreground="Gray" FontStyle="Italic" Margin="0,15,0,0">
+            Changes save automatically.
+        </TextBlock>
+    </StackPanel>
+</Page>

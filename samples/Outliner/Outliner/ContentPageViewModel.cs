@@ -3,17 +3,14 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
-using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml;
 using System;
 using System.IO;
-using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
-using DocumentFormat.OpenXml.Packaging;
 using StoryCADLib.Services.API;
-using UglyToad.PdfPig;
-using UglyToad.PdfPig.Content;
 using Outliner.Services;
 
 namespace Outliner
@@ -25,10 +22,12 @@ namespace Outliner
     /// </summary>
     public class ContentPageViewModel : ObservableObject
     {
-        // Services
+        // Pipeline + a peek at the analyzer for prose-length validation in
+        // the file-loading step. The runner orchestrates analyze + build +
+        // artifact writes for both single and batch modes.
+        private readonly OutlineRunner _runner;
         private readonly ProseAnalyzer _proseAnalyzer;
-        private readonly OutlineBuilder _outlineBuilder;
-        private readonly DispatcherQueue _dispatcher;
+        private readonly ProseDocumentReader _proseReader;
 
         // File management
         private StorageFile? _storyFile;
@@ -39,6 +38,32 @@ namespace Outliner
         public IAsyncRelayCommand SelectOutputFileCommand { get; }
         public IAsyncRelayCommand OutputFileCommand { get; }  // Alias for SelectOutputFileCommand
         public IAsyncRelayCommand CreateOutlineCommand { get; }
+        public IRelayCommand ThumbsUpCommand { get; }
+        public IRelayCommand ThumbsDownCommand { get; }
+
+        // Feedback state — captured after a successful outline creation.
+        // Public properties so VM tests can pre-populate them and exercise
+        // SubmitFeedback without driving a full LLM round-trip.
+        private OnePassResponse? _lastResponse;
+        public OnePassResponse? LastResponse
+        {
+            get => _lastResponse;
+            set => SetProperty(ref _lastResponse, value);
+        }
+
+        private OutlineCost? _lastCost;
+        public OutlineCost? LastCost
+        {
+            get => _lastCost;
+            set => SetProperty(ref _lastCost, value);
+        }
+
+        private string? _lastOutputPath;
+        public string? LastOutputPath
+        {
+            get => _lastOutputPath;
+            set => SetProperty(ref _lastOutputPath, value);
+        }
 
         // Window handle for file picker initialization (read lazily from App)
         public IntPtr WindowHandle => App.MWindowHandle;
@@ -94,19 +119,49 @@ namespace Outliner
             set => SetProperty(ref _chatHistoryText, value);
         }
 
+        private bool _showFeedbackPanel;
+        public bool ShowFeedbackPanel
+        {
+            get => _showFeedbackPanel;
+            set
+            {
+                if (SetProperty(ref _showFeedbackPanel, value))
+                    OnPropertyChanged(nameof(FeedbackVisibility));
+            }
+        }
+
+        public Visibility FeedbackVisibility =>
+            _showFeedbackPanel ? Visibility.Visible : Visibility.Collapsed;
+
+        private string _userFeedback = string.Empty;
+        public string UserFeedback
+        {
+            get => _userFeedback;
+            set => SetProperty(ref _userFeedback, value);
+        }
+
+        private string _feedbackStatus = string.Empty;
+        public string FeedbackStatus
+        {
+            get => _feedbackStatus;
+            set => SetProperty(ref _feedbackStatus, value);
+        }
+
         #endregion
 
         public ContentPageViewModel()
         {
-            _dispatcher = DispatcherQueue.GetForCurrentThread();
-
-            // Initialize services from DI container
+            // Build pipeline components and assemble the shared runner. The
+            // analyzer reference is kept so we can validate prose length and
+            // surface LastCost on the feedback panel.
             var kernel = Ioc.Default.GetRequiredService<Kernel>();
             var chatService = Ioc.Default.GetRequiredService<IChatCompletionService>();
             var api = Ioc.Default.GetRequiredService<StoryCADApi>();
 
             _proseAnalyzer = new ProseAnalyzer(kernel, chatService);
-            _outlineBuilder = new OutlineBuilder(api);
+            _proseReader   = new ProseDocumentReader();
+            var builder    = new OutlineBuilder(api);
+            _runner        = new OutlineRunner(_proseReader, _proseAnalyzer, builder);
 
             // Initialize commands
             ReadStoryCommand = new AsyncRelayCommand(ReadStoryFileAsync);
@@ -115,6 +170,42 @@ namespace Outliner
             CreateOutlineCommand = new AsyncRelayCommand(
                 CreateOutlineAsync,
                 CanCreateOutline);
+            ThumbsUpCommand = new RelayCommand(() => SubmitFeedback("thumbs_up"));
+            ThumbsDownCommand = new RelayCommand(() => SubmitFeedback("thumbs_down"));
+        }
+
+        /// <summary>
+        /// Writes an OutlineRating beside the .stbx capturing the user's
+        /// thumbs verdict and any free-text feedback. Heuristic auto-rating
+        /// is also recorded so we have signal even when feedback is sparse.
+        /// </summary>
+        public void SubmitFeedback(string userRating)
+        {
+            if (LastResponse == null || string.IsNullOrEmpty(LastOutputPath))
+                return;
+
+            var rating = OutlineRating.ComputeAuto(
+                LastResponse,
+                _storyFile?.Name,
+                LastCost?.ModelId);
+            rating.UserRating = userRating;
+            rating.UserFeedback = string.IsNullOrWhiteSpace(UserFeedback) ? null : UserFeedback;
+
+            try
+            {
+                var ratingPath = Path.ChangeExtension(LastOutputPath, ".rating.json");
+                var json = JsonSerializer.Serialize(
+                    rating,
+                    new JsonSerializerOptions { WriteIndented = true });
+                File.WriteAllText(ratingPath, json);
+                FeedbackStatus = $"Thanks — feedback saved to {Path.GetFileName(ratingPath)}.";
+            }
+            catch (Exception ex)
+            {
+                FeedbackStatus = $"Couldn't save feedback: {ex.Message}";
+            }
+
+            ShowFeedbackPanel = false;
         }
 
         /// <summary>
@@ -152,13 +243,7 @@ namespace Outliner
                 ProgressStatus = $"Reading {_storyFile.Name}...";
                 IsProcessing = true;
 
-                StoryText = _storyFile.FileType.ToLower() switch
-                {
-                    ".txt" => await Windows.Storage.FileIO.ReadTextAsync(_storyFile),
-                    ".docx" => await ReadDocxAsync(_storyFile),
-                    ".pdf" => await ReadPdfAsync(_storyFile),
-                    _ => string.Empty
-                };
+                StoryText = await _proseReader.ReadAsync(_storyFile.Path);
 
                 if (!string.IsNullOrWhiteSpace(StoryText))
                 {
@@ -222,58 +307,42 @@ namespace Outliner
             try
             {
                 IsProcessing = true;
-                ProgressValue = 0;
-
-                // Phase 1: Analyze prose
-                ProgressStatus = "Phase 1: Analyzing story with AI...";
                 ProgressValue = 20;
 
-                var analysisResult = await _proseAnalyzer.AnalyzeProse(StoryText);
+                var progress = new Progress<string>(msg => ProgressStatus = msg);
 
-                if (analysisResult == null)
-                {
-                    ContentText = "Failed to analyze story. Please try again.";
-                    return;
-                }
-
-                ProgressValue = 50;
-                var analysisText = $"Found: {analysisResult.Characters?.Count ?? 0} characters, " +
-                                   $"{analysisResult.Settings?.Count ?? 0} settings, " +
-                                   $"{analysisResult.Scenes?.Count ?? 0} scenes, " +
-                                   $"{analysisResult.Problems?.Count ?? 0} problems";
-                AnalysisResultText = analysisText;
-                ChatHistoryText = $"Analysis complete:\n{analysisText}";
-
-                // Phase 2: Build outline
-                ProgressStatus = "Phase 2: Building StoryCAD outline...";
-                ProgressValue = 70;
-
-                var success = await _outlineBuilder.BuildOutlineFromResponse(
-                    analysisResult,
-                    _outputFile.Path);
+                var inputName = _storyFile?.Name ?? "loaded prose";
+                var result = await _runner.RunFromTextAsync(
+                    StoryText,
+                    inputName,
+                    _outputFile.Path,
+                    progress);
 
                 ProgressValue = 100;
 
-                if (success)
+                if (result.IsSuccess && result.Response != null)
                 {
+                    AnalysisResultText =
+                        $"Found: {result.Response.Characters?.Count ?? 0} characters, " +
+                        $"{result.Response.Settings?.Count ?? 0} settings, " +
+                        $"{result.Response.Scenes?.Count ?? 0} scenes, " +
+                        $"{result.Response.Problems?.Count ?? 0} problems";
+                    ChatHistoryText = $"Analysis complete:\n{AnalysisResultText}";
                     ContentText = $"✓ Outline successfully created and saved to:\n{_outputFile.Path}";
                     ProgressStatus = "Complete!";
+
+                    LastResponse = result.Response;
+                    LastCost = result.Cost;
+                    LastOutputPath = _outputFile.Path;
+                    UserFeedback = string.Empty;
+                    FeedbackStatus = string.Empty;
+                    ShowFeedbackPanel = true;
                 }
                 else
                 {
-                    ContentText = "⚠ Outline was partially created. Some elements may be missing.";
-                    ProgressStatus = "Completed with warnings";
+                    ContentText = result.ErrorMessage ?? "Outline could not be created.";
+                    ProgressStatus = "Failed";
                 }
-            }
-            catch (InvalidOperationException ex)
-            {
-                ContentText = $"Validation error: {ex.Message}";
-                ProgressStatus = "Failed";
-            }
-            catch (Exception ex)
-            {
-                ContentText = $"Error creating outline: {ex.Message}";
-                ProgressStatus = "Failed";
             }
             finally
             {
@@ -282,31 +351,5 @@ namespace Outliner
             }
         }
 
-        /// <summary>
-        /// Reads content from a .docx file.
-        /// </summary>
-        private static async Task<string> ReadDocxAsync(StorageFile file)
-        {
-            using var stream = await file.OpenStreamForReadAsync();
-            using var doc = WordprocessingDocument.Open(stream, false);
-            return doc.MainDocumentPart?.Document.Body?.InnerText ?? string.Empty;
-        }
-
-        /// <summary>
-        /// Reads content from a .pdf file.
-        /// </summary>
-        private static async Task<string> ReadPdfAsync(StorageFile file)
-        {
-            var sb = new StringBuilder();
-            using var stream = await file.OpenStreamForReadAsync();
-            using var pdf = PdfDocument.Open(stream);
-
-            foreach (var page in pdf.GetPages())
-            {
-                sb.AppendLine(page.Text);
-            }
-
-            return sb.ToString();
-        }
     }
 }

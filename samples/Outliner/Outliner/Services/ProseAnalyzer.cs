@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -14,6 +15,9 @@ namespace Outliner.Services
     /// </summary>
     public class ProseAnalyzer
     {
+        public string? LastRawResponse { get; private set; }
+        public OutlineCost? LastCost { get; private set; }
+
         private readonly Kernel _kernel;
         private readonly IChatCompletionService _chatService;
         private readonly OpenAIPromptExecutionSettings _executionSettings;
@@ -75,6 +79,9 @@ namespace Outliner.Services
                     _executionSettings,
                     _kernel);
 
+                LastRawResponse = result.Content;
+                LastCost = ExtractCost(result);
+
                 if (string.IsNullOrWhiteSpace(result.Content))
                 {
                     throw new InvalidOperationException("LLM returned empty response");
@@ -119,6 +126,33 @@ namespace Outliner.Services
         public int EstimateTokenCount(string text)
         {
             return text.Length / TokensPerCharacterEstimate;
+        }
+
+        /// <summary>
+        /// Pre-flight worst-case cost estimate for analyzing the given prose.
+        /// Output tokens are estimated at the configured MaxTokens ceiling, so
+        /// the returned figure is an upper bound — actual cost (LastCost after
+        /// AnalyzeProse) is typically significantly lower. Useful for letting
+        /// the UI warn before a long round-trip.
+        /// </summary>
+        public OutlineCost EstimateCost(string proseText, string? modelId = null)
+        {
+            var actualModel = modelId
+                ?? Environment.GetEnvironmentVariable("OPENAI_MODEL")
+                ?? "gpt-4o";
+            var inputTokens  = EstimateTokenCount(proseText);
+            var outputTokens = _executionSettings.MaxTokens ?? 16000;
+            var (inputCost, outputCost) = ModelPriceTable.Compute(actualModel, inputTokens, outputTokens);
+
+            return new OutlineCost
+            {
+                ModelId = actualModel,
+                InputTokens = inputTokens,
+                OutputTokens = outputTokens,
+                InputCostUsd = inputCost,
+                OutputCostUsd = outputCost,
+                PriceTableValidAsOf = ModelPriceTable.ValidAsOf
+            };
         }
 
         /// <summary>
@@ -212,39 +246,33 @@ namespace Outliner.Services
 
         /// <summary>
         /// Validates that all elements have GUIDs for cross-referencing.
+        /// LLMs frequently emit strings that look like GUIDs but contain non-hex
+        /// characters; in that case we regenerate a fresh GUID and remap every
+        /// cross-reference so cast/protagonist/setting links survive.
         /// </summary>
         private void ValidateGuids(OnePassResponse response)
         {
-            if (response.Characters != null)
-            {
-                foreach (var character in response.Characters)
-                {
-                    if (string.IsNullOrWhiteSpace(character.Guid))
-                    {
-                        // Generate a GUID if missing
-                        character.Guid = Guid.NewGuid().ToString();
-                    }
-                }
-            }
+            var remap = new Dictionary<string, string>();
 
-            if (response.Settings != null)
-            {
-                foreach (var setting in response.Settings)
-                {
-                    if (string.IsNullOrWhiteSpace(setting.Guid))
-                    {
-                        setting.Guid = Guid.NewGuid().ToString();
-                    }
-                }
-            }
+            EnsureValidGuids(response.Characters, c => c.Guid, (c, g) => c.Guid = g, remap);
+            EnsureValidGuids(response.Settings,   s => s.Guid, (s, g) => s.Guid = g, remap);
+            EnsureValidGuids(response.Scenes,     s => s.Guid, (s, g) => s.Guid = g, remap);
+            EnsureValidGuids(response.Problems,   p => p.Guid, (p, g) => p.Guid = g, remap);
+
+            if (remap.Count == 0) return;
 
             if (response.Scenes != null)
             {
                 foreach (var scene in response.Scenes)
                 {
-                    if (string.IsNullOrWhiteSpace(scene.Guid))
+                    scene.Protagonist        = Remap(scene.Protagonist, remap);
+                    scene.Antagonist         = Remap(scene.Antagonist, remap);
+                    scene.ViewpointCharacter = Remap(scene.ViewpointCharacter, remap);
+                    scene.Setting            = Remap(scene.Setting, remap);
+                    if (scene.Cast != null)
                     {
-                        scene.Guid = Guid.NewGuid().ToString();
+                        for (int i = 0; i < scene.Cast.Count; i++)
+                            scene.Cast[i] = Remap(scene.Cast[i], remap) ?? scene.Cast[i];
                     }
                 }
             }
@@ -253,12 +281,79 @@ namespace Outliner.Services
             {
                 foreach (var problem in response.Problems)
                 {
-                    if (string.IsNullOrWhiteSpace(problem.Guid))
-                    {
-                        problem.Guid = Guid.NewGuid().ToString();
-                    }
+                    problem.Protagonist = Remap(problem.Protagonist, remap);
+                    problem.Antagonist  = Remap(problem.Antagonist, remap);
                 }
             }
+        }
+
+        private static void EnsureValidGuids<T>(
+            List<T>? items,
+            Func<T, string> get,
+            Action<T, string> set,
+            Dictionary<string, string> remap)
+        {
+            if (items == null) return;
+            foreach (var item in items)
+            {
+                var current = get(item);
+                if (string.IsNullOrWhiteSpace(current) || !Guid.TryParse(current, out _))
+                {
+                    var fresh = Guid.NewGuid().ToString();
+                    if (!string.IsNullOrWhiteSpace(current))
+                        remap[current] = fresh;
+                    set(item, fresh);
+                }
+            }
+        }
+
+        private static string? Remap(string? value, Dictionary<string, string> remap)
+        {
+            if (string.IsNullOrEmpty(value)) return value;
+            return remap.TryGetValue(value, out var fresh) ? fresh : value;
+        }
+
+        /// <summary>
+        /// Reads token usage from the SK result's Usage metadata (the OpenAI
+        /// connector populates an OpenAI.Chat.ChatTokenUsage there). Reflection
+        /// keeps us decoupled from a specific OpenAI SDK version.
+        /// </summary>
+        private static OutlineCost ExtractCost(Microsoft.SemanticKernel.ChatMessageContent result)
+        {
+            var modelId = result.ModelId
+                ?? Environment.GetEnvironmentVariable("OPENAI_MODEL")
+                ?? "gpt-4o";
+
+            int inputTokens = 0;
+            int outputTokens = 0;
+
+            try
+            {
+                if (result.Metadata != null
+                    && result.Metadata.TryGetValue("Usage", out var usageObj)
+                    && usageObj != null)
+                {
+                    var t = usageObj.GetType();
+                    inputTokens  = (t.GetProperty("InputTokenCount")?.GetValue(usageObj) as int?) ?? 0;
+                    outputTokens = (t.GetProperty("OutputTokenCount")?.GetValue(usageObj) as int?) ?? 0;
+                }
+            }
+            catch
+            {
+                // Best-effort; unknown metadata shape just yields zero tokens
+            }
+
+            var (inputCost, outputCost) = ModelPriceTable.Compute(modelId, inputTokens, outputTokens);
+
+            return new OutlineCost
+            {
+                ModelId = modelId,
+                InputTokens = inputTokens,
+                OutputTokens = outputTokens,
+                InputCostUsd = inputCost,
+                OutputCostUsd = outputCost,
+                PriceTableValidAsOf = ModelPriceTable.ValidAsOf
+            };
         }
 
         /// <summary>

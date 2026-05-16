@@ -407,4 +407,27 @@ FodyWeavers.xsd
 # docfx build output
 docs/_site/
 
+# Outliner runtime outputs (user-picked output folder)
+samples/Outliner/Outliner/OutlinerOutput/
+
+# Outliner test outputs (regenerated each test run)
+samples/Outliner/OutlinerTests/TestOutputs/
+
+# Outliner — never commit prose stories, generated outlines, or per-run JSON
+# artifacts to either project. They are user IP / generated content.
+samples/Outliner/Outliner/**/*.docx
+samples/Outliner/Outliner/**/*.pdf
+samples/Outliner/Outliner/**/*.txt
+samples/Outliner/Outliner/**/*.stbx
+samples/Outliner/Outliner/**/*.raw.json
+samples/Outliner/Outliner/**/*.costs.json
+samples/Outliner/Outliner/**/*.rating.json
+samples/Outliner/OutlinerTests/**/*.docx
+samples/Outliner/OutlinerTests/**/*.pdf
+samples/Outliner/OutlinerTests/**/*.txt
+samples/Outliner/OutlinerTests/**/*.stbx
+samples/Outliner/OutlinerTests/**/*.raw.json
+samples/Outliner/OutlinerTests/**/*.costs.json
+samples/Outliner/OutlinerTests/**/*.rating.json
+
 
