@@ -86,6 +86,6 @@ namespace Outliner.Services
     /// </summary>
     internal static class OutlinePrompt
     {
-        public const string Version = "v3";
+        public const string Version = "v4";
     }
 }

@@ -26,11 +26,12 @@ Output a single JSON object with this exact shape. All inner property names are 
     {
       "guid": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
       "name": "Character name",
-      "characterSketch": "one or two sentences",
-      "role": "Protagonist | Antagonist | Supporting | Mentor | Guide | ...",
+      "characterSketch": "one or two sentences naming who this person is in the story's world (role + age, e.g. 'An awkward high-school boy.'). Do NOT describe physical appearance here.",
+      "role": "the character's job, station, or role in their world (free-form): e.g. 'Student', 'Smith', 'Tax Collector', 'AI Mirror'",
+      "storyRole": "Antagonist | Major Role | Minor Role | Protagonist | Service Role | Supporting Role",
       "age": "...",
       "sex": "...",
-      "appearance": "...",
+      "appearance": "physical description only — height, build, hair, eyes, distinguishing features. Must NOT repeat characterSketch.",
       "physNotes": "...",
       "psychNotes": "...",
       "flaw": "...",
@@ -57,6 +58,7 @@ Output a single JSON object with this exact shape. All inner property names are 
       "viewpointCharacter": "GUID of POV character",
       "setting": "GUID of the scene's setting",
       "cast": ["GUID", "GUID"],
+      "scenePurpose": ["Advance the Plot", "Develop Characters"],
       "protagonist": "GUID",
       "protGoal": "...",
       "antagonist": "GUID",
@@ -104,9 +106,52 @@ A problem is a **conflict between two opposing goals**. Every problem has a prot
 
 Also fill `subject` (what the conflict is about), `theme` (the abstract idea at stake), and `method` (how the problem is approached) on every problem.
 
-### Person vs. Self conflicts
+### Person vs. Self conflicts — strict rule
 
-If you classify a problem as **Person vs. Self**, the protagonist and the antagonist are the **same character** — set both `protagonist` and `antagonist` to that character's GUID. Do not invent a separate antagonist. The opposing force is internal (self-doubt, addiction, identity crisis, moral choice, etc.). The principle of antagonism above still applies: the same character has two opposing internal goals, each with its own motive and conflict.
+If you classify a problem as **Person vs. Self**, the protagonist and the antagonist are the **same character**. This rule is absolute and has two consequences you must enforce:
+
+1. On the **Problem**: set both `protagonist` and `antagonist` to that character's GUID. Do not invent a separate antagonist. Do not name a sentient object, AI, mentor, or guide as the antagonist of a Person vs. Self problem — those are aids or foils, not opponents. The opposing force is internal (self-doubt, addiction, identity crisis, moral choice, etc.).
+2. On **every Scene that serves this Problem**: the scene's `protagonist` and `antagonist` must also be the **same character** as on the parent Problem. A scene cannot frame the conflict as Person vs. Person if the underlying Problem is Person vs. Self.
+
+The principle of antagonism above still applies: the same character has two opposing internal goals, each with its own motive and conflict. Fill `antagGoal`, `antagMotive`, `antagConflict` as the character's *resistant* internal pull (fear, denial, attachment to the old self), not as the external aid's goals.
+
+If you find yourself wanting to put a different character into the antagonist slot, the conflict is not Person vs. Self — reclassify it.
+
+### Scene purpose — required, multi-select
+
+Every scene must include a `scenePurpose` array with **one or more** of the following exact values, no others:
+
+- `"Advance the Plot"`
+- `"Build Conflict/Problems"`
+- `"Build Suspense"`
+- `"Develop Characters"`
+- `"Introduce Situation"`
+- `"Develop Setting"`
+- `"Establish Tone/Atmosphere"`
+- `"Provide Twist/Surprise"`
+- `"Misdirect Reader (Red Herring)"`
+
+Pick the values that genuinely apply to the scene. Multiple values are expected — most scenes do more than one thing. An opening scene might be `["Introduce Situation", "Establish Tone/Atmosphere", "Develop Setting"]`; a climax `["Advance the Plot", "Build Suspense"]`. Do not invent new purposes or paraphrase the canonical strings.
+
+### Character story role — fixed list
+
+The `storyRole` field uses **only** these exact values:
+
+- `"Protagonist"`
+- `"Antagonist"`
+- `"Major Role"`
+- `"Minor Role"`
+- `"Supporting Role"`
+- `"Service Role"`
+
+This is the character's **narrative function**. It is separate from `role`, which is the character's free-form occupation/station in their world (e.g. "Student", "Smith"). Both fields are required — do not put narrative-role values like "Protagonist" into `role`, and do not put occupation values like "Student" into `storyRole`.
+
+### Character sketch vs. appearance — keep them distinct
+
+- `characterSketch`: a one- or two-sentence summary of **who this person is in the story** — role and age and identity, *not* physical traits. Examples: "An awkward high-school boy.", "A weary blacksmith near retirement.", "An AI program designed to reflect identities."
+- `appearance`: physical description **only** — height, build, hair, eyes, scars, clothing, posture. Examples: "Too tall, too thin, with a swollen cheek and haunted eyes.", "A digital avatar that shifts between reflected figures."
+
+The two fields must not contain the same text. If physical details belong to a character, they go in `appearance`; the sketch stays at the role/identity level.
 
 ### Settings — always emit at least one
 
@@ -146,8 +191,8 @@ Expected output shape (truncated for brevity):
     "concept": "A village smith confronted by an unjust tax."
   },
   "characters": [
-    { "guid": "aaaaaaaa-1111-1111-1111-aaaaaaaaaaaa", "name": "The Smith", "role": "Protagonist", "characterSketch": "A weary blacksmith." },
-    { "guid": "bbbbbbbb-2222-2222-2222-bbbbbbbbbbbb", "name": "Tax Collector", "role": "Antagonist", "characterSketch": "An armed agent of the new lord." }
+    { "guid": "aaaaaaaa-1111-1111-1111-aaaaaaaaaaaa", "name": "The Smith", "role": "Smith", "storyRole": "Protagonist", "characterSketch": "A weary village blacksmith.", "appearance": "Soot-stained, broad-shouldered, with calloused hands." },
+    { "guid": "bbbbbbbb-2222-2222-2222-bbbbbbbbbbbb", "name": "Tax Collector", "role": "Tax Collector", "storyRole": "Antagonist", "characterSketch": "An armed agent of the new lord.", "appearance": "Sword at his hip, livery of the new regime." }
   ],
   "settings": [
     { "guid": "cccccccc-3333-3333-3333-cccccccccccc", "name": "The Forge", "locale": "village smithy", "sights": "anvil, glowing iron", "sounds": "hammer on steel" }
@@ -158,6 +203,7 @@ Expected output shape (truncated for brevity):
       "viewpointCharacter": "aaaaaaaa-1111-1111-1111-aaaaaaaaaaaa",
       "setting": "cccccccc-3333-3333-3333-cccccccccccc",
       "cast": ["aaaaaaaa-1111-1111-1111-aaaaaaaaaaaa", "bbbbbbbb-2222-2222-2222-bbbbbbbbbbbb"],
+      "scenePurpose": ["Advance the Plot", "Build Conflict/Problems"],
       "protagonist": "aaaaaaaa-1111-1111-1111-aaaaaaaaaaaa",
       "protGoal": "Refuse the unjust tax",
       "antagonist": "bbbbbbbb-2222-2222-2222-bbbbbbbbbbbb",

@@ -39,6 +39,7 @@ namespace Outliner
         public string? Name { get; set; }
         public string? CharacterSketch { get; set; }
         public string? Role { get; set; }
+        public string? StoryRole { get; set; }
         public string? Age { get; set; }
         public string? Sex { get; set; }
         public string? Eyes { get; set; }
@@ -87,6 +88,7 @@ namespace Outliner
         public string? ViewpointCharacter { get; set; }
         public string? Setting { get; set; }
         public List<string>? Cast { get; set; }
+        public List<string>? ScenePurpose { get; set; }
     }
 
     public class ProblemElement
