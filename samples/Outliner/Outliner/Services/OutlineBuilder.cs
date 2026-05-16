@@ -149,6 +149,7 @@ namespace Outliner.Services
         {
             var props = new Dictionary<string, object>();
             AddIfPresent(props, "Role",       character.Role);
+            AddIfPresent(props, "StoryRole",  character.StoryRole);
             AddIfPresent(props, "Age",        character.Age);
             AddIfPresent(props, "Sex",        character.Sex);
             AddIfPresent(props, "Eyes",       character.Eyes);
@@ -316,6 +317,15 @@ namespace Outliner.Services
                         {
                             if (!string.IsNullOrWhiteSpace(castGuid))
                                 _api.AddCollectionEntry(Guid.Parse(scene.Guid), "CastMembers", castGuid);
+                        }
+                    }
+
+                    if (scene.ScenePurpose != null)
+                    {
+                        foreach (var purpose in scene.ScenePurpose)
+                        {
+                            if (!string.IsNullOrWhiteSpace(purpose))
+                                _api.AddCollectionEntry(Guid.Parse(scene.Guid), "ScenePurpose", purpose);
                         }
                     }
                 }

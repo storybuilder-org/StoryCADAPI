@@ -109,6 +109,74 @@ namespace OutlinerTests
         }
 
         [TestMethod]
+        public async Task StubbedPipeline_MirrorMirror_CharacterStoryRoleAndRolePopulated()
+        {
+            var canned = await LoadFixtureAsync();
+            var runner = BuildStubbedRunner(canned);
+
+            var outputPath = Path.Combine(App.OutputDir, "stub_roles.stbx");
+            var result = await runner.RunFromTextAsync(
+                "stub prose",
+                "Mirror, Mirror.docx",
+                outputPath);
+
+            Assert.IsTrue(result.IsSuccess);
+            var characters = result.Response!.Characters!;
+            Assert.IsTrue(characters.Count >= 2);
+
+            var jaime = characters[0];
+            Assert.AreEqual("Student",     jaime.Role,      "Role is free-form (e.g. Student), not the narrative role.");
+            Assert.AreEqual("Protagonist", jaime.StoryRole, "StoryRole is the fixed-list narrative role.");
+
+            var possibility = characters[1];
+            Assert.AreEqual("AI Mirror",        possibility.Role);
+            Assert.AreEqual("Supporting Role",  possibility.StoryRole);
+        }
+
+        [TestMethod]
+        public async Task StubbedPipeline_MirrorMirror_ScenePurposePopulated()
+        {
+            var canned = await LoadFixtureAsync();
+            var runner = BuildStubbedRunner(canned);
+
+            var outputPath = Path.Combine(App.OutputDir, "stub_purpose.stbx");
+            var result = await runner.RunFromTextAsync(
+                "stub prose",
+                "Mirror, Mirror.docx",
+                outputPath);
+
+            Assert.IsTrue(result.IsSuccess);
+            var scene = result.Response!.Scenes![0];
+            Assert.IsNotNull(scene.ScenePurpose, "Scene.ScenePurpose deserialized as null.");
+            Assert.IsTrue(scene.ScenePurpose!.Count >= 1, "Expected at least one scene purpose.");
+            CollectionAssert.Contains(scene.ScenePurpose, "Introduce Situation");
+            CollectionAssert.Contains(scene.ScenePurpose, "Develop Characters");
+        }
+
+        [TestMethod]
+        public async Task StubbedPipeline_MirrorMirror_CharacterSketchDistinctFromAppearance()
+        {
+            var canned = await LoadFixtureAsync();
+            var runner = BuildStubbedRunner(canned);
+
+            var outputPath = Path.Combine(App.OutputDir, "stub_sketch.stbx");
+            var result = await runner.RunFromTextAsync(
+                "stub prose",
+                "Mirror, Mirror.docx",
+                outputPath);
+
+            Assert.IsTrue(result.IsSuccess);
+            foreach (var character in result.Response!.Characters!)
+            {
+                if (string.IsNullOrWhiteSpace(character.CharacterSketch) ||
+                    string.IsNullOrWhiteSpace(character.Appearance))
+                    continue;
+                Assert.AreNotEqual(character.CharacterSketch, character.Appearance,
+                    $"Sketch and Appearance must not be identical for {character.Name}.");
+            }
+        }
+
+        [TestMethod]
         public async Task StubbedPipeline_MirrorMirror_RatingArtifactWritten()
         {
             var canned = await LoadFixtureAsync();
