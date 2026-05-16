@@ -14,8 +14,9 @@ public partial class App : Application
     // Inputs are shared with the app (real prose lives in Outliner/OutlinerInput).
     // Outputs are test-only — they go inside OutlinerTests so they don't
     // pollute the user's runtime OutlinerOutput folder.
-    public static string InputDir  = Path.Combine(FindOutlinerProjectDir(), "OutlinerInput");
-    public static string OutputDir = Path.Combine(FindTestsProjectDir(), "TestOutputs");
+    public static string InputDir    = Path.Combine(FindOutlinerProjectDir(), "OutlinerInput");
+    public static string OutputDir   = Path.Combine(FindTestsProjectDir(), "TestOutputs");
+    public static string FixturesDir = Path.Combine(FindTestsProjectDir(), "Fixtures");
 
     private static string FindTestsProjectDir()
     {
@@ -43,6 +44,7 @@ public partial class App : Application
         // Create test directories if they don't exist
         Directory.CreateDirectory(InputDir);
         Directory.CreateDirectory(OutputDir);
+        Directory.CreateDirectory(FixturesDir);
 
         InitializeComponent();
     }

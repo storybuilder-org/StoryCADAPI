@@ -430,4 +430,12 @@ samples/Outliner/OutlinerTests/**/*.raw.json
 samples/Outliner/OutlinerTests/**/*.costs.json
 samples/Outliner/OutlinerTests/**/*.rating.json
 
+# Exception: deterministic test fixtures (recorded LLM responses checked in for CI)
+!samples/Outliner/OutlinerTests/Fixtures/
+!samples/Outliner/OutlinerTests/Fixtures/**
+
+# Exception: manual-test prose fixtures (public-domain texts checked in for repeatable manual runs)
+!samples/Outliner/OutlinerTests/ManualTests/Fixtures/
+!samples/Outliner/OutlinerTests/ManualTests/Fixtures/**
+
 
