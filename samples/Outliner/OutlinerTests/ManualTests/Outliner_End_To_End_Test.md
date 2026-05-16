@@ -5,7 +5,7 @@
 ## Prerequisites
 - Fresh build of the Outliner sample (`samples/Outliner/Outliner`).
 - `OPENAI_API_KEY` set in the environment (and optionally `OPENAI_MODEL`, default `gpt-4o`).
-- A short prose file (`.docx`, `.pdf`, or `.txt`) — a short story is enough; novellas can take minutes.
+- Reference prose fixture: `samples/Outliner/OutlinerTests/ManualTests/Fixtures/the_story_of_an_hour.txt` (Kate Chopin, 1894, US public domain, ~1,050 words). Checked in so every tester runs against the same prose and the expected-output spot-checks below are meaningful.
 - StoryCAD installed and openable, for `.stbx` round-trip verification.
 
 ---
@@ -30,11 +30,11 @@
 **Time:** ~1 minute
 
 **Steps:**
-1. Click "Read Story" and pick the prose file.
-   **Expected:** File picker opens, accepts `.docx` / `.pdf` / `.txt`.
+1. Click "Read Story" and pick `Fixtures/the_story_of_an_hour.txt`.
+   **Expected:** File picker opens, accepts `.txt`. File loads.
 
 2. Confirm the prose loads into the `Story Content` text area.
-   **Expected:** Prose text visible in the text area (not the status accumulator). Status TextBlock shows a "Loaded: filename" message in gray.
+   **Expected:** Prose text visible in the text area (not the status accumulator); opens with "Knowing that Mrs. Mallard was afflicted with a heart trouble..." and ends with "of the joy that kills." Status TextBlock shows a "Loaded: the_story_of_an_hour.txt" message in gray.
 
 **Pass/Fail:** ______
 
@@ -97,21 +97,29 @@
 **Priority:** Critical
 **Time:** ~3 minutes
 
+LLM output varies run-to-run; assertions below name *what should appear*, not exact text. If the outline differs in obvious ways (wrong protagonist, missing characters, wrong conflict type) it's a failure worth investigating.
+
 **Steps:**
 1. Click Story Overview.
-   **Expected:** Title, Author, Premise populated. StoryType and StoryGenre populated. StoryProblem points at a real Problem element.
+   **Expected:** Title contains "Story of an Hour" or "Mrs. Mallard". Author "Kate Chopin". Premise references Mrs. Mallard, the news of her husband's death, her awakening to freedom, and her death when he returns alive. StoryType "Short-Short". StoryGenre something in the literary-fiction family ("Literary Fiction", "Drama", "Realism"). StoryProblem GUID points at the lone Problem element.
 
-2. Click each Character.
-   **Expected:** Role, Age, Sex, Appearance populated. The "Character Sketch" field on the Character page is populated (not just Notes).
+2. Click each Character. Expected characters (the LLM may also fold Richards in or drop him):
+   - **Mrs. Louise Mallard** (or "Louise Mallard") — Role: Protagonist. Sex: Female. Age: young / unspecified adult. Appearance references a fair, calm face. PhysNotes references the heart condition. Character Sketch field on the Character page is populated.
+   - **Brently Mallard** — Role: secondary / "husband". Sex: Male. Sketch describes him as the supposed-dead husband who returns alive.
+   - **Josephine** — Louise's sister, the one who breaks the news. May be present; LLM may merge.
+   - Roles, Sex, and Character Sketch fields populated (not just Notes).
 
 3. Click each Setting.
-   **Expected:** Locale and one or more sensory fields (Sights, Sounds, Lighting) populated. The "Setting Summary" field is populated (not just Notes).
+   **Expected:** One Setting — the Mallard house (or the upstairs room with the open window). Locale populated. Sights / Sounds populated (spring trees, sparrows, peddler crying wares, distant song). The "Setting Summary" field is populated (not just Notes).
 
-4. Click each Problem.
-   **Expected:** ConflictType, Protagonist, Antagonist, Outcome populated. The "Story Question" field is populated (not just Notes). All six goal/motive/conflict slots (ProtGoal/ProtMotive/ProtConflict + AntagGoal/AntagMotive/AntagConflict) populated.
+4. Click the Problem.
+   **Expected:** One Problem. ConflictType "Person vs. Self" (preferred) or "Person vs. Society"; *not* "Person vs. Person" against Brently. Protagonist = Louise Mallard. Antagonist = Louise Mallard (Person vs. Self) — same GUID as Protagonist. Outcome references her death from the shock. Story Question field populated. All six goal/motive/conflict slots populated (ProtGoal/ProtMotive/ProtConflict + AntagGoal/AntagMotive/AntagConflict).
 
-5. Click each Scene.
-   **Expected:** ViewpointCharacter, Setting, CastMembers, Protagonist, Antagonist populated. The "Scene Sketch" field is populated (not just Notes).
+5. Click each Scene. Expected scene structure (1–3 scenes, depending on segmentation):
+   - News-of-death delivered (Josephine + Richards present; Louise weeps).
+   - Louise alone in the upstairs room, by the window, recognizing freedom.
+   - Brently returns; Louise dies.
+   - For each scene: ViewpointCharacter = Louise (except possibly the final scene if the LLM frames it externally). Setting populated. CastMembers populated. Protagonist = Louise. Scene Sketch field populated.
 
 **Pass/Fail:** ______
 

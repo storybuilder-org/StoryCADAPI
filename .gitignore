@@ -434,4 +434,8 @@ samples/Outliner/OutlinerTests/**/*.rating.json
 !samples/Outliner/OutlinerTests/Fixtures/
 !samples/Outliner/OutlinerTests/Fixtures/**
 
+# Exception: manual-test prose fixtures (public-domain texts checked in for repeatable manual runs)
+!samples/Outliner/OutlinerTests/ManualTests/Fixtures/
+!samples/Outliner/OutlinerTests/ManualTests/Fixtures/**
+
 
