@@ -430,4 +430,8 @@ samples/Outliner/OutlinerTests/**/*.raw.json
 samples/Outliner/OutlinerTests/**/*.costs.json
 samples/Outliner/OutlinerTests/**/*.rating.json
 
+# Exception: deterministic test fixtures (recorded LLM responses checked in for CI)
+!samples/Outliner/OutlinerTests/Fixtures/
+!samples/Outliner/OutlinerTests/Fixtures/**
+
 
