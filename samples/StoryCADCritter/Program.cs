@@ -152,6 +152,49 @@ catch (Exception ex)
     Console.WriteLine(report);
 }
 
+// 7a) Write companion files: .costs.json (run totals) and .raw.json (raw LLM
+// per-element responses, before they were rendered into Markdown).
+var jsonOpts = new System.Text.Json.JsonSerializerOptions
+{
+    WriteIndented = true,
+    PropertyNamingPolicy = null
+};
+
+var costsPath = outlinePath + ".costs.json";
+try
+{
+    await File.WriteAllTextAsync(costsPath, System.Text.Json.JsonSerializer.Serialize(run.Cost, jsonOpts));
+    Console.WriteLine($"Costs written:  {costsPath}");
+}
+catch (Exception ex)
+{
+    Console.Error.WriteLine($"WARNING: Couldn't write costs to {costsPath}: {ex.Message}");
+}
+
+var rawPath = outlinePath + ".raw.json";
+try
+{
+    var rawDoc = new
+    {
+        model = run.Cost.ModelId,
+        elements = run.ElementCritiques.Select(e => new
+        {
+            uuid = e.Uuid,
+            type = e.ElementType,
+            name = e.Name,
+            parsed = e.Parsed,
+            rawResponse = e.RawResponse,
+            error = e.ErrorMessage
+        })
+    };
+    await File.WriteAllTextAsync(rawPath, System.Text.Json.JsonSerializer.Serialize(rawDoc, jsonOpts));
+    Console.WriteLine($"Raw written:    {rawPath}");
+}
+catch (Exception ex)
+{
+    Console.Error.WriteLine($"WARNING: Couldn't write raw responses to {rawPath}: {ex.Message}");
+}
+
 // 8) Exit code
 if (run.HardFailed)
 {

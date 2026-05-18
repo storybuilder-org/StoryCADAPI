@@ -141,9 +141,76 @@ namespace StoryCADCritter
                 progress?.Report($"Critiquing {el.ElementType} {i}/{ordered.Count}: '{el.Name}'...");
                 var critique = await CritiqueElementAsync(el, cancellationToken);
                 run.ElementCritiques.Add(critique);
+                AccumulateCost(run.Cost, critique.Cost);
+            }
+
+            // Recompute totals for the run-level price-table-derived costs in case
+            // any per-call cost was zeroed because of an unknown model id.
+            if (!string.IsNullOrEmpty(run.Cost.ModelId))
+            {
+                var (inCost, outCost) = ModelPriceTable.Compute(
+                    run.Cost.ModelId, run.Cost.InputTokens, run.Cost.OutputTokens);
+                run.Cost.InputCostUsd = inCost;
+                run.Cost.OutputCostUsd = outCost;
             }
 
             return run;
+        }
+
+        // -- Cost extraction --------------------------------------------------
+
+        /// <summary>
+        /// Reads token usage from the SK result's Usage metadata (OpenAI connector
+        /// populates an OpenAI.Chat.ChatTokenUsage there). Reflection keeps this
+        /// decoupled from a specific OpenAI SDK version. Modeled after Outliner's
+        /// ProseAnalyzer.ExtractCost.
+        /// </summary>
+        private static CritiqueCost ExtractCost(Microsoft.SemanticKernel.ChatMessageContent result)
+        {
+            var modelId = result.ModelId
+                ?? Environment.GetEnvironmentVariable("OPENAI_MODEL")
+                ?? "gpt-4o-mini";
+
+            int inputTokens = 0;
+            int outputTokens = 0;
+
+            try
+            {
+                if (result.Metadata != null
+                    && result.Metadata.TryGetValue("Usage", out var usageObj)
+                    && usageObj != null)
+                {
+                    var t = usageObj.GetType();
+                    inputTokens  = (t.GetProperty("InputTokenCount")?.GetValue(usageObj) as int?) ?? 0;
+                    outputTokens = (t.GetProperty("OutputTokenCount")?.GetValue(usageObj) as int?) ?? 0;
+                }
+            }
+            catch
+            {
+                // Best-effort; unknown metadata shape yields zero tokens.
+            }
+
+            var (inputCost, outputCost) = ModelPriceTable.Compute(modelId, inputTokens, outputTokens);
+
+            return new CritiqueCost
+            {
+                ModelId = modelId,
+                LlmCallCount = 1,
+                InputTokens = inputTokens,
+                OutputTokens = outputTokens,
+                InputCostUsd = inputCost,
+                OutputCostUsd = outputCost
+            };
+        }
+
+        private static void AccumulateCost(CritiqueCost total, CritiqueCost? perCall)
+        {
+            if (perCall == null) return;
+            if (string.IsNullOrEmpty(total.ModelId))
+                total.ModelId = perCall.ModelId;
+            total.LlmCallCount += perCall.LlmCallCount;
+            total.InputTokens  += perCall.InputTokens;
+            total.OutputTokens += perCall.OutputTokens;
         }
 
         private async Task<ElementCritique> CritiqueElementAsync(StoryElement element, CancellationToken cancellationToken)
@@ -196,6 +263,7 @@ namespace StoryCADCritter
                         : await _chatService.GetChatMessageContentAsync(history, settings, null, cancellationToken);
 
                     rawContent = result.Content;
+                    critique.Cost = ExtractCost(result);
                     lastException = null;
                     break;
                 }

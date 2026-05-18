@@ -48,6 +48,9 @@ namespace StoryCADCritter
         /// <summary>Error message if the LLM call itself failed (after retries).</summary>
         public string? ErrorMessage { get; set; }
 
+        /// <summary>Token usage + USD cost for this element's LLM call. Null when the call didn't happen.</summary>
+        public CritiqueCost? Cost { get; set; }
+
         public bool ParseFailed => Parsed == null && string.IsNullOrEmpty(ErrorMessage) && !string.IsNullOrEmpty(RawResponse);
         public bool CallFailed => !string.IsNullOrEmpty(ErrorMessage);
         public bool Succeeded => Parsed != null;
@@ -68,6 +71,7 @@ namespace StoryCADCritter
         public bool ShortCircuited { get; set; }
         public string? ShortCircuitReason { get; set; }
         public string? HardFailureMessage { get; set; }
+        public CritiqueCost Cost { get; set; } = new();
 
         public bool HardFailed => !string.IsNullOrEmpty(HardFailureMessage);
         public bool HasPerElementErrors =>
