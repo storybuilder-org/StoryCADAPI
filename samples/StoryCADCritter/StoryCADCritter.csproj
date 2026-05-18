@@ -1,9 +1,11 @@
-<Project Sdk="Uno.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <UnoSingleProject>true</UnoSingleProject>
     <OutputType>Exe</OutputType>
     <TargetFramework>net10.0-windows10.0.22621</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>StoryCADCritter</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,5 +15,12 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SemanticKernel" Version="1.72.0" />
+    <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.72.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Prompts\CritiquePrompt.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

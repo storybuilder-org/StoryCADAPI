@@ -1,240 +1,196 @@
+using System;
+using System.IO;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
-using StoryCADLib.Models;
+using StoryCADCritter;
 using StoryCADLib.Services.API;
 using StoryCADLib.Services.IoC;
 
-Console.WriteLine("=== StoryCADCritter: AI-Scored Story Evaluation ===");
+// ─────────────────────────────────────────────────────────────────────────────
+// StoryCADCritter — per-element Key Questions critique walk over a StoryCAD
+// outline. See issue storybuilder-org/StoryCADAPI#14 for the design intent.
+//
+// CLI:
+//   StoryCADCritter [path-to-outline.stbx]
+// With no arg, builds and critiques the "Last Lighthouse Keeper" demo outline
+// in memory so the sample still works out of the box.
+//
+// Env vars:
+//   OPENAI_API_KEY  (required)
+//   OPENAI_MODEL    (optional; default: gpt-4o-mini)
+//
+// Exit codes:
+//   0 = full success
+//   1 = partial (some per-element failures; see report)
+//   2 = hard failure (missing key / bad outline / no LLM access)
+// ─────────────────────────────────────────────────────────────────────────────
+
+Console.WriteLine("=== StoryCADCritter — per-element critique walk ===");
 Console.WriteLine();
 
-// Step 1: Read API key from environment (fail fast if missing)
-var apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY")
-    ?? throw new InvalidOperationException(
-        "OPENAI_API_KEY environment variable is required. Set it before running.");
+// 1) API key
+var apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
+if (string.IsNullOrWhiteSpace(apiKey))
+{
+    Console.Error.WriteLine("ERROR: OPENAI_API_KEY environment variable is not set.");
+    Console.Error.WriteLine("Set it (export OPENAI_API_KEY=sk-...) and re-run.");
+    return 2;
+}
 var modelId = Environment.GetEnvironmentVariable("OPENAI_MODEL") ?? "gpt-4o-mini";
+Console.WriteLine($"Model: {modelId}");
 
-Console.WriteLine($"Using model: {modelId}");
-Console.WriteLine();
-
-// Step 2: Initialize StoryCADLib and Semantic Kernel
+// 2) StoryCADLib bootstrap + API handle
 BootStrapper.Initialise();
 var api = Ioc.Default.GetRequiredService<StoryCADApi>();
 
-var kernel = Kernel.CreateBuilder()
-    .AddOpenAIChatCompletion(modelId, apiKey)
-    .Build();
-var chatService = kernel.GetRequiredService<IChatCompletionService>();
-
-// Step 3: Create a fleshed-out outline
-Console.WriteLine("Building story outline for critique...");
-var createResult = await api.CreateEmptyOutline("The Last Lighthouse Keeper", "Demo Author", "0");
-if (!createResult.IsSuccess) { Console.WriteLine($"FAIL: {createResult.ErrorMessage}"); return 1; }
-var overviewGuid = createResult.Payload[0].ToString();
-
-// Characters
-var charElara = api.AddElement(StoryItemType.Character, overviewGuid, "Elara Marsh",
-    new Dictionary<string, object>
-    {
-        { "Role", "Protagonist" },
-        { "Age", "34" },
-        { "Flaw", "Cannot trust anyone since her father's betrayal" },
-        { "BackStory", "Grew up in the lighthouse, left for the city, returned after her father's death" }
-    });
-var charSilas = api.AddElement(StoryItemType.Character, overviewGuid, "Silas Croft",
-    new Dictionary<string, object>
-    {
-        { "Role", "Antagonist" },
-        { "Age", "50" },
-        { "Flaw", "Greed disguised as civic duty" }
-    });
-var charMarina = api.AddElement(StoryItemType.Character, overviewGuid, "Marina Torres",
-    new Dictionary<string, object>
-    {
-        { "Role", "Supporting" },
-        { "Age", "29" }
-    });
-
-// Problems
-var prob1 = api.AddElement(StoryItemType.Problem, overviewGuid, "Save the Lighthouse");
-api.UpdateElementProperties(prob1.Payload, new()
+// 3) Semantic Kernel — built here in the composition root only. The
+// orchestrator gets IChatCompletionService injected, so tests can stub it.
+Kernel kernel;
+IChatCompletionService chatService;
+try
 {
-    { "Protagonist", charElara.Payload.ToString() },
-    { "Antagonist", charSilas.Payload.ToString() },
-    { "ProtGoal", "Preserve the lighthouse and her father's legacy" },
-    { "ProtMotive", "Guilt over leaving and her father dying alone" },
-    { "AntagGoal", "Demolish the lighthouse for a resort development" },
-    { "AntagMotive", "Profit and political ambition" },
-    { "Theme", "Legacy vs. Progress" },
-    { "Premise", "A woman must confront her past to save her father's lighthouse from demolition" }
-});
-
-var prob2 = api.AddElement(StoryItemType.Problem, overviewGuid, "Trust Again");
-api.UpdateElementProperties(prob2.Payload, new()
-{
-    { "Protagonist", charElara.Payload.ToString() },
-    { "ProtGoal", "Learn to rely on others" },
-    { "ProtMotive", "Loneliness and the realization she cannot fight alone" }
-});
-
-// Settings
-var setLighthouse = api.AddElement(StoryItemType.Setting, overviewGuid, "Marsh Point Lighthouse",
-    new Dictionary<string, object>
-    {
-        { "Locale", "Remote coastal headland" },
-        { "Season", "Late autumn" },
-        { "Period", "Present day" }
-    });
-var setTownHall = api.AddElement(StoryItemType.Setting, overviewGuid, "Harborview Town Hall",
-    new Dictionary<string, object> { { "Locale", "Small fishing town" } });
-var setCafe = api.AddElement(StoryItemType.Setting, overviewGuid, "The Anchor Cafe",
-    new Dictionary<string, object> { { "Locale", "Small fishing town waterfront" } });
-
-// Scenes
-var scene1 = api.AddElement(StoryItemType.Scene, overviewGuid, "Homecoming");
-api.UpdateElementProperties(scene1.Payload, new()
-{
-    { "Setting", setLighthouse.Payload.ToString() },
-    { "Protagonist", charElara.Payload.ToString() },
-    { "Outcome", "Elara discovers the demolition notice" }
-});
-api.AddCastMember(scene1.Payload, charElara.Payload);
-
-var scene2 = api.AddElement(StoryItemType.Scene, overviewGuid, "The Town Meeting");
-api.UpdateElementProperties(scene2.Payload, new()
-{
-    { "Setting", setTownHall.Payload.ToString() },
-    { "Protagonist", charElara.Payload.ToString() },
-    { "Antagonist", charSilas.Payload.ToString() },
-    { "Outcome", "Silas reveals the council vote is in two weeks" }
-});
-api.AddCastMember(scene2.Payload, charElara.Payload);
-api.AddCastMember(scene2.Payload, charSilas.Payload);
-
-var scene3 = api.AddElement(StoryItemType.Scene, overviewGuid, "An Unlikely Ally");
-api.UpdateElementProperties(scene3.Payload, new()
-{
-    { "Setting", setCafe.Payload.ToString() },
-    { "Protagonist", charElara.Payload.ToString() },
-    { "Outcome", "Marina offers to help with the historical preservation filing" }
-});
-api.AddCastMember(scene3.Payload, charElara.Payload);
-api.AddCastMember(scene3.Payload, charMarina.Payload);
-
-var scene4 = api.AddElement(StoryItemType.Scene, overviewGuid, "Father's Secret");
-api.UpdateElementProperties(scene4.Payload, new()
-{
-    { "Setting", setLighthouse.Payload.ToString() },
-    { "Protagonist", charElara.Payload.ToString() },
-    { "Outcome", "Elara finds her father's journal revealing why he stayed" }
-});
-api.AddCastMember(scene4.Payload, charElara.Payload);
-
-var scene5 = api.AddElement(StoryItemType.Scene, overviewGuid, "The Council Vote");
-api.UpdateElementProperties(scene5.Payload, new()
-{
-    { "Setting", setTownHall.Payload.ToString() },
-    { "Protagonist", charElara.Payload.ToString() },
-    { "Antagonist", charSilas.Payload.ToString() },
-    { "Outcome", "The vote is tied; Elara must make a personal appeal" }
-});
-api.AddCastMember(scene5.Payload, charElara.Payload);
-api.AddCastMember(scene5.Payload, charSilas.Payload);
-api.AddCastMember(scene5.Payload, charMarina.Payload);
-
-Console.WriteLine("Outline built.");
-Console.WriteLine();
-
-// Step 4: Serialize elements and gather key questions
-Console.WriteLine("Serializing outline and gathering key questions...");
-var allElements = api.GetAllElements();
-var serializedElements = new List<string>();
-foreach (var el in allElements.Payload)
-{
-    var detail = api.GetElement(el.Uuid);
-    if (detail.IsSuccess)
-        serializedElements.Add($"[{el.ElementType}] {el.Name}:\n{detail.Payload}");
+    kernel = Kernel.CreateBuilder()
+        .AddOpenAIChatCompletion(modelId, apiKey)
+        .Build();
+    chatService = kernel.GetRequiredService<IChatCompletionService>();
 }
-var outlineData = string.Join("\n\n", serializedElements);
-
-// Gather key questions for context
-var keyQuestionTypes = api.GetKeyQuestionElements();
-var keyQuestionsText = "";
-if (keyQuestionTypes.IsSuccess)
+catch (Exception ex)
 {
-    var sections = new List<string>();
-    foreach (var elementType in keyQuestionTypes.Payload)
+    Console.Error.WriteLine($"ERROR: Couldn't initialize the OpenAI chat client: {ex.Message}");
+    return 2;
+}
+
+// 4) Load the critique system prompt from disk. Prompts/CritiquePrompt.md is
+// copied to the output dir at build time (see .csproj).
+string systemPrompt;
+try
+{
+    systemPrompt = LoadPrompt();
+}
+catch (Exception ex)
+{
+    Console.Error.WriteLine($"ERROR: Couldn't load CritiquePrompt.md: {ex.Message}");
+    return 2;
+}
+
+// 5) Open or build the outline
+string outlinePath;
+string outlineDisplay;
+bool isDemo = false;
+if (args.Length > 0 && !string.IsNullOrWhiteSpace(args[0]))
+{
+    outlinePath = args[0];
+    if (!File.Exists(outlinePath))
     {
-        var questions = api.GetKeyQuestions(elementType);
-        if (questions.IsSuccess)
-        {
-            var qs = questions.Payload.Select(q => $"  - [{q.Topic}] {q.Question}");
-            sections.Add($"{elementType}:\n{string.Join("\n", qs)}");
-        }
+        Console.Error.WriteLine($"ERROR: Outline file not found: {outlinePath}");
+        return 2;
     }
-    keyQuestionsText = string.Join("\n\n", sections);
+    Console.WriteLine($"Opening outline: {outlinePath}");
+    var openResult = await api.OpenOutline(outlinePath);
+    if (openResult == null || !openResult.IsSuccess)
+    {
+        Console.Error.WriteLine($"ERROR: Failed to open outline: {openResult?.ErrorMessage ?? "unknown error"}");
+        return 2;
+    }
+    outlineDisplay = Path.GetFileNameWithoutExtension(outlinePath);
+}
+else
+{
+    isDemo = true;
+    Console.WriteLine("No outline argument provided — building the 'Last Lighthouse Keeper' demo outline in memory.");
+    try
+    {
+        await LighthouseKeeperFixture.BuildAsync(api);
+    }
+    catch (Exception ex)
+    {
+        Console.Error.WriteLine($"ERROR: Couldn't build demo outline: {ex.Message}");
+        return 2;
+    }
+    // Use a stable display name + an in-cwd report path; we don't save the
+    // .stbx since nobody asked for it.
+    outlineDisplay = LighthouseKeeperFixture.Title;
+    outlinePath = Path.Combine(Directory.GetCurrentDirectory(), "LastLighthouseKeeper.demo");
 }
 
-// Step 5: Build the critique prompt with scoring rubric
-var systemPrompt = $"""
-    You are an expert story editor evaluating a fiction outline using StoryCAD.
+// 6) Run the critique
+var orchestrator = new CritiqueOrchestrator(api, chatService, systemPrompt, kernel);
+var progress = new Progress<string>(msg => Console.WriteLine($"  - {msg}"));
 
-    StoryCAD organizes stories into Problems, Characters, Settings, and Scenes.
-    Each element has structured fields (goals, motives, flaws, outcomes, etc.).
-
-    Here are the key questions that fiction writers should consider for each element type:
-    {keyQuestionsText}
-
-    Evaluate the outline against these 5 craft criteria. Score each 1-5:
-    1 = Major issues, 2 = Significant gaps, 3 = Adequate, 4 = Good, 5 = Excellent
-
-    CRITERIA:
-    1. PREMISE: Is the story premise clear, compelling, and well-articulated?
-    2. CHARACTER ARCS: Do characters have clear flaws, goals, and growth potential?
-    3. SCENE STRUCTURE: Do scenes have conflict, stakes, and meaningful outcomes?
-    4. CONFLICT: Is the central conflict well-defined with worthy opposition?
-    5. THEME: Is there a coherent theme that connects the story elements?
-
-    FORMAT YOUR RESPONSE EXACTLY LIKE THIS:
-
-    ## Scored Critique
-
-    | Criterion | Score | Assessment |
-    |-----------|-------|------------|
-    | Premise | X/5 | [brief assessment] |
-    | Character Arcs | X/5 | [brief assessment] |
-    | Scene Structure | X/5 | [brief assessment] |
-    | Conflict | X/5 | [brief assessment] |
-    | Theme | X/5 | [brief assessment] |
-
-    **Overall: XX/25**
-
-    ## Recommendations
-    [3-5 specific, actionable recommendations referencing element names]
-    """;
-
-var userPrompt = $"""
-    Please evaluate this story outline:
-
-    {outlineData}
-    """;
-
-// Step 6: Send to LLM
-Console.WriteLine("Sending to LLM for critique...");
 Console.WriteLine();
+Console.WriteLine("Walking elements…");
+CritiqueRunResult run;
+try
+{
+    run = await orchestrator.RunAsync(outlinePath, progress);
+}
+catch (Exception ex)
+{
+    Console.Error.WriteLine($"ERROR: Unhandled exception during critique: {ex.Message}");
+    return 2;
+}
 
-var history = new ChatHistory();
-history.AddSystemMessage(systemPrompt);
-history.AddUserMessage(userPrompt);
+// 7) Write the report
+var report = CritiqueOrchestrator.RenderReport(run, outlineDisplay);
+if (isDemo)
+{
+    report = report.Replace($"from `{outlinePath}`.", "from the built-in demo outline.");
+}
+try
+{
+    await File.WriteAllTextAsync(run.ReportPath, report);
+    Console.WriteLine();
+    Console.WriteLine($"Report written: {run.ReportPath}");
+}
+catch (Exception ex)
+{
+    Console.Error.WriteLine($"WARNING: Couldn't write report to {run.ReportPath}: {ex.Message}");
+    Console.WriteLine();
+    Console.WriteLine("--- Report (stdout fallback) ---");
+    Console.WriteLine(report);
+}
 
-var response = await chatService.GetChatMessageContentAsync(history);
+// 8) Exit code
+if (run.HardFailed)
+{
+    Console.Error.WriteLine();
+    Console.Error.WriteLine($"Hard failure: {run.HardFailureMessage}");
+    return 2;
+}
+if (run.ShortCircuited)
+{
+    Console.WriteLine();
+    Console.WriteLine($"Short-circuited: {run.ShortCircuitReason}");
+    return 0;
+}
+if (run.HasPerElementErrors)
+{
+    Console.WriteLine();
+    Console.WriteLine("Completed with per-element failures — see Errors section in the report.");
+    return 1;
+}
 
-// Step 7: Print the critique report
-Console.WriteLine("╔══════════════════════════════════════════════════╗");
-Console.WriteLine("║       AUTOMATED STORY CRITIQUE                    ║");
-Console.WriteLine("╚══════════════════════════════════════════════════╝");
 Console.WriteLine();
-Console.WriteLine(response.Content);
-Console.WriteLine();
-Console.WriteLine("=== StoryCADCritter complete! ===");
+Console.WriteLine("Done.");
 return 0;
+
+// ─── local helpers ──────────────────────────────────────────────────────────
+
+static string LoadPrompt()
+{
+    string[] candidates =
+    {
+        Path.Combine(AppContext.BaseDirectory, "Prompts", "CritiquePrompt.md"),
+        Path.Combine(Directory.GetCurrentDirectory(), "Prompts", "CritiquePrompt.md"),
+        Path.Combine(Directory.GetCurrentDirectory(), "samples", "StoryCADCritter", "Prompts", "CritiquePrompt.md")
+    };
+    foreach (var p in candidates)
+    {
+        if (File.Exists(p))
+            return File.ReadAllText(p);
+    }
+    throw new FileNotFoundException(
+        "CritiquePrompt.md not found. Looked in: " + string.Join(" | ", candidates));
+}
