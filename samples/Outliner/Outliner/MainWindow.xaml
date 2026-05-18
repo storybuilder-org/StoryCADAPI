@@ -20,6 +20,7 @@
         </NavigationView.MenuItems>
 
         <NavigationView.FooterMenuItems>
+            <NavigationViewItem Tag="Help"     Content="Help"     Icon="Help"/>
             <NavigationViewItem Tag="Settings" Content="Settings" Icon="Setting"/>
         </NavigationView.FooterMenuItems>
 

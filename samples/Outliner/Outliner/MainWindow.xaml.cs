@@ -57,6 +57,9 @@ namespace Outliner
                 case "Settings":
                     ContentFrame.Navigate(typeof(SettingsPage));
                     break;
+                case "Help":
+                    ContentFrame.Navigate(typeof(HelpPage));
+                    break;
             }
         }
     }
