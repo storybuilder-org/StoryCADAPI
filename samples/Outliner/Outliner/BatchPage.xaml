@@ -26,10 +26,13 @@
             <TextBlock Text="{x:Bind PageVm.OutputFolder, Mode=OneWay}" VerticalAlignment="Center"/>
         </StackPanel>
 
-        <Button Content="Run Batch"
-                Command="{x:Bind PageVm.RunBatchCommand}"
-                HorizontalAlignment="Left"
-                Margin="0,10,0,0"/>
+        <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,10,0,0">
+            <Button Content="Run Batch"
+                    Command="{x:Bind PageVm.RunBatchCommand}"/>
+            <ProgressRing IsActive="{x:Bind PageVm.IsRunning, Mode=OneWay}"
+                          Width="24" Height="24"
+                          VerticalAlignment="Center"/>
+        </StackPanel>
 
         <ListView ItemsSource="{x:Bind PageVm.Items}" Height="320" SelectionMode="None">
             <ListView.HeaderTemplate>

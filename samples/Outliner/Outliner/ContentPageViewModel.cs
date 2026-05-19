@@ -5,6 +5,7 @@ using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.UI.Xaml;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -40,6 +41,7 @@ namespace Outliner
         public IAsyncRelayCommand CreateOutlineCommand { get; }
         public IRelayCommand ThumbsUpCommand { get; }
         public IRelayCommand ThumbsDownCommand { get; }
+        public IRelayCommand OpenInStoryCadCommand { get; }
 
         // Feedback state — captured after a successful outline creation.
         // Public properties so VM tests can pre-populate them and exercise
@@ -62,7 +64,11 @@ namespace Outliner
         public string? LastOutputPath
         {
             get => _lastOutputPath;
-            set => SetProperty(ref _lastOutputPath, value);
+            set
+            {
+                if (SetProperty(ref _lastOutputPath, value))
+                    OpenInStoryCadCommand?.NotifyCanExecuteChanged();
+            }
         }
 
         // Window handle for file picker initialization (read lazily from App)
@@ -81,7 +87,32 @@ namespace Outliner
         public string StoryText
         {
             get => _storyText;
-            set => SetProperty(ref _storyText, value);
+            set
+            {
+                if (SetProperty(ref _storyText, value))
+                    RefreshTokenInfoEstimate();
+            }
+        }
+
+        private string _tokenInfo = string.Empty;
+        public string TokenInfo
+        {
+            get => _tokenInfo;
+            set => SetProperty(ref _tokenInfo, value);
+        }
+
+        private void RefreshTokenInfoEstimate()
+        {
+            // Only refresh the estimate label while the user is still editing
+            // prose. After a run, TokenInfo carries the actual usage and we
+            // leave it alone until the next StoryText edit triggers a recompute.
+            if (string.IsNullOrEmpty(_storyText))
+            {
+                TokenInfo = string.Empty;
+                return;
+            }
+            var estimated = _proseAnalyzer?.EstimateTokenCount(_storyText) ?? (_storyText.Length / 4);
+            TokenInfo = $"{estimated:N0} prompt tokens (system prompt not included)";
         }
 
         private string _analysisResultText = string.Empty;
@@ -172,6 +203,31 @@ namespace Outliner
                 CanCreateOutline);
             ThumbsUpCommand = new RelayCommand(() => SubmitFeedback("thumbs_up"));
             ThumbsDownCommand = new RelayCommand(() => SubmitFeedback("thumbs_down"));
+            OpenInStoryCadCommand = new RelayCommand(OpenInStoryCad, CanOpenInStoryCad);
+        }
+
+        private bool CanOpenInStoryCad() =>
+            !string.IsNullOrEmpty(LastOutputPath) && File.Exists(LastOutputPath);
+
+        /// <summary>
+        /// Launches the generated .stbx via the OS shell association, which is
+        /// what opens it in StoryCAD on a machine where StoryCAD is installed.
+        /// </summary>
+        private void OpenInStoryCad()
+        {
+            if (!CanOpenInStoryCad()) return;
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = LastOutputPath!,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                ContentText = $"Couldn't open in StoryCAD: {ex.Message}";
+            }
         }
 
         /// <summary>
@@ -337,6 +393,13 @@ namespace Outliner
                     UserFeedback = string.Empty;
                     FeedbackStatus = string.Empty;
                     ShowFeedbackPanel = true;
+
+                    if (result.Cost != null)
+                    {
+                        TokenInfo =
+                            $"{result.Cost.InputTokens:N0} in / {result.Cost.OutputTokens:N0} out tokens · " +
+                            $"${result.Cost.TotalCostUsd:F4} ({result.Cost.ModelId})";
+                    }
                 }
                 else
                 {

@@ -11,6 +11,9 @@ namespace Outliner
             PageVm = new SettingsPageViewModel();
             this.InitializeComponent();
             DataContext = PageVm;
+            // Fire-and-forget: populates the model picker from /v1/models in
+            // the background; the priced-models seed is shown until it returns.
+            _ = PageVm.LoadModelsAsync();
         }
     }
 }

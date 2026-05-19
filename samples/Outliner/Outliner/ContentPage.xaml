@@ -16,12 +16,20 @@
                 <Button Content="Read Story" Command="{x:Bind PageVm.ReadStoryCommand}" Margin="5"/>
                 <Button Content="Output File" Command="{x:Bind PageVm.OutputFileCommand}" Margin="5"/>
                 <Button Content="Create Outline" Command="{x:Bind PageVm.CreateOutlineCommand}" Margin="5"/>
+                <ProgressRing IsActive="{x:Bind PageVm.IsProcessing, Mode=OneWay}"
+                              Width="24" Height="24"
+                              VerticalAlignment="Center"
+                              Margin="5"/>
             </StackPanel>
             <!-- Status line (file loaded, output path picked, run result) -->
             <TextBlock Text="{x:Bind PageVm.ContentText, Mode=OneWay}"
                        Margin="5"
                        Foreground="Gray"
                        TextWrapping="Wrap"/>
+            <TextBlock Text="{x:Bind PageVm.TokenInfo, Mode=OneWay}"
+                       Margin="5,0,5,0"
+                       Foreground="Gray"
+                       FontStyle="Italic"/>
 
             <!-- Display area for the actual prose -->
             <TextBlock Text="Story Content:" FontWeight="Bold" Margin="5"/>
@@ -57,6 +65,7 @@
                          Height="60"
                          Margin="0,0,0,5"/>
                 <StackPanel Orientation="Horizontal" Spacing="5">
+                    <Button Content="Open in StoryCAD" Command="{x:Bind PageVm.OpenInStoryCadCommand}"/>
                     <Button Content="👍 Thumbs Up"   Command="{x:Bind PageVm.ThumbsUpCommand}"/>
                     <Button Content="👎 Thumbs Down" Command="{x:Bind PageVm.ThumbsDownCommand}"/>
                 </StackPanel>

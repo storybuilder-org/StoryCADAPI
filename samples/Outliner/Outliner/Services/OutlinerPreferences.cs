@@ -22,6 +22,13 @@ namespace Outliner.Services
         /// <summary>Last folder the user actually picked in batch mode (drives auto-population).</summary>
         public string LastBatchInputFolder  { get; set; } = string.Empty;
         public string LastBatchOutputFolder { get; set; } = string.Empty;
+
+        /// <summary>
+        /// OpenAI model id used for analysis. Empty means "fall back to OPENAI_MODEL
+        /// env var, then the hardcoded default". Applied at app startup; change
+        /// takes effect on next launch.
+        /// </summary>
+        public string SelectedModelId { get; set; } = string.Empty;
     }
 
     /// <summary>

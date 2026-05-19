@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Outliner.Services
 {
@@ -46,5 +47,7 @@ namespace Outliner.Services
                 inputTokens  * rate.Input  / 1_000_000m,
                 outputTokens * rate.Output / 1_000_000m);
         }
+
+        public static IReadOnlyList<string> KnownModels => Prices.Keys.OrderBy(k => k).ToList();
     }
 }

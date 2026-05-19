@@ -35,7 +35,13 @@ namespace Outliner
             var apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY")
                 ?? throw new InvalidOperationException("OPENAI_API_KEY environment variable is not set.");
 
-            var modelId = Environment.GetEnvironmentVariable("OPENAI_MODEL") ?? "gpt-4o";
+            // Persistent user preferences (mode, last folders, model, etc.)
+            var prefsService = new PreferencesService();
+            var prefs = prefsService.Load();
+
+            var modelId = !string.IsNullOrWhiteSpace(prefs.SelectedModelId)
+                ? prefs.SelectedModelId
+                : Environment.GetEnvironmentVariable("OPENAI_MODEL") ?? "gpt-5.4-mini-2026-03-17";
 
             var kernel = Kernel.CreateBuilder()
                 .AddOpenAIChatCompletion(modelId, apiKey)
@@ -44,10 +50,10 @@ namespace Outliner
             BootStrapper.Services.AddSingleton(kernel);
             BootStrapper.Services.AddSingleton(kernel.GetRequiredService<IChatCompletionService>());
 
-            // Persistent user preferences (mode, last folders, etc.)
-            var prefsService = new PreferencesService();
             BootStrapper.Services.AddSingleton(prefsService);
-            BootStrapper.Services.AddSingleton(prefsService.Load());
+            BootStrapper.Services.AddSingleton(prefs);
+
+            BootStrapper.Services.AddSingleton(new ModelCatalogService(apiKey));
 
             BootStrapper.Initialise(headless: false);
         }

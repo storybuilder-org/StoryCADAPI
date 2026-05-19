@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.ML.Tokenizers;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
@@ -25,7 +26,14 @@ namespace Outliner.Services
 
         // Token limit for the model (configurable)
         private const int MaxTokensPerCall = 1000000;
-        private const int TokensPerCharacterEstimate = 4; // Rough estimate
+        private const int TokensPerCharacterEstimate = 4; // Fallback heuristic if tiktoken isn't available for the model
+
+        // Lazy-initialized tiktoken tokenizer. CreateForModel can throw for
+        // unrecognized model ids, so we cache success and remember failure
+        // to avoid spamming exceptions per keystroke.
+        private static Tokenizer? s_tokenizer;
+        private static string? s_tokenizerModel;
+        private static bool s_tokenizerInitFailed;
 
         public ProseAnalyzer(Kernel kernel, IChatCompletionService chatService)
         {
@@ -118,14 +126,54 @@ namespace Outliner.Services
         }
 
         /// <summary>
-        /// Estimates the token count for a given text.
-        /// Uses a rough heuristic of 1 token per 4 characters.
+        /// Counts tokens for the configured model using tiktoken. Falls back to
+        /// a 1-token-per-4-character heuristic if tiktoken can't recognize the
+        /// model id (e.g. an unreleased future model).
         /// </summary>
-        /// <param name="text">Text to estimate tokens for</param>
-        /// <returns>Estimated token count</returns>
         public int EstimateTokenCount(string text)
         {
+            if (string.IsNullOrEmpty(text)) return 0;
+
+            var tokenizer = GetTokenizer();
+            if (tokenizer != null)
+            {
+                try { return tokenizer.CountTokens(text); }
+                catch { /* fall through to heuristic */ }
+            }
             return text.Length / TokensPerCharacterEstimate;
+        }
+
+        private static Tokenizer? GetTokenizer()
+        {
+            if (s_tokenizerInitFailed) return null;
+
+            var modelId = Environment.GetEnvironmentVariable("OPENAI_MODEL") ?? "gpt-4o";
+            if (s_tokenizer != null && string.Equals(s_tokenizerModel, modelId, StringComparison.Ordinal))
+                return s_tokenizer;
+
+            try
+            {
+                s_tokenizer = TiktokenTokenizer.CreateForModel(modelId);
+                s_tokenizerModel = modelId;
+                return s_tokenizer;
+            }
+            catch
+            {
+                // Unknown model — try the modern GPT-4o family encoding as a
+                // best-effort default; if even that fails, give up and let the
+                // caller fall back to the character heuristic.
+                try
+                {
+                    s_tokenizer = TiktokenTokenizer.CreateForEncoding("o200k_base");
+                    s_tokenizerModel = modelId;
+                    return s_tokenizer;
+                }
+                catch
+                {
+                    s_tokenizerInitFailed = true;
+                    return null;
+                }
+            }
         }
 
         /// <summary>

@@ -3,6 +3,9 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using Outliner.Services;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage.Pickers;
 
@@ -16,17 +19,23 @@ namespace Outliner
     {
         private readonly OutlinerPreferences _prefs;
         private readonly PreferencesService _prefsService;
+        private readonly ModelCatalogService? _catalog;
 
         public SettingsPageViewModel()
             : this(
                 Ioc.Default.GetRequiredService<OutlinerPreferences>(),
-                Ioc.Default.GetRequiredService<PreferencesService>())
+                Ioc.Default.GetRequiredService<PreferencesService>(),
+                Ioc.Default.GetService<ModelCatalogService>())
         { }
 
-        public SettingsPageViewModel(OutlinerPreferences prefs, PreferencesService prefsService)
+        public SettingsPageViewModel(
+            OutlinerPreferences prefs,
+            PreferencesService prefsService,
+            ModelCatalogService? catalog = null)
         {
             _prefs = prefs;
             _prefsService = prefsService;
+            _catalog = catalog;
 
             _isStartupSingle = _prefs.StartupMode == "Single";
             _isStartupBatch  = _prefs.StartupMode == "Batch";
@@ -34,8 +43,77 @@ namespace Outliner
             _defaultInputFolder  = _prefs.DefaultInputFolder;
             _defaultOutputFolder = _prefs.DefaultOutputFolder;
 
+            // Seed with the priced models so the picker is usable instantly;
+            // LoadModelsAsync() will replace this with the live /v1/models list.
+            // Same blacklist filter as the live list to keep the seed consistent.
+            ModelOptions = new ObservableCollection<string>(
+                ModelPriceTable.KnownModels.Where(id => !ModelCatalogService.IsBlacklisted(id)));
+            // Surface the persisted value even if it isn't in the seed list,
+            // so the picker reflects what the kernel will actually use.
+            if (!string.IsNullOrWhiteSpace(_prefs.SelectedModelId)
+                && !ModelOptions.Contains(_prefs.SelectedModelId))
+            {
+                ModelOptions.Insert(0, _prefs.SelectedModelId);
+            }
+            _selectedModelId = string.IsNullOrWhiteSpace(_prefs.SelectedModelId)
+                ? null
+                : _prefs.SelectedModelId;
+
             PickInputFolderCommand  = new AsyncRelayCommand(() => PickFolderAsync(p => DefaultInputFolder = p));
             PickOutputFolderCommand = new AsyncRelayCommand(() => PickFolderAsync(p => DefaultOutputFolder = p));
+        }
+
+        public ObservableCollection<string> ModelOptions { get; }
+
+        private string _modelLoadStatus = string.Empty;
+        public string ModelLoadStatus
+        {
+            get => _modelLoadStatus;
+            set => SetProperty(ref _modelLoadStatus, value);
+        }
+
+        /// <summary>
+        /// Refreshes ModelOptions from the OpenAI /v1/models endpoint. Preserves
+        /// the current SelectedModelId even if the live list doesn't include it.
+        /// Silent no-op when no catalog service is wired (e.g. in unit tests).
+        /// </summary>
+        public async Task LoadModelsAsync()
+        {
+            if (_catalog == null) return;
+
+            ModelLoadStatus = "Loading models...";
+            var live = await _catalog.GetChatModelsAsync();
+            if (live.Count == 0)
+            {
+                ModelLoadStatus = "Couldn't fetch model list — showing built-in defaults.";
+                return;
+            }
+
+            var preserved = _selectedModelId;
+            ModelOptions.Clear();
+            if (!string.IsNullOrWhiteSpace(preserved) && !live.Contains(preserved))
+                ModelOptions.Add(preserved);
+            foreach (var id in live) ModelOptions.Add(id);
+
+            // ComboBox SelectedItem clears when its source is repopulated; restore.
+            if (!string.IsNullOrWhiteSpace(preserved))
+                SelectedModelId = preserved;
+
+            ModelLoadStatus = $"Loaded {live.Count} models.";
+        }
+
+        private string? _selectedModelId;
+        public string? SelectedModelId
+        {
+            get => _selectedModelId;
+            set
+            {
+                if (SetProperty(ref _selectedModelId, value))
+                {
+                    _prefs.SelectedModelId = value ?? string.Empty;
+                    _prefsService.Save(_prefs);
+                }
+            }
         }
 
         public IAsyncRelayCommand PickInputFolderCommand  { get; }

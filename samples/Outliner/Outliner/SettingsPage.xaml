@@ -41,6 +41,21 @@
             <TextBlock Text="{x:Bind PageVm.DefaultOutputFolder, Mode=OneWay}" VerticalAlignment="Center"/>
         </StackPanel>
 
+        <TextBlock Text="Model" FontWeight="SemiBold" Margin="0,20,0,5"/>
+        <TextBlock TextWrapping="Wrap" Foreground="Gray">
+            OpenAI model used for analysis. Leave blank to use the OPENAI_MODEL env var (or the built-in default).
+        </TextBlock>
+        <ComboBox ItemsSource="{x:Bind PageVm.ModelOptions}"
+                  SelectedItem="{x:Bind PageVm.SelectedModelId, Mode=TwoWay}"
+                  PlaceholderText="(use env var / default)"
+                  Width="280"
+                  Margin="0,5,0,0"/>
+        <TextBlock Text="{x:Bind PageVm.ModelLoadStatus, Mode=OneWay}"
+                   Foreground="Gray" FontStyle="Italic" Margin="0,3,0,0"/>
+        <TextBlock TextWrapping="Wrap" Foreground="Gray" FontStyle="Italic" Margin="0,3,0,0">
+            Takes effect on next launch.
+        </TextBlock>
+
         <TextBlock TextWrapping="Wrap" Foreground="Gray" FontStyle="Italic" Margin="0,15,0,0">
             Changes save automatically.
         </TextBlock>
