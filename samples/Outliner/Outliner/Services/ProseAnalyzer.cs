@@ -293,10 +293,13 @@ namespace Outliner.Services
         }
 
         /// <summary>
-        /// Validates that all elements have GUIDs for cross-referencing.
-        /// LLMs frequently emit strings that look like GUIDs but contain non-hex
-        /// characters; in that case we regenerate a fresh GUID and remap every
-        /// cross-reference so cast/protagonist/setting links survive.
+        /// Replaces every element GUID with a fresh Guid.NewGuid() and remaps
+        /// every cross-reference. We always regenerate (not just on parse
+        /// failure) because LLMs also emit syntactically-valid placeholder
+        /// GUIDs like "11111111-1111-1111-1111-111111111111" that pass
+        /// Guid.TryParse but make every outline look the same. The LLM's GUIDs
+        /// only need to be self-consistent within one response; the actual
+        /// values don't need to be the LLM's.
         /// </summary>
         private void ValidateGuids(OnePassResponse response)
         {
@@ -345,13 +348,10 @@ namespace Outliner.Services
             foreach (var item in items)
             {
                 var current = get(item);
-                if (string.IsNullOrWhiteSpace(current) || !Guid.TryParse(current, out _))
-                {
-                    var fresh = Guid.NewGuid().ToString();
-                    if (!string.IsNullOrWhiteSpace(current))
-                        remap[current] = fresh;
-                    set(item, fresh);
-                }
+                var fresh = Guid.NewGuid().ToString();
+                if (!string.IsNullOrWhiteSpace(current))
+                    remap[current] = fresh;
+                set(item, fresh);
             }
         }
 
