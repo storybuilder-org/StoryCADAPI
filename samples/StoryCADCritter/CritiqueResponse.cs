@@ -67,6 +67,8 @@ namespace StoryCADCritter
     {
         public string OutlinePath { get; set; } = string.Empty;
         public string ReportPath { get; set; } = string.Empty;
+        public string CostsPath { get; set; } = string.Empty;
+        public string RawPath { get; set; } = string.Empty;
         public List<ElementCritique> ElementCritiques { get; set; } = new();
         public bool ShortCircuited { get; set; }
         public string? ShortCircuitReason { get; set; }
@@ -77,6 +79,8 @@ namespace StoryCADCritter
         public bool HasPerElementErrors =>
             ElementCritiques.Exists(e => e.CallFailed || e.ParseFailed);
     }
+
+    public sealed record CritiqueProgress(string Status, int Done, int Total);
 
     /// <summary>
     /// JSON serializer options used for both deserializing LLM responses and

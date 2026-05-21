@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -43,8 +44,9 @@ namespace StoryCADCritter
         // Run-scoped cache so we don't re-serialize the same element when it's
         // referenced as a cross-ref body from two parents (e.g. a Character is
         // protagonist of two Problems).
-        private readonly Dictionary<Guid, string> _bodyCache = new();
+        private readonly ConcurrentDictionary<Guid, string> _bodyCache = new();
         private readonly Dictionary<Guid, StoryElement> _byUuid = new();
+        private const int MaxConcurrency = 4;
 
         // Cache of Key Questions per element-type string. Issue #14 wants these
         // visible in the report so the rubric is transparent.
@@ -52,6 +54,7 @@ namespace StoryCADCritter
 
         private const int MaxRetries = 3;
         private static readonly TimeSpan InitialBackoff = TimeSpan.FromSeconds(2);
+        private static readonly TimeSpan PerCallTimeout = TimeSpan.FromSeconds(45);
 
         // Element types we walk. Folder / Section / Notes / Web / TrashCan /
         // StoryWorld are out-of-scope for the critique — they aren't part of
@@ -84,13 +87,24 @@ namespace StoryCADCritter
         /// </summary>
         public async Task<CritiqueRunResult> RunAsync(
             string outlinePath,
-            IProgress<string>? progress = null,
+            IProgress<CritiqueProgress>? progress = null,
+            string? outputDirectory = null,
             CancellationToken cancellationToken = default)
         {
+            string ReportFor(string suffix)
+            {
+                if (string.IsNullOrEmpty(outputDirectory))
+                    return outlinePath + suffix;
+                var stem = Path.GetFileNameWithoutExtension(outlinePath);
+                return Path.Combine(outputDirectory, stem + suffix);
+            }
+
             var run = new CritiqueRunResult
             {
                 OutlinePath = outlinePath,
-                ReportPath = outlinePath + ".critique.md"
+                ReportPath = ReportFor(".critique.md"),
+                CostsPath = ReportFor(".costs.json"),
+                RawPath = ReportFor(".raw.json")
             };
 
             var allElementsResult = _api.GetAllElements();
@@ -117,7 +131,7 @@ namespace StoryCADCritter
                     ? "Outline contains no Scenes — nothing to walk dramatically. Add at least one Scene to enable a per-element critique."
                     : $"Outline has only {nonOverview.Count} element(s) beyond the Story Overview (need 3+). Add more Characters, Settings, Problems, or Scenes to enable a per-element critique.";
 
-                progress?.Report($"Short-circuit: {run.ShortCircuitReason}");
+                progress?.Report(new CritiqueProgress($"Short-circuit: {run.ShortCircuitReason}", 0, 0));
                 return run;
             }
 
@@ -133,15 +147,73 @@ namespace StoryCADCritter
             // Preload Key Questions for the types we'll actually use.
             LoadKeyQuestionsForTypes(ordered.Select(e => MapTypeToPromptName(e.ElementType)).Distinct());
 
-            int i = 0;
+            int total = ordered.Count;
+
+            // Pre-fetch all element bodies serially. StoryCADApi reads aren't
+            // documented as thread-safe, so we populate the cache up-front and
+            // the parallel walk reads from it only.
+            progress?.Report(new CritiqueProgress(
+                $"Loading {total} element bodies...", 0, total));
             foreach (var el in ordered)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                i++;
-                progress?.Report($"Critiquing {el.ElementType} {i}/{ordered.Count}: '{el.Name}'...");
-                var critique = await CritiqueElementAsync(el, cancellationToken);
-                run.ElementCritiques.Add(critique);
-                AccumulateCost(run.Cost, critique.Cost);
+                GetBody(el.Uuid);
+            }
+
+            progress?.Report(new CritiqueProgress(
+                $"Critiquing {total} elements (up to {MaxConcurrency} in parallel)...", 0, total));
+
+            using var semaphore = new SemaphoreSlim(MaxConcurrency, MaxConcurrency);
+            var critiques = new ElementCritique[total];
+            int doneCount = 0;
+
+            var tasks = new Task[total];
+            for (int idx = 0; idx < total; idx++)
+            {
+                int capturedIdx = idx;
+                var el = ordered[idx];
+                tasks[idx] = RunOne(el, capturedIdx);
+            }
+
+            try
+            {
+                await Task.WhenAll(tasks);
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
+            }
+            catch
+            {
+                // Per-element failures are captured into ElementCritique.ErrorMessage
+                // by CritiqueElementAsync, but a non-element exception (e.g. from
+                // the semaphore or task plumbing) can still escape. Let it bubble.
+                throw;
+            }
+
+            // Preserve deterministic order: append by ordered index.
+            foreach (var c in critiques)
+            {
+                if (c == null) continue;
+                run.ElementCritiques.Add(c);
+                AccumulateCost(run.Cost, c.Cost);
+            }
+
+            async Task RunOne(StoryElement el, int idx)
+            {
+                await semaphore.WaitAsync(cancellationToken);
+                try
+                {
+                    var critique = await CritiqueElementAsync(el, cancellationToken);
+                    critiques[idx] = critique;
+                    int done = Interlocked.Increment(ref doneCount);
+                    progress?.Report(new CritiqueProgress(
+                        $"{done}/{total} complete (last: {el.ElementType} '{el.Name}')", done, total));
+                }
+                finally
+                {
+                    semaphore.Release();
+                }
             }
 
             // Recompute totals for the run-level price-table-derived costs in case
@@ -256,20 +328,35 @@ namespace StoryCADCritter
             for (int attempt = 1; attempt <= MaxRetries; attempt++)
             {
                 cancellationToken.ThrowIfCancellationRequested();
+                using var perCallCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+                perCallCts.CancelAfter(PerCallTimeout);
                 try
                 {
                     var result = _kernel != null
-                        ? await _chatService.GetChatMessageContentAsync(history, settings, _kernel, cancellationToken)
-                        : await _chatService.GetChatMessageContentAsync(history, settings, null, cancellationToken);
+                        ? await _chatService.GetChatMessageContentAsync(history, settings, _kernel, perCallCts.Token)
+                        : await _chatService.GetChatMessageContentAsync(history, settings, null, perCallCts.Token);
 
                     rawContent = result.Content;
                     critique.Cost = ExtractCost(result);
                     lastException = null;
                     break;
                 }
-                catch (OperationCanceledException)
+                catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
                 {
                     throw;
+                }
+                catch (OperationCanceledException ex) when (attempt < MaxRetries)
+                {
+                    lastException = new TimeoutException(
+                        $"LLM call timed out after {PerCallTimeout.TotalSeconds:F0}s.", ex);
+                    var delay = TimeSpan.FromMilliseconds(InitialBackoff.TotalMilliseconds * Math.Pow(2, attempt - 1));
+                    await Task.Delay(delay, cancellationToken);
+                }
+                catch (OperationCanceledException ex)
+                {
+                    lastException = new TimeoutException(
+                        $"LLM call timed out after {PerCallTimeout.TotalSeconds:F0}s.", ex);
+                    break;
                 }
                 catch (Exception ex) when (attempt < MaxRetries && IsTransient(ex))
                 {
@@ -279,7 +366,6 @@ namespace StoryCADCritter
                 }
                 catch (Exception ex)
                 {
-                    // Either non-transient or last attempt — record and stop retrying.
                     lastException = ex;
                     break;
                 }
@@ -476,14 +562,13 @@ namespace StoryCADCritter
 
         private string GetBody(Guid uuid)
         {
-            if (_bodyCache.TryGetValue(uuid, out var cached))
-                return cached;
-            var result = _api.GetElement(uuid);
-            var body = (result != null && result.IsSuccess && result.Payload != null)
-                ? result.Payload.ToString() ?? string.Empty
-                : $"{{ \"error\": \"could not retrieve element body for {uuid}\" }}";
-            _bodyCache[uuid] = body;
-            return body;
+            return _bodyCache.GetOrAdd(uuid, static (key, api) =>
+            {
+                var result = api.GetElement(key);
+                return (result != null && result.IsSuccess && result.Payload != null)
+                    ? result.Payload.ToString() ?? string.Empty
+                    : $"{{ \"error\": \"could not retrieve element body for {key}\" }}";
+            }, _api);
         }
 
         private void LoadKeyQuestionsForTypes(IEnumerable<string> promptTypes)
