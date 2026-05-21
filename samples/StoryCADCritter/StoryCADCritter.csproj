@@ -13,6 +13,11 @@
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
+
+    <!-- The test project lives in a subdirectory of this one. Uno.Sdk
+         convention-includes everything under the project root by default,
+         which would pull the test sources into the app build. -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);StoryCADCritterTests\**</DefaultItemExcludes>
   </PropertyGroup>
 
   <!-- Windows first so MSIX packaged debugging works in VS (matches StoryCAD). -->

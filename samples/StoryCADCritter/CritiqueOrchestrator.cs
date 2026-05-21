@@ -56,6 +56,14 @@ namespace StoryCADCritter
         private static readonly TimeSpan InitialBackoff = TimeSpan.FromSeconds(2);
         private static readonly TimeSpan PerCallTimeout = TimeSpan.FromSeconds(45);
 
+        // Run-scoped progress state, set at the top of RunAsync. CritiqueElementAsync
+        // reads these to emit retry-visibility messages while a slot is held inside
+        // the timeout/backoff loop (otherwise the UI sees ~141s of dead air per
+        // stuck element).
+        private IProgress<CritiqueProgress>? _runProgress;
+        private int _runDone;
+        private int _runTotal;
+
         // Element types we walk. Folder / Section / Notes / Web / TrashCan /
         // StoryWorld are out-of-scope for the critique — they aren't part of
         // the dramatic-structure rubric.
@@ -148,6 +156,9 @@ namespace StoryCADCritter
             LoadKeyQuestionsForTypes(ordered.Select(e => MapTypeToPromptName(e.ElementType)).Distinct());
 
             int total = ordered.Count;
+            _runProgress = progress;
+            _runTotal = total;
+            _runDone = 0;
 
             // Pre-fetch all element bodies serially. StoryCADApi reads aren't
             // documented as thread-safe, so we populate the cache up-front and
@@ -165,7 +176,6 @@ namespace StoryCADCritter
 
             using var semaphore = new SemaphoreSlim(MaxConcurrency, MaxConcurrency);
             var critiques = new ElementCritique[total];
-            int doneCount = 0;
 
             var tasks = new Task[total];
             for (int idx = 0; idx < total; idx++)
@@ -204,11 +214,20 @@ namespace StoryCADCritter
                 await semaphore.WaitAsync(cancellationToken);
                 try
                 {
+                    var sw = System.Diagnostics.Stopwatch.StartNew();
                     var critique = await CritiqueElementAsync(el, cancellationToken);
+                    sw.Stop();
                     critiques[idx] = critique;
-                    int done = Interlocked.Increment(ref doneCount);
-                    progress?.Report(new CritiqueProgress(
-                        $"{done}/{total} complete (last: {el.ElementType} '{el.Name}')", done, total));
+                    int done = Interlocked.Increment(ref _runDone);
+                    var elapsed = sw.Elapsed.TotalSeconds;
+                    string status;
+                    if (critique.CallFailed)
+                        status = $"{done}/{total} FAILED ({el.ElementType} '{el.Name}', {elapsed:F1}s): {critique.ErrorMessage}";
+                    else if (critique.ParseFailed)
+                        status = $"{done}/{total} parse fallback ({el.ElementType} '{el.Name}', {elapsed:F1}s)";
+                    else
+                        status = $"{done}/{total} complete ({el.ElementType} '{el.Name}', {elapsed:F1}s)";
+                    progress?.Report(new CritiqueProgress(status, done, total));
                 }
                 finally
                 {
@@ -350,7 +369,9 @@ namespace StoryCADCritter
                     lastException = new TimeoutException(
                         $"LLM call timed out after {PerCallTimeout.TotalSeconds:F0}s.", ex);
                     var delay = TimeSpan.FromMilliseconds(InitialBackoff.TotalMilliseconds * Math.Pow(2, attempt - 1));
-                    await Task.Delay(delay, cancellationToken);
+                    ReportRetry(element, attempt, delay, "timed out");
+                    try { await Task.Delay(delay, cancellationToken); }
+                    catch (OperationCanceledException) { throw; }
                 }
                 catch (OperationCanceledException ex)
                 {
@@ -362,7 +383,9 @@ namespace StoryCADCritter
                 {
                     lastException = ex;
                     var delay = TimeSpan.FromMilliseconds(InitialBackoff.TotalMilliseconds * Math.Pow(2, attempt - 1));
-                    await Task.Delay(delay, cancellationToken);
+                    ReportRetry(element, attempt, delay, $"transient error ({ex.GetType().Name})");
+                    try { await Task.Delay(delay, cancellationToken); }
+                    catch (OperationCanceledException) { throw; }
                 }
                 catch (Exception ex)
                 {
@@ -682,6 +705,13 @@ namespace StoryCADCritter
             // "didn't parse cleanly" — the report will fall back to raw text.
             // Empty arrays ARE valid (the prompt permits them).
             return r.Strengths != null && r.Concerns != null && r.QuestionsForAuthor != null;
+        }
+
+        private void ReportRetry(StoryElement element, int attempt, TimeSpan delay, string reason)
+        {
+            _runProgress?.Report(new CritiqueProgress(
+                $"'{element.Name}' {reason} (attempt {attempt}/{MaxRetries}), retrying in {delay.TotalSeconds:F0}s...",
+                Volatile.Read(ref _runDone), _runTotal));
         }
 
         // -- Retry classification ------------------------------------------
