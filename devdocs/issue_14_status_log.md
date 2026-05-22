@@ -59,6 +59,14 @@ Branch: `issue-14-critter-rebuild` (not yet pushed/merged).
 **Remains**
 - Key Questions rubric text uses "him" as a generic pronoun regardless of character sex (e.g. "What goal or desire matters more to him than anything?"). This is a data problem in the Key Questions source, separate from the prompt fix above.
 
+### 2026-05-22 — Bump parallel concurrency to 8
+
+**Done**
+- `MaxConcurrency` const raised 4 → 8 in `CritiqueOrchestrator.cs:49`. The progress message ("Critiquing N elements (up to {MaxConcurrency} in parallel)...") interpolates the const, so both the semaphore width and the displayed message now read 8. Addresses the "requested at 8" note under New tasks (2026-05-20 entry).
+
+**Remains**
+- Preferences UI knob for MaxConcurrency still open; this only changes the default const.
+
 ## Carry-forward for #14 completion
 
 Open acceptance criteria (issue #14 body):

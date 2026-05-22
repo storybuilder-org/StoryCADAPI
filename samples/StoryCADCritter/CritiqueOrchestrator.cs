@@ -46,7 +46,7 @@ namespace StoryCADCritter
         // protagonist of two Problems).
         private readonly ConcurrentDictionary<Guid, string> _bodyCache = new();
         private readonly Dictionary<Guid, StoryElement> _byUuid = new();
-        private const int MaxConcurrency = 4;
+        private const int MaxConcurrency = 8;
 
         // Cache of Key Questions per element-type string. Issue #14 wants these
         // visible in the report so the rubric is transparent.
