@@ -583,33 +583,18 @@ namespace StoryCADCritter
         private static string Truncate(string s, int max) =>
             s.Length <= max ? s : s.Substring(0, max - 1) + "…";
 
-        private static readonly JsonSerializerOptions BodySerializerOptions = new()
-        {
-            WriteIndented = true,
-            DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
-        };
-
         private string GetBody(Guid uuid)
         {
+            // StoryCADApi.GetElement returns OperationResult<object> whose Payload
+            // is already the element serialized to a JSON string (element.Serialize()).
+            // ToString() on that string is the identity — do NOT JsonSerializer it
+            // again, or the body becomes a double-encoded escaped string.
             return _bodyCache.GetOrAdd(uuid, static (key, api) =>
             {
                 var result = api.GetElement(key);
-                if (result == null || !result.IsSuccess || result.Payload == null)
-                    return $"{{ \"error\": \"could not retrieve element body for {key}\" }}";
-
-                // The StoryCADLib models override ToString() to return only the
-                // UUID; their actual data lives in [JsonInclude]-decorated
-                // properties. Serialize against the runtime type so subclass
-                // fields (ProblemModel.ConflictType, CharacterModel.Sex, etc.)
-                // are emitted, not just the StoryElement base.
-                try
-                {
-                    return JsonSerializer.Serialize(result.Payload, result.Payload.GetType(), BodySerializerOptions);
-                }
-                catch (Exception ex)
-                {
-                    return $"{{ \"error\": \"could not serialize element {key}: {ex.Message}\" }}";
-                }
+                return (result != null && result.IsSuccess && result.Payload != null)
+                    ? result.Payload.ToString() ?? string.Empty
+                    : $"{{ \"error\": \"could not retrieve element body for {key}\" }}";
             }, _api);
         }
 
