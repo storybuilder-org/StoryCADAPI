@@ -39,7 +39,6 @@ Branch: `issue-14-critter-rebuild` (not yet pushed/merged).
 - Added a prompt-content regression test (`364bb46`) asserting the serialized `ProtGoal` field name and value reach the prompt — guards against both a bare-UUID and a double-encoded body. The earlier stubbed tests only checked LLM responses, not what the prompt sends.
 
 **Remains**
-- Real cause of the ungrounded critique still open. The LLM was receiving correctly-serialized element data, so investigate: sparse property values in the specific outline, prompt-grounding in `CritiquePrompt.md`, or the body being one long escaped JSON line the model uses poorly.
 - Decide commit/untangle of the #13 fix riding on the #14 branch (user declined untangling).
 
 **New tasks / issues**
@@ -47,6 +46,18 @@ Branch: `issue-14-critter-rebuild` (not yet pushed/merged).
 - Key Questions block: keep but move to a separate report gated by the preferences toggle (still rendered inline today).
 - Open diagnostic: whether the SK OpenAI connector honors the per-call `CancellationToken` during the response-body read; the completion Stopwatch time will indicate it.
 - Unverified: whether long-text fields (Notes/Description) come through as RTF in the serialized body.
+
+### 2026-05-22 — Ungrounded critique root cause found and fixed
+
+**Done**
+- `933fe75` — added instruction to `CritiquePrompt.md` Mandate section: when referencing characters, use their specific attributes (name, sex, role) from cross-reference data rather than generic role labels ("protagonist"/"antagonist"). Verified with a live run against "The Long Ride Home": "Accident on the road" now names Joseph and Arrogance throughout; "Desire to attend the fair" names Becky and Joseph with correct pronouns.
+
+**Worked / didn't**
+- Root cause of ungrounded critique confirmed: `BuildCrossReferences` was already injecting full character bodies for Problem protagonist/antagonist GUIDs — the data was reaching the LLM. The issue was purely a prompt instruction gap; the model defaulted to generic role labels. One sentence in the Mandate fixed it.
+- Used the StoryCAD MCP to open and inspect "The Long Ride Home.stbx" directly, then ran Critter twice (before and after the fix) for side-by-side comparison.
+
+**Remains**
+- Key Questions rubric text uses "him" as a generic pronoun regardless of character sex (e.g. "What goal or desire matters more to him than anything?"). This is a data problem in the Key Questions source, separate from the prompt fix above.
 
 ## Carry-forward for #14 completion
 
@@ -61,6 +72,5 @@ Open acceptance criteria (issue #14 body):
 - [ ] Human final approval.
 
 Related follow-ups:
-- [ ] Investigate the real cause of the ungrounded critique (not `GetBody` — that was a mis-diagnosis, reverted in `fdf6272`). Start by dumping the live prompt for the reported "Accident on the road" problem.
 - [ ] Preferences UI iteration (MaxConcurrency, Key Questions placement, model picker).
 - [ ] Decide whether the #13 GUID fix should land on its own branch/PR.
