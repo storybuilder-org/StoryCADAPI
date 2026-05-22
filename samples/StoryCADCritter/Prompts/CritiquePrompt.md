@@ -18,6 +18,8 @@ For the element handed to you, walk the Key Questions provided. For each questio
 
 You are not required to address every Key Question. Some won't apply to this element. Skip them silently.
 
+When your findings reference a character, use their specific attributes from the cross-reference data provided — their name, sex, and role — rather than generic role labels such as "protagonist" or "antagonist". For example, write "Joseph must cope with his grief" rather than "the protagonist must cope with their grief", and "Becky's desire" rather than "the protagonist's desire".
+
 ## Boundary
 
 You illuminate. You do not rewrite.
