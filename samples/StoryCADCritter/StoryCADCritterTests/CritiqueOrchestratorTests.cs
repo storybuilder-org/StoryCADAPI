@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -78,6 +79,45 @@ public class CritiqueOrchestratorTests
         // Render the report and assert the parse-failure banner appears.
         var report = CritiqueOrchestrator.RenderReport(run, "Lighthouse_Malformed");
         StringAssert.Contains(report, "Couldn't parse the LLM response");
+    }
+
+    [TestMethod]
+    public async Task StubbedWalk_PromptCarriesSerializedElementData_NotBareUuid()
+    {
+        await LighthouseKeeperFixture.BuildAsync(_api);
+
+        // Capture every user message the orchestrator sends. The walk is
+        // parallel, so guard the list.
+        var prompts = new List<string>();
+        var stub = new StubChatCompletionService
+        {
+            Respond = userMessage =>
+            {
+                lock (prompts) prompts.Add(userMessage);
+                return StubChatCompletionService.DefaultValidJson;
+            }
+        };
+
+        var orchestrator = new CritiqueOrchestrator(_api, stub, _systemPrompt);
+        var outlinePath = Path.Combine(_outputDir, "PromptData.demo");
+        await orchestrator.RunAsync(outlinePath, progress: null, outputDirectory: _outputDir);
+
+        // The "Save the Lighthouse" Problem sets ProtGoal in the fixture. Its
+        // prompt must contain both the JSON field name and the actual value,
+        // which only happens if GetBody serializes the element rather than
+        // emitting the bare UUID. Regression guard for the bug where
+        // StoryElement.ToString() (just the UUID) was sent as "element data".
+        List<string> snapshot;
+        lock (prompts) snapshot = prompts.ToList();
+
+        var problemPrompt = snapshot.FirstOrDefault(p => p.Contains("Save the Lighthouse"));
+        Assert.IsNotNull(problemPrompt, "No prompt for the 'Save the Lighthouse' problem was captured.");
+        StringAssert.Contains(problemPrompt, "ProtGoal",
+            "Problem prompt is missing serialized field names — GetBody may be sending only the UUID.");
+        // Substring stops before "father's" — System.Text.Json escapes the
+        // apostrophe to ', so we assert on apostrophe-free text.
+        StringAssert.Contains(problemPrompt, "Preserve the lighthouse and her father",
+            "Problem prompt is missing the actual ProtGoal value — element data isn't reaching the LLM.");
     }
 
     [TestMethod]
