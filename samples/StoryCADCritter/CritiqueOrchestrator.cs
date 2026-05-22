@@ -583,14 +583,33 @@ namespace StoryCADCritter
         private static string Truncate(string s, int max) =>
             s.Length <= max ? s : s.Substring(0, max - 1) + "…";
 
+        private static readonly JsonSerializerOptions BodySerializerOptions = new()
+        {
+            WriteIndented = true,
+            DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+        };
+
         private string GetBody(Guid uuid)
         {
             return _bodyCache.GetOrAdd(uuid, static (key, api) =>
             {
                 var result = api.GetElement(key);
-                return (result != null && result.IsSuccess && result.Payload != null)
-                    ? result.Payload.ToString() ?? string.Empty
-                    : $"{{ \"error\": \"could not retrieve element body for {key}\" }}";
+                if (result == null || !result.IsSuccess || result.Payload == null)
+                    return $"{{ \"error\": \"could not retrieve element body for {key}\" }}";
+
+                // The StoryCADLib models override ToString() to return only the
+                // UUID; their actual data lives in [JsonInclude]-decorated
+                // properties. Serialize against the runtime type so subclass
+                // fields (ProblemModel.ConflictType, CharacterModel.Sex, etc.)
+                // are emitted, not just the StoryElement base.
+                try
+                {
+                    return JsonSerializer.Serialize(result.Payload, result.Payload.GetType(), BodySerializerOptions);
+                }
+                catch (Exception ex)
+                {
+                    return $"{{ \"error\": \"could not serialize element {key}: {ex.Message}\" }}";
+                }
             }, _api);
         }
 
