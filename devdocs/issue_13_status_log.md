@@ -92,6 +92,23 @@ Branch: `issue-13-outliner-hardening` — merged to `main` via PR #19 at `a94474
 - Live-LLM verification deferred to the next manual run. Schema/builder coverage is deterministic; whether the LLM honors the strengthened prompt rules under the v4 instructions needs an actual run against a real model.
 - Merged via PR #21 at `a771b0e` (merge commit); remote and local branches deleted. Manual re-run against "Mirror, Mirror" verified the five fixes before merge.
 
+### 2026-05-21 — GUID regeneration fix (found during #14 work)
+
+**Done**
+- `0b0d370` — `ProseAnalyzer.EnsureValidGuids` now unconditionally regenerates every element GUID via `Guid.NewGuid()` and remaps every cross-reference, instead of only regenerating when `Guid.TryParse` fails. Committed on branch `issue-14-critter-rebuild` (not a #13-specific branch).
+
+**Worked / didn't**
+- Cause: the LLM emits syntactically valid placeholder GUIDs (`11111111-1111-1111-1111-111111111111`, `22222222-…`) that pass `Guid.TryParse`; `OutlineBuilder` passed them to `AddElement` as the element UUID, so every Outliner-generated `.stbx` shipped with canonical UUIDs. Confirmed in a live `Mirror, Mirror_outline.raw.json` (raw LLM output before post-processing).
+- OutlinerTests 59/59 still pass after the change.
+- Verified at code/test level only; no live Outliner run done this session to confirm a fresh `.stbx` carries real GUIDs.
+
+**Remains**
+- Pre-existing `.stbx` files keep their canonical UUIDs; only new Outliner runs produce real GUIDs.
+- Fix is committed on the `issue-14-critter-rebuild` branch, not yet pushed/merged.
+
+**New tasks / issues**
+- Decide whether this fix should land via its own branch/PR rather than riding the #14 branch.
+
 ## Carry-forward for #13 completion
 
 Open acceptance criteria:
