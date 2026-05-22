@@ -28,25 +28,24 @@ Branch: `issue-14-critter-rebuild` (not yet pushed/merged).
 - `b988de4` — rewrote `samples/StoryCADCritter/README.md` as user-facing help: requirements, how-to-run, output files, performance/timing/parallelism (wall-clock table by outline size, OpenAI TPM/RPM tiers), known limitations, troubleshooting.
 - `36876fc` — retry-visibility progress messages (`'X' timed out (attempt 2/3), retrying in 4s...`); completion message now carries a Stopwatch elapsed time and branches on complete / parse-fallback / FAILED; explicit OCE re-throw around backoff `Task.Delay`; `DefaultItemExcludes` extended with `StoryCADCritterTests\**`.
 - Auto-scrolling log added (`ScrollViewer.ChangeView` on `TextChanged`); progress bar made visible (was `Height=6`).
-- `GetBody` serialization fix — replaced `Payload.ToString()` (returns UUID only) with `JsonSerializer.Serialize` on the runtime type. **Uncommitted on the branch as of this writing.**
+- `fdf6272` / `364bb46` — `GetBody` change from a wrong diagnosis, reverted, plus a regression test. Detail under Worked/didn't.
 - Issue #14 body updated on GitHub: 5 Hardening ACs and the Code-tasks Implementation checkbox flipped to `[x]`; added Status / upstream-fix / open-follow-ups sections.
 
 **Worked / didn't**
-- Both Critter TFMs build clean (3 warnings, all NU1903 Tmds.DBus.Protocol transitive). Critter tests 3/3.
+- Both Critter TFMs build clean (3 warnings, all NU1903 Tmds.DBus.Protocol transitive). Critter tests 4/4.
 - Live run reported as "hung": traced to silent 141s worst case per stuck element in the retry loop (45+2+45+4+45) holding semaphore slots; retry-visibility messages address the symptom.
 - A separate "hung" report was the log scrollbar hiding completed content, not a hang — fixed by auto-scroll.
-- Live run surfaced ungrounded critique (wrong pronoun, invented framing). Root cause: `StoryElement.ToString()` returns only the UUID, so `GetBody` had been sending the LLM a bare UUID as "element data" for every element, and `ExtractGuidsFromJson` found no cross-refs — the two-tier granularity never fired. Fixed by the `GetBody` serialization change (uncommitted).
-- The stubbed tests verify LLM responses, not what the prompt sends — they did not catch the `GetBody` bug.
+- Live run surfaced ungrounded critique (wrong pronoun, invented framing). I mis-diagnosed it as `GetBody` sending a bare UUID and changed it to `JsonSerializer.Serialize` (`9d98b4b`). That was wrong: `StoryCADApi.GetElement` returns `OperationResult<object>` whose `Payload` is already a JSON string (`element.Serialize()`), so the original `Payload.ToString()` was returning real data. The change double-encoded the body; reverted in `fdf6272`. The ungrounded critique is therefore NOT a `GetBody` bug — its real cause is still open.
+- Added a prompt-content regression test (`364bb46`) asserting the serialized `ProtGoal` field name and value reach the prompt — guards against both a bare-UUID and a double-encoded body. The earlier stubbed tests only checked LLM responses, not what the prompt sends.
 
 **Remains**
-- Verify the `GetBody` fix on a live run (critique grounds in real `ConflictType` / `Sex` / goals); then commit it.
+- Real cause of the ungrounded critique still open. The LLM was receiving correctly-serialized element data, so investigate: sparse property values in the specific outline, prompt-grounding in `CritiquePrompt.md`, or the body being one long escaped JSON line the model uses poorly.
 - Decide commit/untangle of the #13 fix riding on the #14 branch (user declined untangling).
 
 **New tasks / issues**
 - Preferences UI is the agreed next iteration: `MaxConcurrency` knob (currently a const, requested at 8), Key Questions placement toggle, likely a model picker (parallels Jake's Outliner Settings).
 - Key Questions block: keep but move to a separate report gated by the preferences toggle (still rendered inline today).
 - Open diagnostic: whether the SK OpenAI connector honors the per-call `CancellationToken` during the response-body read; the completion Stopwatch time will indicate it.
-- Possible regression test gap: nothing asserts what the prompt sends to the LLM.
 - Unverified: whether long-text fields (Notes/Description) come through as RTF in the serialized body.
 
 ## Carry-forward for #14 completion
@@ -62,6 +61,6 @@ Open acceptance criteria (issue #14 body):
 - [ ] Human final approval.
 
 Related follow-ups:
-- [ ] Verify + commit the `GetBody` serialization fix.
+- [ ] Investigate the real cause of the ungrounded critique (not `GetBody` — that was a mis-diagnosis, reverted in `fdf6272`). Start by dumping the live prompt for the reported "Accident on the road" problem.
 - [ ] Preferences UI iteration (MaxConcurrency, Key Questions placement, model picker).
 - [ ] Decide whether the #13 GUID fix should land on its own branch/PR.
