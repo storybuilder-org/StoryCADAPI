@@ -13,11 +13,15 @@ namespace OutlinerTests
     /// deterministic, no API key required, no money spent, no LLM variance.
     /// Catches breakage in deserialization, GUID validation, OutlineBuilder
     /// field mapping, and the prose-reader -> analyzer -> builder wiring.
+    ///
+    /// Fixture is built from "The Yellow Wallpaper" (Charlotte Perkins Gilman,
+    /// 1892 — public domain). No proprietary content ships in the repo.
     /// </summary>
     [TestClass]
     public class StubbedPipelineTests
     {
-        private const string FixtureFile = "Mirror, Mirror.raw.json";
+        private const string FixtureFile = "The Yellow Wallpaper.raw.json";
+        private const string SourceDocName = "The Yellow Wallpaper.txt";
 
         private static OutlineRunner BuildStubbedRunner(string cannedJson)
         {
@@ -49,25 +53,25 @@ namespace OutlinerTests
         }
 
         [TestMethod]
-        public async Task StubbedPipeline_MirrorMirror_ProducesExpectedElements()
+        public async Task StubbedPipeline_ProducesExpectedElements()
         {
             var canned = await LoadFixtureAsync();
             var runner = BuildStubbedRunner(canned);
 
-            var prosePath = await WriteSyntheticProseAsync("stub_mirror");
-            var outputPath = Path.Combine(App.OutputDir, "stub_mirror.stbx");
+            var prosePath = await WriteSyntheticProseAsync("stub_yw");
+            var outputPath = Path.Combine(App.OutputDir, "stub_yw.stbx");
             var result = await runner.RunAsync(prosePath, outputPath);
 
             Assert.IsTrue(result.IsSuccess, result.ErrorMessage);
             Assert.IsNotNull(result.Response);
-            Assert.AreEqual(2, result.Response.Characters?.Count, "Expected 2 characters (Jaime + Possibility).");
+            Assert.AreEqual(2, result.Response.Characters?.Count, "Expected 2 characters (The Narrator + John).");
             Assert.AreEqual(1, result.Response.Settings?.Count,   "Expected 1 setting.");
             Assert.AreEqual(1, result.Response.Scenes?.Count,     "Expected 1 scene.");
             Assert.AreEqual(1, result.Response.Problems?.Count,   "Expected 1 problem.");
         }
 
         [TestMethod]
-        public async Task StubbedPipeline_MirrorMirror_OverviewFieldsPopulated()
+        public async Task StubbedPipeline_OverviewFieldsPopulated()
         {
             var canned = await LoadFixtureAsync();
             var runner = BuildStubbedRunner(canned);
@@ -75,7 +79,7 @@ namespace OutlinerTests
             var outputPath = Path.Combine(App.OutputDir, "stub_overview.stbx");
             var result = await runner.RunFromTextAsync(
                 "stub prose",
-                "Mirror, Mirror.docx",
+                SourceDocName,
                 outputPath);
 
             Assert.IsTrue(result.IsSuccess);
@@ -83,14 +87,14 @@ namespace OutlinerTests
             Assert.IsFalse(string.IsNullOrWhiteSpace(overview.Title));
             Assert.IsFalse(string.IsNullOrWhiteSpace(overview.Author));
             Assert.IsFalse(string.IsNullOrWhiteSpace(overview.Premise));
-            Assert.AreEqual("Short-Short",     overview.StoryType);
-            Assert.AreEqual("Science Fiction", overview.StoryGenre);
+            Assert.AreEqual("Short Story", overview.StoryType);
+            Assert.AreEqual("Literary",    overview.StoryGenre);
             Assert.IsFalse(string.IsNullOrWhiteSpace(overview.StoryProblem),
                 "StoryProblem GUID expected on overview.");
         }
 
         [TestMethod]
-        public async Task StubbedPipeline_MirrorMirror_PersonVsSelfAntagonistEqualsProtagonist()
+        public async Task StubbedPipeline_PersonVsSelfAntagonistEqualsProtagonist()
         {
             var canned = await LoadFixtureAsync();
             var runner = BuildStubbedRunner(canned);
@@ -98,7 +102,7 @@ namespace OutlinerTests
             var outputPath = Path.Combine(App.OutputDir, "stub_pvs.stbx");
             var result = await runner.RunFromTextAsync(
                 "stub prose",
-                "Mirror, Mirror.docx",
+                SourceDocName,
                 outputPath);
 
             Assert.IsTrue(result.IsSuccess);
@@ -109,7 +113,7 @@ namespace OutlinerTests
         }
 
         [TestMethod]
-        public async Task StubbedPipeline_MirrorMirror_CharacterStoryRoleAndRolePopulated()
+        public async Task StubbedPipeline_CharacterStoryRoleAndRolePopulated()
         {
             var canned = await LoadFixtureAsync();
             var runner = BuildStubbedRunner(canned);
@@ -117,24 +121,24 @@ namespace OutlinerTests
             var outputPath = Path.Combine(App.OutputDir, "stub_roles.stbx");
             var result = await runner.RunFromTextAsync(
                 "stub prose",
-                "Mirror, Mirror.docx",
+                SourceDocName,
                 outputPath);
 
             Assert.IsTrue(result.IsSuccess);
             var characters = result.Response!.Characters!;
             Assert.IsTrue(characters.Count >= 2);
 
-            var jaime = characters[0];
-            Assert.AreEqual("Student",     jaime.Role,      "Role is free-form (e.g. Student), not the narrative role.");
-            Assert.AreEqual("Protagonist", jaime.StoryRole, "StoryRole is the fixed-list narrative role.");
+            var narrator = characters[0];
+            Assert.AreEqual("Patient",     narrator.Role,      "Role is free-form (e.g. Patient), not the narrative role.");
+            Assert.AreEqual("Protagonist", narrator.StoryRole, "StoryRole is the fixed-list narrative role.");
 
-            var possibility = characters[1];
-            Assert.AreEqual("AI Mirror",        possibility.Role);
-            Assert.AreEqual("Supporting Role",  possibility.StoryRole);
+            var john = characters[1];
+            Assert.AreEqual("Physician",       john.Role);
+            Assert.AreEqual("Supporting Role", john.StoryRole);
         }
 
         [TestMethod]
-        public async Task StubbedPipeline_MirrorMirror_ScenePurposePopulated()
+        public async Task StubbedPipeline_ScenePurposePopulated()
         {
             var canned = await LoadFixtureAsync();
             var runner = BuildStubbedRunner(canned);
@@ -142,7 +146,7 @@ namespace OutlinerTests
             var outputPath = Path.Combine(App.OutputDir, "stub_purpose.stbx");
             var result = await runner.RunFromTextAsync(
                 "stub prose",
-                "Mirror, Mirror.docx",
+                SourceDocName,
                 outputPath);
 
             Assert.IsTrue(result.IsSuccess);
@@ -154,7 +158,7 @@ namespace OutlinerTests
         }
 
         [TestMethod]
-        public async Task StubbedPipeline_MirrorMirror_CharacterSketchDistinctFromAppearance()
+        public async Task StubbedPipeline_CharacterSketchDistinctFromAppearance()
         {
             var canned = await LoadFixtureAsync();
             var runner = BuildStubbedRunner(canned);
@@ -162,7 +166,7 @@ namespace OutlinerTests
             var outputPath = Path.Combine(App.OutputDir, "stub_sketch.stbx");
             var result = await runner.RunFromTextAsync(
                 "stub prose",
-                "Mirror, Mirror.docx",
+                SourceDocName,
                 outputPath);
 
             Assert.IsTrue(result.IsSuccess);
@@ -177,7 +181,7 @@ namespace OutlinerTests
         }
 
         [TestMethod]
-        public async Task StubbedPipeline_MirrorMirror_RatingArtifactWritten()
+        public async Task StubbedPipeline_RatingArtifactWritten()
         {
             var canned = await LoadFixtureAsync();
             var runner = BuildStubbedRunner(canned);
@@ -187,7 +191,7 @@ namespace OutlinerTests
 
             await runner.RunFromTextAsync(
                 "stub prose",
-                "Mirror, Mirror.docx",
+                SourceDocName,
                 outputPath);
 
             Assert.IsTrue(File.Exists(ratingPath), $"Rating artifact missing: {ratingPath}");
