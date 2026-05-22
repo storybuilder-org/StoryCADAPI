@@ -31,7 +31,7 @@ Branch: `issue-13-outliner-hardening` — merged to `main` via PR #19 at `a94474
 
 ### 2026-05-07 — Prompt v3 and IP cleanup
 - `0149e47` — prompt v3. Every Problem now emits `subject`, `theme`, `method`, and all six goal/motive/conflict slots (`protGoal`/`protMotive`/`protConflict` + `antagGoal`/`antagMotive`/`antagConflict`) symmetrically regardless of ConflictType. Schema + `OutlineBuilder.BuildProblemProperties` extended.
-- `b09e0ff` — `.gitignore` excludes `*.docx`, `*.pdf`, `*.txt`, `*.stbx`, `*.raw.json`, `*.costs.json`, `*.rating.json` under `samples/Outliner/Outliner/` and `samples/Outliner/OutlinerTests/`. The four already-committed `.docx` files (`Mirror, Mirror.docx`, `Mister Death.docx`, `The Long Ride Home.docx`) left in history — user accepted exposure (own stories + a publicly available work). Status log moved out of the repo so future log edits don't get committed.
+- `b09e0ff` — `.gitignore` excludes `*.docx`, `*.pdf`, `*.txt`, `*.stbx`, `*.raw.json`, `*.costs.json`, `*.rating.json` under `samples/Outliner/Outliner/` and `samples/Outliner/OutlinerTests/`.
 - End of session: branch at `b09e0ff`, 18 `(#13)` commits ahead of main, 44/44 tests passing.
 
 ### 2026-05-11 — NuGet flip attempt (abandoned)
@@ -108,6 +108,21 @@ Branch: `issue-13-outliner-hardening` — merged to `main` via PR #19 at `a94474
 
 **New tasks / issues**
 - Decide whether this fix should land via its own branch/PR rather than riding the #14 branch.
+
+### 2026-05-22 — Public-domain test fixture (found during #14 work)
+
+**Done**
+- `d2e1519` — replaced the stubbed-pipeline fixture `Fixtures/Mirror, Mirror.raw.json` with `Fixtures/The Yellow Wallpaper.raw.json` (Charlotte Perkins Gilman, 1892, public domain). Same shape the tests exercise: 2 characters, 1 setting, 1 scene, 1 Person-vs-Self problem (antagonist GUID == protagonist GUID), scene purposes "Introduce Situation"/"Develop Characters", overview StoryType/StoryGenre, distinct sketch vs appearance. List values validated against `StoryCADLib/Assets/Install/Lists.json` (StoryType "Short Story", Genre "Literary"). Rewrote `StubbedPipelineTests.cs`: repointed to the new fixture, updated assertions (Narrator/John, Patient/Physician), and changed the source-doc-name argument so no proprietary string remains in test code. Committed on branch `issue-14-critter-rebuild`.
+
+**Worked / didn't**
+- OutlinerTests 59/59 pass with the new fixture.
+- Driver: the repo is slated to go public at the 4.2 release (#15); proprietary stories can't ship in tracked files.
+
+**Remains**
+- None for this item.
+
+**New tasks / issues**
+- None.
 
 ## Carry-forward for #13 completion
 
