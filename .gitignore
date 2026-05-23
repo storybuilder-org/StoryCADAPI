@@ -3,6 +3,9 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+# Local-only dev notes (kept out of the repo by design)
+devdocs/*.local.md
+
 # User-specific files
 *.rsuser
 *.suo

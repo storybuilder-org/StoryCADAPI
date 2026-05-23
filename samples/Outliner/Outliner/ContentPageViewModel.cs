@@ -280,14 +280,23 @@ namespace Outliner
         /// </summary>
         private async Task ReadStoryFileAsync()
         {
-            var picker = new FileOpenPicker();
-            WinRT.Interop.InitializeWithWindow.Initialize(picker, WindowHandle);
+            try
+            {
+                var picker = new FileOpenPicker();
+                WinRT.Interop.InitializeWithWindow.Initialize(picker, WindowHandle);
 
-            picker.FileTypeFilter.Add(".txt");
-            picker.FileTypeFilter.Add(".docx");
-            picker.FileTypeFilter.Add(".pdf");
+                picker.FileTypeFilter.Add(".txt");
+                picker.FileTypeFilter.Add(".docx");
+                picker.FileTypeFilter.Add(".pdf");
 
-            _storyFile = await picker.PickSingleFileAsync();
+                _storyFile = await picker.PickSingleFileAsync();
+            }
+            catch (Exception ex)
+            {
+                ContentText = $"File picker failed: {ex.GetType().Name}: {ex.Message}\n{ex}";
+                return;
+            }
+
             if (_storyFile == null)
             {
                 ContentText = "No file selected.";
@@ -334,15 +343,24 @@ namespace Outliner
         /// </summary>
         private async Task SelectOutputFileAsync()
         {
-            var picker = new FileSavePicker();
-            WinRT.Interop.InitializeWithWindow.Initialize(picker, WindowHandle);
+            try
+            {
+                var picker = new FileSavePicker();
+                WinRT.Interop.InitializeWithWindow.Initialize(picker, WindowHandle);
 
-            picker.FileTypeChoices.Add("Story Outline", new[] { ".stbx" });
-            picker.SuggestedFileName = _storyFile != null
-                ? Path.GetFileNameWithoutExtension(_storyFile.Name) + "_outline.stbx"
-                : "Outline.stbx";
+                picker.FileTypeChoices.Add("Story Outline", new[] { ".stbx" });
+                picker.SuggestedFileName = _storyFile != null
+                    ? Path.GetFileNameWithoutExtension(_storyFile.Name) + "_outline.stbx"
+                    : "Outline.stbx";
 
-            _outputFile = await picker.PickSaveFileAsync();
+                _outputFile = await picker.PickSaveFileAsync();
+            }
+            catch (Exception ex)
+            {
+                ContentText = $"Save picker failed: {ex.GetType().Name}: {ex.Message}\n{ex}";
+                return;
+            }
+
             if (_outputFile != null)
             {
                 ContentText = $"Output will be saved to: {_outputFile.Path}";
