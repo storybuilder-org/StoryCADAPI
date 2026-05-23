@@ -57,7 +57,7 @@ Branch: `issue-14-critter-rebuild` (not yet pushed/merged).
 - Used the StoryCAD MCP to open and inspect "The Long Ride Home.stbx" directly, then ran Critter twice (before and after the fix) for side-by-side comparison.
 
 **Remains**
-- Key Questions rubric text uses "him" as a generic pronoun regardless of character sex (e.g. "What goal or desire matters more to him than anything?"). This is a data problem in the Key Questions source, separate from the prompt fix above.
+- ~~Key Questions rubric text uses "him" as a generic pronoun regardless of character sex.~~ Resolved 2026-05-23 (see below).
 
 ### 2026-05-22 — Bump parallel concurrency to 8
 
@@ -66,6 +66,24 @@ Branch: `issue-14-critter-rebuild` (not yet pushed/merged).
 
 **Remains**
 - Preferences UI knob for MaxConcurrency still open; this only changes the default const.
+
+### 2026-05-23 — Key Questions rubric personalization (Minerva)
+
+**Done**
+- `CritiqueOrchestrator.PersonalizeKeyQuestions` — per-element copy of the shared per-type rubric with generic role nouns replaced by real names and generic pronouns replaced by the referent's actual gendered pronoun. Resolves the "him/her regardless of sex" item from the 2026-05-22 entry.
+  - Character element: "the/your/this character" → element name; pronouns → the character's gendered pronoun (from the `Sex` field).
+  - Problem element: "protagonist"/"antagonist" → the resolved Protagonist/Antagonist names; pronouns substituted only when a question references exactly one role (ambiguous both/neither left alone).
+  - Sex blank (e.g. Arrogance, the Driver's Companion) → substitute the name (possessive → "Name's"); never guesses gender.
+  - "her" object-vs-possessive disambiguated by following-word context, no POS parser.
+  - Personalized list feeds both the LLM prompt and the rendered report; shared `_keyQuestionsByType` is never mutated.
+- Two deterministic unit tests (male → masculine pronouns + name; unknown sex → name fallback). 6/6 Critter tests pass.
+
+**Worked / didn't**
+- Verified live against "The Long Ride Home" (stubbed walk, real `GetKeyQuestions` + real outline): Joseph's section now reads "he/him/his" (0 feminine pronouns); the "go to the fair" Problem reads "matters more to her" (Becky) vs "matters more to him" (Joseph); Arrogance falls back to its name.
+- Environment note (Minerva): the WinUI samples must be built with VS MSBuild (`-p:Platform=x64`), not `dotnet build` (missing MSIX/PRI packaging task); GUI apps must be launched non-elevated or WinRT file pickers fail with `0x80004005`.
+
+**Remains**
+- None for the pronoun item.
 
 ## Carry-forward for #14 completion
 
@@ -81,4 +99,4 @@ Open acceptance criteria (issue #14 body):
 
 Related follow-ups:
 - [ ] Preferences UI iteration (MaxConcurrency, Key Questions placement, model picker).
-- [ ] Decide whether the #13 GUID fix should land on its own branch/PR.
+- [x] #13 GUID fix stays on `issue-14-critter-rebuild` (pushed as `0b0d370`); merging this branch lands it. No separate branch/PR.

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.SemanticKernel;
@@ -307,9 +308,14 @@ namespace StoryCADCritter
         private async Task<ElementCritique> CritiqueElementAsync(StoryElement element, CancellationToken cancellationToken)
         {
             var promptType = MapTypeToPromptName(element.ElementType);
-            var keyQuestions = _keyQuestionsByType.TryGetValue(promptType, out var qs)
+            var baseQuestions = _keyQuestionsByType.TryGetValue(promptType, out var qs)
                 ? qs
                 : new List<(string Topic, string Question)>();
+            // Personalize the shared per-type rubric for THIS element: generic
+            // role nouns ("the character", "your protagonist") become real names,
+            // and generic pronouns become the referent's actual gendered pronoun
+            // (from the Sex field). Issue #14 — fixes the rubric mis-gendering.
+            var keyQuestions = PersonalizeKeyQuestions(element, baseQuestions);
 
             var critique = new ElementCritique
             {
@@ -690,6 +696,152 @@ namespace StoryCADCritter
                     {
                         value = g;
                         return true;
+                    }
+                }
+            }
+            catch
+            {
+                // ignore
+            }
+            return false;
+        }
+
+        // -- Key Questions personalization (issue #14) ---------------------
+
+        /// <summary>
+        /// Returns a per-element copy of the rubric with generic role nouns
+        /// replaced by real names and generic pronouns replaced by the
+        /// referent's actual gendered pronoun. The shared per-type list is
+        /// never mutated. Setting/Scene/Overview pass through unchanged.
+        /// </summary>
+        private List<(string Topic, string Question)> PersonalizeKeyQuestions(
+            StoryElement element, List<(string Topic, string Question)> questions)
+        {
+            if (questions.Count == 0) return questions;
+            var body = GetBody(element.Uuid);
+
+            switch (element.ElementType)
+            {
+                case StoryItemType.Character:
+                {
+                    var name = element.Name;
+                    var sex = TryGetStringProperty(body, "Sex", out var s) ? s : null;
+                    return questions
+                        .Select(q => (q.Topic, PersonalizeCharacterQuestion(q.Question, name, sex)))
+                        .ToList();
+                }
+                case StoryItemType.Problem:
+                {
+                    string? protName = null, protSex = null, antName = null, antSex = null;
+                    if (TryGetGuidProperty(body, "Protagonist", out var pg) && _byUuid.TryGetValue(pg, out var pEl))
+                    {
+                        protName = pEl.Name;
+                        if (TryGetStringProperty(GetBody(pg), "Sex", out var ps)) protSex = ps;
+                    }
+                    if (TryGetGuidProperty(body, "Antagonist", out var ag) && _byUuid.TryGetValue(ag, out var aEl))
+                    {
+                        antName = aEl.Name;
+                        if (TryGetStringProperty(GetBody(ag), "Sex", out var asx)) antSex = asx;
+                    }
+                    return questions
+                        .Select(q => (q.Topic, PersonalizeProblemQuestion(q.Question, protName, protSex, antName, antSex)))
+                        .ToList();
+                }
+                default:
+                    return questions;
+            }
+        }
+
+        internal static string PersonalizeCharacterQuestion(string text, string name, string? sex)
+        {
+            // "the / your / this character" -> the character's name.
+            text = Regex.Replace(text, @"\b(the|your|this)\s+character\b", name, RegexOptions.IgnoreCase);
+            // Pronouns refer to this single character.
+            return ApplyGenderedPronouns(text, sex, name);
+        }
+
+        internal static string PersonalizeProblemQuestion(
+            string text, string? protName, string? protSex, string? antName, string? antSex)
+        {
+            // Decide the pronoun referent from the ORIGINAL text before any
+            // role-noun substitution erases the "protagonist"/"antagonist" cue.
+            bool mentionsProt = Regex.IsMatch(text, @"\bprotagonist\b", RegexOptions.IgnoreCase);
+            bool mentionsAnt  = Regex.IsMatch(text, @"\bantagonist\b", RegexOptions.IgnoreCase);
+
+            // Role nouns -> names (safe regardless of how many roles appear).
+            if (!string.IsNullOrEmpty(protName))
+                text = Regex.Replace(text, @"\b(the|your)\s+protagonist\b|\bprotagonist\b", protName, RegexOptions.IgnoreCase);
+            if (!string.IsNullOrEmpty(antName))
+                text = Regex.Replace(text, @"\b(the|your)\s+antagonist\b|\bantagonist\b", antName, RegexOptions.IgnoreCase);
+
+            // Pronouns only when exactly one role is referenced — otherwise the
+            // referent is ambiguous and we leave them alone.
+            if (mentionsProt && !mentionsAnt && !string.IsNullOrEmpty(protName))
+                text = ApplyGenderedPronouns(text, protSex, protName);
+            else if (mentionsAnt && !mentionsProt && !string.IsNullOrEmpty(antName))
+                text = ApplyGenderedPronouns(text, antSex, antName);
+
+            return text;
+        }
+
+        /// <summary>
+        /// Replaces generic third-person pronouns with the referent's actual
+        /// gendered forms. When Sex is unknown, falls back to the name (and
+        /// "Name's" for the possessive) rather than guessing gender.
+        /// </summary>
+        private static string ApplyGenderedPronouns(string text, string? sex, string name)
+        {
+            bool male   = string.Equals(sex, "Male", StringComparison.OrdinalIgnoreCase);
+            bool female = string.Equals(sex, "Female", StringComparison.OrdinalIgnoreCase);
+
+            string subj, obj, poss, possIndep;
+            if (male)        { subj = "he";  obj = "him"; poss = "his";       possIndep = "his"; }
+            else if (female) { subj = "she"; obj = "her"; poss = "her";       possIndep = "hers"; }
+            else             { subj = name;  obj = name;  poss = name + "'s"; possIndep = name + "'s"; }
+
+            return Regex.Replace(text, @"\b(he|she|him|her|his|hers)\b", m =>
+            {
+                string token = m.Value.ToLowerInvariant();
+                string repl = token switch
+                {
+                    "he" or "she" => subj,
+                    "him"         => obj,
+                    "his"         => poss,
+                    "hers"        => possIndep,
+                    "her"         => IsPossessiveContext(text, m.Index + m.Length) ? poss : obj,
+                    _             => m.Value
+                };
+                // Preserve a leading capital (sentence start).
+                if (char.IsUpper(m.Value[0]) && repl.Length > 0)
+                    repl = char.ToUpperInvariant(repl[0]) + repl.Substring(1);
+                return repl;
+            }, RegexOptions.IgnoreCase);
+        }
+
+        // "her" is possessive when immediately followed by whitespace + a word
+        // ("her outlook"); object otherwise ("visualize her?").
+        private static bool IsPossessiveContext(string text, int afterIndex)
+        {
+            int i = afterIndex;
+            while (i < text.Length && char.IsWhiteSpace(text[i])) i++;
+            return i < text.Length && char.IsLetter(text[i]);
+        }
+
+        private static bool TryGetStringProperty(string json, string propertyName, out string value)
+        {
+            value = string.Empty;
+            try
+            {
+                using var doc = JsonDocument.Parse(json);
+                if (doc.RootElement.ValueKind != JsonValueKind.Object) return false;
+                foreach (var prop in doc.RootElement.EnumerateObject())
+                {
+                    if (!string.Equals(prop.Name, propertyName, StringComparison.OrdinalIgnoreCase))
+                        continue;
+                    if (prop.Value.ValueKind == JsonValueKind.String)
+                    {
+                        var s = prop.Value.GetString();
+                        if (!string.IsNullOrWhiteSpace(s)) { value = s; return true; }
                     }
                 }
             }

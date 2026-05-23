@@ -121,6 +121,38 @@ public class CritiqueOrchestratorTests
     }
 
     [TestMethod]
+    public void PersonalizeKeyQuestions_MaleCharacter_UsesNameAndMasculinePronouns()
+    {
+        // A rubric question that mixes the generic role noun with female-default
+        // pronouns — the exact mis-gendering seen against male characters.
+        const string q = "Is your character fleshed out? Does she have the dimensionality of a real person? Can you visualize her?";
+
+        var result = CritiqueOrchestrator.PersonalizeCharacterQuestion(q, "Joseph", "Male");
+
+        StringAssert.Contains(result, "Joseph", "Generic 'your character' should become the name.");
+        StringAssert.Contains(result, "Does he have", "Subject pronoun should be masculine.");
+        StringAssert.Contains(result, "visualize him", "Object pronoun should be masculine.");
+        Assert.IsFalse(System.Text.RegularExpressions.Regex.IsMatch(result, @"\b(she|her|hers)\b",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase),
+            $"No feminine pronouns should remain: {result}");
+    }
+
+    [TestMethod]
+    public void PersonalizeKeyQuestions_UnknownSex_FallsBackToName()
+    {
+        // Arrogance (the horse) has no Sex on file — never guess a gender.
+        const string q = "Can you visualize her? Is she central to her outlook?";
+
+        var result = CritiqueOrchestrator.PersonalizeCharacterQuestion(q, "Arrogance", null);
+
+        StringAssert.Contains(result, "visualize Arrogance", "Object pronoun should fall back to the name.");
+        StringAssert.Contains(result, "Arrogance's outlook", "Possessive should become Name's.");
+        Assert.IsFalse(System.Text.RegularExpressions.Regex.IsMatch(result, @"\b(she|he|her|him|his)\b",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase),
+            $"No gendered pronouns should remain: {result}");
+    }
+
+    [TestMethod]
     public async Task ShortCircuit_OutlineWithoutScenes_SkipsLLM()
     {
         // Build a minimal outline: Overview + 1 Character, no Scenes.
