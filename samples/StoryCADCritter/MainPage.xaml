@@ -28,6 +28,29 @@
                            TextTrimming="CharacterEllipsis"/>
             </StackPanel>
 
+            <Expander Header="Settings" HorizontalAlignment="Stretch"
+                      HorizontalContentAlignment="Stretch">
+                <StackPanel Orientation="Vertical" Spacing="12" Margin="0,4,0,0">
+                    <NumberBox x:Name="ConcurrencyBox"
+                               Header="Max parallel critiques (1–16)"
+                               Minimum="1" Maximum="16" SmallChange="1"
+                               SpinButtonPlacementMode="Inline"
+                               ValueChanged="ConcurrencyBox_ValueChanged"/>
+                    <ComboBox Header="OpenAI model"
+                              IsEditable="True"
+                              ItemsSource="{x:Bind Vm.ModelOptions}"
+                              Text="{x:Bind Vm.SelectedModelId, Mode=TwoWay}"
+                              PlaceholderText="gpt-4o-mini (default)"
+                              HorizontalAlignment="Stretch"/>
+                    <ToggleSwitch Header="Key Questions placement"
+                                  OffContent="Inline (per element)"
+                                  OnContent="Separate section"
+                                  IsOn="{x:Bind Vm.KeyQuestionsSeparate, Mode=TwoWay}"/>
+                    <TextBlock Text="Settings apply to the next Run Critique."
+                               Foreground="Gray" FontSize="12"/>
+                </StackPanel>
+            </Expander>
+
             <StackPanel Orientation="Horizontal" Spacing="10">
                 <Button Content="Run Critique"
                         Command="{x:Bind Vm.RunCommand}"/>

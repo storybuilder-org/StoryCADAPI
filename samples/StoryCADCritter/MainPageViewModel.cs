@@ -1,4 +1,5 @@
 using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -20,6 +21,8 @@ namespace StoryCADCritter;
 public class MainPageViewModel : ObservableObject
 {
     private readonly StoryCADApi _api;
+    private readonly CritterPreferences _prefs;
+    private readonly PreferencesService _prefsService;
     private StorageFile? _outlineFile;
     private StorageFolder? _outputFolder;
     private CancellationTokenSource? _runCts;
@@ -34,12 +37,71 @@ public class MainPageViewModel : ObservableObject
     public MainPageViewModel()
     {
         _api = Ioc.Default.GetRequiredService<StoryCADApi>();
+        _prefs = Ioc.Default.GetRequiredService<CritterPreferences>();
+        _prefsService = Ioc.Default.GetRequiredService<PreferencesService>();
+
+        _maxConcurrency = _prefs.MaxConcurrency;
+        _keyQuestionsSeparate = string.Equals(_prefs.KeyQuestionsPlacement, "Separate", StringComparison.OrdinalIgnoreCase);
+        _selectedModelId = string.IsNullOrWhiteSpace(_prefs.SelectedModelId) ? null : _prefs.SelectedModelId;
+        if (_selectedModelId != null && !ModelOptions.Contains(_selectedModelId))
+            ModelOptions.Insert(0, _selectedModelId);
+
         PickOutlineCommand = new AsyncRelayCommand(PickOutlineAsync, () => !IsRunning);
         PickOutputFolderCommand = new AsyncRelayCommand(PickOutputFolderAsync, () => !IsRunning);
         RunCommand = new AsyncRelayCommand(RunAsync, CanRun);
         CancelCommand = new RelayCommand(Cancel, () => IsRunning && _runCts is { IsCancellationRequested: false });
         OpenReportCommand = new RelayCommand(OpenReport, () => !string.IsNullOrEmpty(ReportPath) && File.Exists(ReportPath));
         OpenOutputFolderCommand = new RelayCommand(OpenOutputFolder, () => _outputFolder != null);
+    }
+
+    // ---- Settings (persisted on change; applied at the next run) ----
+
+    public ObservableCollection<string> ModelOptions { get; } =
+        new() { "gpt-4o-mini", "gpt-4o", "gpt-4-turbo" };
+
+    private int _maxConcurrency = 8;
+    public int MaxConcurrency
+    {
+        get => _maxConcurrency;
+        set
+        {
+            var clamped = Math.Clamp(value, 1, 16);
+            if (SetProperty(ref _maxConcurrency, clamped))
+            {
+                _prefs.MaxConcurrency = clamped;
+                _prefsService.Save(_prefs);
+            }
+        }
+    }
+
+    private string? _selectedModelId;
+    /// <summary>Empty/null means fall back to OPENAI_MODEL, then gpt-4o-mini.</summary>
+    public string? SelectedModelId
+    {
+        get => _selectedModelId;
+        set
+        {
+            if (SetProperty(ref _selectedModelId, value))
+            {
+                _prefs.SelectedModelId = value ?? string.Empty;
+                _prefsService.Save(_prefs);
+            }
+        }
+    }
+
+    private bool _keyQuestionsSeparate;
+    /// <summary>True = consolidated Key Questions section; false = inline per element.</summary>
+    public bool KeyQuestionsSeparate
+    {
+        get => _keyQuestionsSeparate;
+        set
+        {
+            if (SetProperty(ref _keyQuestionsSeparate, value))
+            {
+                _prefs.KeyQuestionsPlacement = value ? "Separate" : "Inline";
+                _prefsService.Save(_prefs);
+            }
+        }
     }
 
     private string _outlinePathDisplay = "(no outline selected)";
@@ -194,7 +256,9 @@ public class MainPageViewModel : ObservableObject
             AppendLog(StatusText);
             return;
         }
-        var modelId = Environment.GetEnvironmentVariable("OPENAI_MODEL") ?? "gpt-4o-mini";
+        var modelId = !string.IsNullOrWhiteSpace(_prefs.SelectedModelId)
+            ? _prefs.SelectedModelId
+            : Environment.GetEnvironmentVariable("OPENAI_MODEL") ?? "gpt-4o-mini";
 
         IsRunning = true;
         try
@@ -237,7 +301,7 @@ public class MainPageViewModel : ObservableObject
                 return;
             }
 
-            var orchestrator = new CritiqueOrchestrator(_api, chatService, systemPrompt, kernel);
+            var orchestrator = new CritiqueOrchestrator(_api, chatService, systemPrompt, kernel, _prefs.MaxConcurrency);
             var progress = new Progress<CritiqueProgress>(p =>
             {
                 StatusText = p.Status;
@@ -292,7 +356,8 @@ public class MainPageViewModel : ObservableObject
 
     private async Task WriteArtifactsAsync(CritiqueRunResult run, string outlineDisplay)
     {
-        var report = CritiqueOrchestrator.RenderReport(run, outlineDisplay);
+        var separateKq = string.Equals(_prefs.KeyQuestionsPlacement, "Separate", StringComparison.OrdinalIgnoreCase);
+        var report = CritiqueOrchestrator.RenderReport(run, outlineDisplay, separateKq);
         try
         {
             await File.WriteAllTextAsync(run.ReportPath, report);

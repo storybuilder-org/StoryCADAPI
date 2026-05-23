@@ -121,6 +121,52 @@ public class CritiqueOrchestratorTests
     }
 
     [TestMethod]
+    public void PreferencesService_RoundTripsAllFields()
+    {
+        var path = Path.Combine(_outputDir, $"prefs_{Guid.NewGuid():N}.json");
+        var svc = new PreferencesService(path);
+
+        svc.Save(new CritterPreferences
+        {
+            MaxConcurrency = 12,
+            KeyQuestionsPlacement = "Separate",
+            SelectedModelId = "gpt-4o"
+        });
+        var loaded = svc.Load();
+
+        Assert.AreEqual(12, loaded.MaxConcurrency);
+        Assert.AreEqual("Separate", loaded.KeyQuestionsPlacement);
+        Assert.AreEqual("gpt-4o", loaded.SelectedModelId);
+
+        // Missing file → defaults, not a throw.
+        var fresh = new PreferencesService(Path.Combine(_outputDir, $"missing_{Guid.NewGuid():N}.json")).Load();
+        Assert.AreEqual(8, fresh.MaxConcurrency);
+        Assert.AreEqual("Inline", fresh.KeyQuestionsPlacement);
+    }
+
+    [TestMethod]
+    public void RenderReport_SeparatePlacement_ConsolidatesKeyQuestions()
+    {
+        var run = new CritiqueRunResult { OutlinePath = "demo.stbx" };
+        run.ElementCritiques.Add(new ElementCritique
+        {
+            Uuid = Guid.NewGuid(),
+            Name = "Joseph",
+            ElementType = "Character",
+            KeyQuestions = new() { ("Role Tab", "Is Joseph fleshed out?") },
+            Parsed = new CritiqueElementResponse { ElementName = "Joseph", ElementType = "Character" }
+        });
+
+        var inline = CritiqueOrchestrator.RenderReport(run, "demo", separateKeyQuestions: false);
+        StringAssert.Contains(inline, "<details><summary>Key Questions used</summary>");
+
+        var separate = CritiqueOrchestrator.RenderReport(run, "demo", separateKeyQuestions: true);
+        StringAssert.Contains(separate, "## Key Questions");
+        Assert.IsFalse(separate.Contains("<details>"),
+            "Separate placement should not emit inline <details> blocks.");
+    }
+
+    [TestMethod]
     public void PersonalizeKeyQuestions_MaleCharacter_UsesNameAndMasculinePronouns()
     {
         // A rubric question that mixes the generic role noun with female-default

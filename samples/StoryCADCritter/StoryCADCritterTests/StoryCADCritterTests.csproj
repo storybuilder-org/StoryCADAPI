@@ -28,6 +28,7 @@
     <Compile Include="..\CritiqueOrchestrator.cs" Link="Critter\CritiqueOrchestrator.cs" />
     <Compile Include="..\CritiqueResponse.cs"     Link="Critter\CritiqueResponse.cs" />
     <Compile Include="..\CritiqueCost.cs"          Link="Critter\CritiqueCost.cs" />
+    <Compile Include="..\CritterPreferences.cs"    Link="Critter\CritterPreferences.cs" />
     <Compile Include="..\LighthouseKeeperFixture.cs" Link="Critter\LighthouseKeeperFixture.cs" />
   </ItemGroup>
 

@@ -47,7 +47,7 @@ namespace StoryCADCritter
         // protagonist of two Problems).
         private readonly ConcurrentDictionary<Guid, string> _bodyCache = new();
         private readonly Dictionary<Guid, StoryElement> _byUuid = new();
-        private const int MaxConcurrency = 8;
+        private readonly int _maxConcurrency;
 
         // Cache of Key Questions per element-type string. Issue #14 wants these
         // visible in the report so the rubric is transparent.
@@ -81,12 +81,15 @@ namespace StoryCADCritter
             StoryCADApi api,
             IChatCompletionService chatService,
             string systemPrompt,
-            Kernel? kernel = null)
+            Kernel? kernel = null,
+            int maxConcurrency = 8)
         {
             _api = api ?? throw new ArgumentNullException(nameof(api));
             _chatService = chatService ?? throw new ArgumentNullException(nameof(chatService));
             _systemPrompt = systemPrompt ?? throw new ArgumentNullException(nameof(systemPrompt));
             _kernel = kernel;
+            // Clamp to a sane range; the semaphore must be >= 1.
+            _maxConcurrency = Math.Clamp(maxConcurrency, 1, 16);
         }
 
         /// <summary>
@@ -173,9 +176,9 @@ namespace StoryCADCritter
             }
 
             progress?.Report(new CritiqueProgress(
-                $"Critiquing {total} elements (up to {MaxConcurrency} in parallel)...", 0, total));
+                $"Critiquing {total} elements (up to {_maxConcurrency} in parallel)...", 0, total));
 
-            using var semaphore = new SemaphoreSlim(MaxConcurrency, MaxConcurrency);
+            using var semaphore = new SemaphoreSlim(_maxConcurrency, _maxConcurrency);
             var critiques = new ElementCritique[total];
 
             var tasks = new Task[total];
@@ -900,7 +903,10 @@ namespace StoryCADCritter
         /// Renders a CritiqueRunResult to Markdown. Public + static so tests
         /// can hand it canned ElementCritiques and assert on the output.
         /// </summary>
-        public static string RenderReport(CritiqueRunResult run, string outlineDisplayName)
+        public static string RenderReport(
+            CritiqueRunResult run,
+            string outlineDisplayName,
+            bool separateKeyQuestions = false)
         {
             var sb = new StringBuilder();
             sb.AppendLine($"# Critique — {outlineDisplayName}");
@@ -941,7 +947,7 @@ namespace StoryCADCritter
             sb.AppendLine();
 
             foreach (var critique in run.ElementCritiques)
-                RenderElement(sb, critique);
+                RenderElement(sb, critique, includeKeyQuestions: !separateKeyQuestions);
 
             if (errorCount > 0)
             {
@@ -952,17 +958,48 @@ namespace StoryCADCritter
                 sb.AppendLine();
             }
 
+            if (separateKeyQuestions)
+                RenderKeyQuestionsAppendix(sb, run);
+
             return sb.ToString();
         }
 
-        private static void RenderElement(StringBuilder sb, ElementCritique critique)
+        /// <summary>
+        /// Consolidated Key Questions section, emitted once after the per-element
+        /// critiques when the user prefers the rubric out of line. Each element's
+        /// (personalized) questions appear under its own heading.
+        /// </summary>
+        private static void RenderKeyQuestionsAppendix(StringBuilder sb, CritiqueRunResult run)
+        {
+            var withQuestions = run.ElementCritiques.Where(c => c.KeyQuestions.Count > 0).ToList();
+            if (withQuestions.Count == 0) return;
+
+            sb.AppendLine("## Key Questions");
+            sb.AppendLine();
+            sb.AppendLine("_The rubric each element was critiqued against._");
+            sb.AppendLine();
+            foreach (var critique in withQuestions)
+            {
+                sb.AppendLine($"### [{critique.ElementType}] {critique.Name}");
+                sb.AppendLine();
+                foreach (var grp in critique.KeyQuestions.GroupBy(q => q.Topic))
+                {
+                    sb.AppendLine($"**{grp.Key}**");
+                    foreach (var q in grp)
+                        sb.AppendLine($"- {q.Question}");
+                    sb.AppendLine();
+                }
+            }
+        }
+
+        private static void RenderElement(StringBuilder sb, ElementCritique critique, bool includeKeyQuestions)
         {
             sb.AppendLine($"## [{critique.ElementType}] {critique.Name}");
             sb.AppendLine();
             sb.AppendLine($"_UUID: `{critique.Uuid}`_");
             sb.AppendLine();
 
-            if (critique.KeyQuestions.Count > 0)
+            if (includeKeyQuestions && critique.KeyQuestions.Count > 0)
             {
                 sb.AppendLine("<details><summary>Key Questions used</summary>");
                 sb.AppendLine();

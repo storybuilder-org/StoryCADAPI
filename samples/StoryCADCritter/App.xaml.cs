@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using StoryCADLib.Services.IoC;
 
@@ -10,6 +11,12 @@ public partial class App : Application
 
     public App()
     {
+        // Register user preferences before BootStrapper builds the provider, so
+        // view models can resolve them via Ioc.Default.
+        var prefsService = new PreferencesService();
+        BootStrapper.Services.AddSingleton(prefsService);
+        BootStrapper.Services.AddSingleton(prefsService.Load());
+
         BootStrapper.Initialise();
         InitializeComponent();
     }
