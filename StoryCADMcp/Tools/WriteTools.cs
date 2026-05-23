@@ -41,11 +41,11 @@ public static class WriteTools
     }
 
     [McpServerTool(Name = "update_property")]
-    [Description("Updates a single property on a story element. Call save_outline after to persist.")]
+    [Description("Updates a single property on a story element. Note: the single 'Description' field is shown under different labels per element type in StoryCAD — Problem=Story Question, Scene=Scene Sketch, Character=Character Sketch, Setting=Setting Summary, Folder=Notes, StoryOverview=Story Idea. Call save_outline after to persist.")]
     public static string UpdateProperty(
         StoryCADApi api,
         [Description("GUID of the element to update")] string guid,
-        [Description("Property name to update (e.g. Name, Description, Role, Archetype)")] string property,
+        [Description("Property name to update (e.g. Name, Description, Role, Archetype). Use 'Description' for a Problem's story question, a Scene's sketch, a Character's sketch, a Setting's summary, a Folder's notes, or the Overview's story idea.")] string property,
         [Description("New value for the property")] string value)
     {
         if (api.CurrentModel == null)
