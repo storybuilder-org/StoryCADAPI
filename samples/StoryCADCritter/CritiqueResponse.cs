@@ -39,6 +39,12 @@ namespace StoryCADCritter
         /// <summary>Key questions actually sent to the LLM for this element (for transparency).</summary>
         public List<(string Topic, string Question)> KeyQuestions { get; set; } = new();
 
+        /// <summary>How deeply this element was asked to be critiqued.</summary>
+        public string CritiqueMode { get; set; } = string.Empty;
+
+        /// <summary>Short explanation of the structural signals behind the critique mode.</summary>
+        public string CritiqueFocus { get; set; } = string.Empty;
+
         /// <summary>Populated when parsing succeeded. Null when we fell back to raw text or hit a hard error.</summary>
         public CritiqueElementResponse? Parsed { get; set; }
 
@@ -70,6 +76,7 @@ namespace StoryCADCritter
         public string CostsPath { get; set; } = string.Empty;
         public string RawPath { get; set; } = string.Empty;
         public List<ElementCritique> ElementCritiques { get; set; } = new();
+        public string StructuralOrientation { get; set; } = string.Empty;
         public bool ShortCircuited { get; set; }
         public string? ShortCircuitReason { get; set; }
         public string? HardFailureMessage { get; set; }

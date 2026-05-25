@@ -385,11 +385,14 @@ public class MainPageViewModel : ObservableObject
             var rawDoc = new
             {
                 model = run.Cost.ModelId,
+                structuralOrientation = run.StructuralOrientation,
                 elements = run.ElementCritiques.ConvertAll(e => (object)new
                 {
                     uuid = e.Uuid,
                     type = e.ElementType,
                     name = e.Name,
+                    critiqueMode = e.CritiqueMode,
+                    critiqueFocus = e.CritiqueFocus,
                     parsed = e.Parsed,
                     rawResponse = e.RawResponse,
                     error = e.ErrorMessage

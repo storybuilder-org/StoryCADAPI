@@ -17,7 +17,7 @@
     <!-- The test project lives in a subdirectory of this one. Uno.Sdk
          convention-includes everything under the project root by default,
          which would pull the test sources into the app build. -->
-    <DefaultItemExcludes>$(DefaultItemExcludes);StoryCADCritterTests\**</DefaultItemExcludes>
+    <DefaultItemExcludes>$(DefaultItemExcludes);StoryCADCritterTests\**;StoryCADCritter.Core\**</DefaultItemExcludes>
   </PropertyGroup>
 
   <!-- Windows first so MSIX packaged debugging works in VS (matches StoryCAD). -->
@@ -46,6 +46,11 @@
 
     <Platforms>x86;x64;ARM64</Platforms>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="CritiqueOrchestrator.cs;CritiqueResponse.cs;CritiqueCost.cs;CritterPreferences.cs;LighthouseKeeperFixture.cs" />
+    <ProjectReference Include="StoryCADCritter.Core\StoryCADCritter.Core.csproj" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />

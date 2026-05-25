@@ -48,6 +48,10 @@ public class CritiqueOrchestratorTests
         Assert.AreEqual(run.ElementCritiques.Count, stub.CallCount, "One LLM call per critiqued element.");
         Assert.IsTrue(run.ElementCritiques.All(c => c.Parsed != null),
             $"Some critiques failed to parse: {string.Join(", ", run.ElementCritiques.Where(c => c.Parsed == null).Select(c => c.Name))}");
+        Assert.IsFalse(string.IsNullOrWhiteSpace(run.StructuralOrientation),
+            "Run should include deterministic structural orientation.");
+        Assert.IsTrue(run.ElementCritiques.All(c => !string.IsNullOrWhiteSpace(c.CritiqueMode)),
+            "Each element should carry a critique mode.");
     }
 
     [TestMethod]
@@ -167,6 +171,74 @@ public class CritiqueOrchestratorTests
     }
 
     [TestMethod]
+    public void RenderReport_IncludesStructuralOrientation()
+    {
+        var run = new CritiqueRunResult
+        {
+            OutlinePath = "demo.stbx",
+            StructuralOrientation = "Story-spine candidates: [Problem] Demo"
+        };
+        run.ElementCritiques.Add(new ElementCritique
+        {
+            Uuid = Guid.NewGuid(),
+            Name = "Demo",
+            ElementType = "Overview",
+            CritiqueMode = CritiqueOrchestrator.ModeFull,
+            CritiqueFocus = "orientation test",
+            Parsed = new CritiqueElementResponse { ElementName = "Demo", ElementType = "Overview" }
+        });
+
+        var report = CritiqueOrchestrator.RenderReport(run, "demo");
+
+        StringAssert.Contains(report, "## Structural Orientation");
+        StringAssert.Contains(report, "Story-spine candidates");
+        StringAssert.Contains(report, "Critique mode: Full structural read");
+    }
+
+    [TestMethod]
+    public void FilterKeyQuestions_FunctionalCharacter_RemovesLeadDepthQuestions()
+    {
+        var questions = new List<(string Topic, string Question)>
+        {
+            ("Role Tab", "What is the character's role in the story?"),
+            ("Physical and Appearance Tabs", "Is your character fleshed out?"),
+            ("Psychological and Inner Traits Tabs", "Does your character have traits?"),
+            ("Flaw Tab", "Does your character have both good and bad qualities?"),
+            ("Backstory", "Are your character's traits consistent with his background?"),
+            ("General Questions", "Is your cast too large, or too small?")
+        };
+
+        var filtered = CritiqueOrchestrator.FilterKeyQuestionsForPlan(
+            StoryItemType.Character, CritiqueOrchestrator.ModeFunctional, questions);
+
+        CollectionAssert.Contains(filtered.Select(q => q.Topic).ToList(), "Role Tab");
+        CollectionAssert.Contains(filtered.Select(q => q.Topic).ToList(), "General Questions");
+        Assert.IsFalse(filtered.Any(q => q.Topic.Contains("Flaw") || q.Topic.Contains("Backstory") || q.Topic.Contains("Psychological")),
+            $"Functional character questions should not demand lead depth: {string.Join(" | ", filtered.Select(q => q.Topic))}");
+    }
+
+    [TestMethod]
+    public void FilterKeyQuestions_FunctionalProblem_RemovesBalancedArcBurden()
+    {
+        var questions = new List<(string Topic, string Question)>
+        {
+            ("Protagonist / Antagonist Tabs", "Is the struggle between opposing forces clearly recognizable?"),
+            ("Protagonist / Antagonist Tabs", "Your protagonist should be capable of growth and change."),
+            ("Protagonist / Antagonist Tabs", "Is your antagonist a worthy opponent? Are the protagonist and the antagonist evenly matched?"),
+            ("Resolution Tab", "What is your problem's premise? Can you summarize the problem?"),
+            ("Resolution Tab", "Can you visualize your problem's resolution as a scene? Does it match your premise?")
+        };
+
+        var filtered = CritiqueOrchestrator.FilterKeyQuestionsForPlan(
+            StoryItemType.Problem, CritiqueOrchestrator.ModeFunctional, questions);
+
+        Assert.IsTrue(filtered.Any(q => q.Question.Contains("struggle between opposing forces")));
+        Assert.IsTrue(filtered.Any(q => q.Question.Contains("problem's premise")));
+        Assert.IsFalse(filtered.Any(q => q.Question.Contains("capable of growth") || q.Question.Contains("worthy opponent")),
+            $"Functional problem questions should not demand a full balanced arc: {string.Join(" | ", filtered.Select(q => q.Question))}");
+    }
+
+    [TestMethod]
     public void PersonalizeKeyQuestions_MaleCharacter_UsesNameAndMasculinePronouns()
     {
         // A rubric question that mixes the generic role noun with female-default
@@ -196,6 +268,74 @@ public class CritiqueOrchestratorTests
         Assert.IsFalse(System.Text.RegularExpressions.Regex.IsMatch(result, @"\b(she|he|her|him|his)\b",
             System.Text.RegularExpressions.RegexOptions.IgnoreCase),
             $"No gendered pronouns should remain: {result}");
+    }
+
+    [TestMethod]
+    public void PersonalizeProblemQuestion_BothRolesNamed_GendersByNearestRole()
+    {
+        // The "worthy opponent" question names the antagonist, carries antagonist
+        // pronouns, then mentions the protagonist in a trailing clause. The old
+        // gate left every pronoun generic because both roles appeared; the
+        // pronouns belong to the antagonist and must follow the antagonist's sex.
+        const string q = "Is the antagonist a worthy opponent? Does he believe in his own goal? "
+                       + "Is he forced to behave as he does? Are the protagonist and antagonist evenly matched?";
+
+        // Protagonist Becky (female), antagonist Joseph (male) — distinct people.
+        var result = CritiqueOrchestrator.PersonalizeProblemQuestion(q, "Becky", "Female", "Joseph", "Male");
+
+        StringAssert.Contains(result, "Is Joseph a worthy opponent? Does he believe in his own goal?");
+        StringAssert.Contains(result, "Are Becky and Joseph evenly matched?");
+    }
+
+    [TestMethod]
+    public void PersonalizeProblemQuestion_FemaleAntagonist_UsesFemininePronouns()
+    {
+        // Same question, but the antagonist is female — the antagonist pronouns
+        // must become she/her, proving the fix tracks sex rather than the one
+        // phrasing seen in the report.
+        const string q = "Is the antagonist a worthy opponent? Does he believe in his own goal? Is he forced to behave as he does?";
+
+        var result = CritiqueOrchestrator.PersonalizeProblemQuestion(q, "Joseph", "Male", "Becky", "Female");
+
+        StringAssert.Contains(result, "Is Becky a worthy opponent? Does she believe in her own goal? Is she forced to behave as she does?");
+        Assert.IsFalse(System.Text.RegularExpressions.Regex.IsMatch(result, @"\b(he|him|his)\b",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase),
+            $"No masculine pronouns should remain for a female antagonist: {result}");
+    }
+
+    [TestMethod]
+    public void PersonalizeProblemQuestion_PersonVsSelf_KeepsAntagonistWordAndGenders()
+    {
+        // Becky is her own antagonist (internal conflict). We must not render
+        // "Becky and Becky"; the second role keeps the literal word "antagonist",
+        // and the pronouns follow Becky's (female) sex.
+        const string q = "The protagonist must be his own antagonist. "
+                       + "Are the protagonist and antagonist evenly matched?";
+
+        var result = CritiqueOrchestrator.PersonalizeProblemQuestion(
+            q, "Becky", "Female", "Becky", "Female", samePerson: true);
+
+        // Protagonist slot -> name; pronoun -> female; antagonist slot keeps the
+        // literal word so the name is never doubled.
+        StringAssert.Contains(result, "Becky must be her own antagonist.");
+        StringAssert.Contains(result, "antagonist evenly matched?");
+        Assert.IsFalse(result.Contains("Becky and Becky"),
+            $"Person-vs-Self must not double the name: {result}");
+        Assert.IsFalse(System.Text.RegularExpressions.Regex.IsMatch(result, @"\b(he|him|his)\b",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase),
+            $"No masculine pronouns should remain for a female character: {result}");
+    }
+
+    [TestMethod]
+    public void PersonalizeProblemQuestion_SingleRole_StillGenders()
+    {
+        // Regression: a question naming only the protagonist already worked; it
+        // must keep working after the rewrite.
+        const string q = "The protagonist should be capable of growth. This is his 'inner problem.'";
+
+        var result = CritiqueOrchestrator.PersonalizeProblemQuestion(q, "Becky", "Female", "Joseph", "Male");
+
+        StringAssert.Contains(result, "Becky should be capable of growth. This is her 'inner problem.'");
     }
 
     [TestMethod]

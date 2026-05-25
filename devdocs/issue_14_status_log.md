@@ -85,15 +85,50 @@ Branch: `issue-14-critter-rebuild` (not yet pushed/merged).
 **Remains**
 - None for the pronoun item.
 
+### 2026-05-25 — Pronoun fix v2, role-weighting prompt, MCP description, importance experiment
+
+**Done (all uncommitted in working tree)**
+- `CritiqueOrchestrator.cs` — rewrote `PersonalizeProblemQuestion`: single pass binding each pronoun to the nearest preceding role noun (fixes mis-gendering in questions that name BOTH roles, which the old "exactly one role" gate skipped); Person-vs-Self detected by `Protagonist UUID == Antagonist UUID` (passed in as `samePerson`) keeps the literal word "antagonist" in the second slot so no "Becky and Becky"; factored a shared `GenderPronoun` helper. 4 new tests; 12/12 Critter tests pass.
+- `Prompts/CritiquePrompt.md` — added "Weigh your critique by the character's role" section (calibrate depth by `StoryRole`; don't fault walk-ons for missing backstory/flaw; route cast-cut to the author). Copied to the app's bin/Prompts and re-ran live: model now *acknowledges* role but still faults minors for missing depth — prompt-only is too weak to enforce proportionality.
+- `StoryCADMcp/Tools/ReadTools.cs` — `list_elements` gained opt-in `includeDescription` (default false, no behavior change); when true, strips RTF via StoryCAD's `RichTextStripper.StripRichTextFormat`. 3 new tests; 91/91 MCP tests pass.
+- GitHub issue #14 (StoryCADAPI) — removed two ACs: "Tests run in CI on every push" and "Pro-perk monetization README section." Same two removed from this log's carry-forward.
+- gh auth made durable: token stored as persistent user env var `GH_TOKEN` (keyring kept getting wiped between sessions).
+
+**Experiment — can a cheap whole-story pass recover the story spine?**
+- Fresh naive agents given minimal data (names+types; +descriptions; +Premise) vs. ground truth from "The Long Ride Home_outline".
+- Result: protagonist/antagonist and rough central-vs-minor recovered from names alone; **theme** improves with descriptions/Premise; but **which problem is THE story problem was missed in all three runs** — the model picks the dramatic climax (horse) or thematic core (resentment), not the author's `ProblemCategory="Story problem"` (the fair). Every run over-rated Arrogance as central because its description says "turning point."
+- Conclusion: structural designations (`ProblemCategory`, `StoryRole`, `ConflictType`, `Protagonist`/`Antagonist`) must be **read**, not inferred; the interpretive pass earns its keep only on the soft layer (theme, framing, what's underdeveloped).
+
+**Decisions / open**
+- Key Questions additions → a **separate StoryCAD repo issue** (questions live in StoryCADLib `Assets/Install/Tools.json`, not here). After dedup against the existing set, only two survive: (1) Problem — "do your other problems connect to the main story problem?"; (2) Character — "is StoryRole assigned?". The "identify the Story Problem" question already exists in the Problem set.
+- Source review: read `G:\My Drive\2-Areas\Writing\Checklists\06 Structural Edit\Structural Edit Checklist.docx` (mostly POV + premise; one new candidate: "POV character = the one who changes most"). Sibling `Fiction Structural Editing Questions.docx` in the same folder is the likely real question source — NOT yet read.
+- Nothing committed this session. storycad MCP server was stopped (to release a DLL lock for the MCP build) and is offline until relaunch.
+
+### 2026-05-25 — Deterministic structural planning pass (Codex)
+
+**Done (all uncommitted in working tree)**
+- `CritiqueOrchestrator.cs` — added a no-extra-LLM structural planning pass before the per-element walk. It computes reference counts, high-signal characters, story-spine candidate problems, and per-element critique modes (`Full structural read`, `Story-spine candidate`, `Supporting structural read`, `Functional element read`, `Context read`). StoryCAD fields are treated as signals, not proof of authorial intent.
+- Per-element prompts now include a `Critique plan` block with mode/focus and explicit instructions to surface ambiguity when generated metadata conflicts.
+- Key Questions are filtered before the LLM sees them. Functional/minor characters keep role/cast-economy questions and drop lead-depth questions. Functional/pressure-event problems drop growth/worthy-opponent/balanced-arc burden and keep struggle/premise/theme/resolution/story-problem questions.
+- Reports now include a `Structural Orientation` section plus per-element critique mode/focus. Raw artifacts include the same orientation/mode/focus metadata.
+- `CritiquePrompt.md` changed from prompt-only role weighting to "Follow the critique plan"; the prompt now treats Key Questions as filtered rubric metadata, not literal story facts.
+- Tests added for structural orientation rendering and question filtering. Critter tests: **15/15 passing** via VS `vstest.console`. Windows app target builds clean with VS MSBuild.
+
+**Worked / didn't**
+- This intentionally avoids adding a global LLM orientation call, keeping classroom batch costs at the existing one-call-per-element shape.
+- The app builds clean across both TFMs with `dotnet build samples\StoryCADCritter\StoryCADCritter.csproj -p:Platform=x64`; `net10.0-desktop` also builds clean by itself with `-f net10.0-desktop`. The earlier `InitializeComponent` failure was specific to invoking Visual Studio's full-framework MSBuild across both TFMs; use dotnet CLI for the all-target app build.
+
+**Remains**
+- Run a live Critter pass against `The Long Ride Home_outline.stbx` to compare whether minor/catalyst elements are now critiqued by function instead of lead-depth standards.
+- Consider a later optional compressed LLM orientation pass only if deterministic planning is not enough; keep it behind a preference or classroom-safe mode.
+
 ## Carry-forward for #14 completion
 
 Open acceptance criteria (issue #14 body):
 - [ ] Unit tests for response-parsing logic (good + malformed variants). Partially covered by `StubbedWalk_MalformedResponse_FallsBackToRawText`.
 - [ ] Integration test against a fixture with a mock `IChatCompletionService`. Covered by `StubbedWalk_LighthouseKeeper_ProducesReport`.
 - [ ] Contract test pinning the per-element response schema.
-- [ ] Tests run in CI on push to `main`/`dev`. Repo has only `deploy-docs.yml`; needs a decision with Jake.
 - [x] README rewrite (`b988de4`).
-- [ ] Pro-perk monetization README section — blocked on the #15 monetization decision.
 - [ ] Code-reviewer pass.
 - [ ] Human final approval.
 

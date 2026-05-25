@@ -4,6 +4,7 @@ using System.Text.Json;
 using ModelContextProtocol.Server;
 using StoryCADLib.Models;
 using StoryCADLib.Services.API;
+using StoryCADLib.Services.Reports;
 using StoryCADLib.ViewModels;
 
 namespace StoryCADMcp.Tools;
@@ -21,35 +22,41 @@ public static class ReadTools
     [Description("Lists all story elements in the open outline. Optionally filter by type: Problem, Character, Setting, Scene, Folder, Section, Web, Notes, StoryOverview, StoryWorld.")]
     public static string ListElements(
         StoryCADApi api,
-        [Description("Optional element type filter (e.g. 'Character', 'Scene'). Omit to list all.")] string? type = null)
+        [Description("Optional element type filter (e.g. 'Character', 'Scene'). Omit to list all.")] string? type = null,
+        [Description("When true, include each element's Description (RTF stripped to plain text). Defaults to false for a compact listing.")] bool includeDescription = false)
     {
         if (api.CurrentModel == null)
             return "Error: No outline is currently open. Call open_outline first.";
+
+        // Reuse StoryCAD's own RTF stripper rather than returning raw {\rtf...}.
+        var stripper = includeDescription ? new RichTextStripper() : null;
+        object Project(StoryElement e) => includeDescription
+            ? new
+            {
+                guid = e.Uuid.ToString(),
+                name = e.Name,
+                type = e.ElementType.ToString(),
+                description = stripper!.StripRichTextFormat(e.Description ?? string.Empty)
+            }
+            : new
+            {
+                guid = e.Uuid.ToString(),
+                name = e.Name,
+                type = e.ElementType.ToString()
+            };
 
         if (type != null && Enum.TryParse<StoryItemType>(type, true, out var typeFilter))
         {
             var result = api.GetElementsByType(typeFilter);
             if (!result.IsSuccess) return $"Error: {result.ErrorMessage}";
 
-            var elements = result.Payload.Select(e => new
-            {
-                guid = e.Uuid.ToString(),
-                name = e.Name,
-                type = e.ElementType.ToString()
-            });
-            return JsonSerializer.Serialize(elements, JsonOptions);
+            return JsonSerializer.Serialize(result.Payload.Select(Project), JsonOptions);
         }
 
         var allResult = api.GetAllElements();
         if (!allResult.IsSuccess) return $"Error: {allResult.ErrorMessage}";
 
-        var allElements = allResult.Payload.Select(e => new
-        {
-            guid = e.Uuid.ToString(),
-            name = e.Name,
-            type = e.ElementType.ToString()
-        });
-        return JsonSerializer.Serialize(allElements, JsonOptions);
+        return JsonSerializer.Serialize(allResult.Payload.Select(Project), JsonOptions);
     }
 
     [McpServerTool(Name = "get_element")]

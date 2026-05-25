@@ -34,6 +34,24 @@ The app is built against:
 
 ---
 
+## Build from source
+
+From the repository root, use the .NET CLI for the app build:
+
+```powershell
+dotnet build samples\StoryCADCritter\StoryCADCritter.csproj -p:Platform=x64
+```
+
+To build only the cross-platform Uno desktop target:
+
+```powershell
+dotnet build samples\StoryCADCritter\StoryCADCritter.csproj -f net10.0-desktop -p:Platform=x64
+```
+
+On Windows, Visual Studio MSBuild can build the WinUI target, but the all-target app build is best run through `dotnet build` so the Uno desktop XAML generator receives the expected SDK-build context.
+
+---
+
 ## How to run
 
 1. Set `OPENAI_API_KEY` in your shell or system environment.

@@ -52,10 +52,17 @@ namespace StoryCADCritter
         // Cache of Key Questions per element-type string. Issue #14 wants these
         // visible in the report so the rubric is transparent.
         private readonly Dictionary<string, List<(string Topic, string Question)>> _keyQuestionsByType = new();
+        private readonly Dictionary<Guid, CritiquePlan> _plansByUuid = new();
 
         private const int MaxRetries = 3;
         private static readonly TimeSpan InitialBackoff = TimeSpan.FromSeconds(2);
         private static readonly TimeSpan PerCallTimeout = TimeSpan.FromSeconds(45);
+
+        internal const string ModeFull = "Full structural read";
+        internal const string ModeSpine = "Story-spine candidate";
+        internal const string ModeSupporting = "Supporting structural read";
+        internal const string ModeFunctional = "Functional element read";
+        internal const string ModeContext = "Context read";
 
         // Run-scoped progress state, set at the top of RunAsync. CritiqueElementAsync
         // reads these to emit retry-visibility messages while a slot is held inside
@@ -76,6 +83,14 @@ namespace StoryCADCritter
             StoryItemType.Setting,
             StoryItemType.Scene
         };
+
+        private sealed class CritiquePlan
+        {
+            public string Mode { get; init; } = ModeFull;
+            public string Focus { get; init; } = string.Empty;
+            public bool IsStorySpineCandidate { get; init; }
+            public bool IsFunctional { get; init; }
+        }
 
         public CritiqueOrchestrator(
             StoryCADApi api,
@@ -118,6 +133,10 @@ namespace StoryCADCritter
                 CostsPath = ReportFor(".costs.json"),
                 RawPath = ReportFor(".raw.json")
             };
+
+            _bodyCache.Clear();
+            _byUuid.Clear();
+            _plansByUuid.Clear();
 
             var allElementsResult = _api.GetAllElements();
             if (allElementsResult == null || !allElementsResult.IsSuccess || allElementsResult.Payload == null)
@@ -174,6 +193,8 @@ namespace StoryCADCritter
                 cancellationToken.ThrowIfCancellationRequested();
                 GetBody(el.Uuid);
             }
+
+            BuildCritiquePlans(ordered, run);
 
             progress?.Report(new CritiqueProgress(
                 $"Critiquing {total} elements (up to {_maxConcurrency} in parallel)...", 0, total));
@@ -319,19 +340,25 @@ namespace StoryCADCritter
             // and generic pronouns become the referent's actual gendered pronoun
             // (from the Sex field). Issue #14 — fixes the rubric mis-gendering.
             var keyQuestions = PersonalizeKeyQuestions(element, baseQuestions);
+            var plan = _plansByUuid.TryGetValue(element.Uuid, out var p)
+                ? p
+                : new CritiquePlan();
+            keyQuestions = FilterKeyQuestionsForPlan(element.ElementType, plan.Mode, keyQuestions);
 
             var critique = new ElementCritique
             {
                 Uuid = element.Uuid,
                 Name = element.Name,
                 ElementType = promptType,
-                KeyQuestions = keyQuestions
+                KeyQuestions = keyQuestions,
+                CritiqueMode = plan.Mode,
+                CritiqueFocus = plan.Focus
             };
 
             string userMessage;
             try
             {
-                userMessage = BuildUserMessage(element, promptType, keyQuestions);
+                userMessage = BuildUserMessage(element, promptType, keyQuestions, plan);
             }
             catch (Exception ex)
             {
@@ -449,12 +476,26 @@ namespace StoryCADCritter
         private string BuildUserMessage(
             StoryElement element,
             string promptType,
-            List<(string Topic, string Question)> keyQuestions)
+            List<(string Topic, string Question)> keyQuestions,
+            CritiquePlan plan)
         {
             var sb = new StringBuilder();
             sb.AppendLine($"Element type: {promptType}");
             sb.AppendLine($"Element UUID: {element.Uuid}");
             sb.AppendLine($"Element name: {element.Name}");
+            sb.AppendLine();
+
+            sb.AppendLine("Critique plan:");
+            sb.AppendLine($"- Mode: {plan.Mode}");
+            if (!string.IsNullOrWhiteSpace(plan.Focus))
+                sb.AppendLine($"- Focus: {plan.Focus}");
+            sb.AppendLine("- Treat StoryCAD metadata as structural signals, not certain authorial intent. If signals conflict, surface the ambiguity instead of declaring one interpretation correct.");
+            if (plan.IsFunctional)
+                sb.AppendLine("- This is a functional/minor element. Judge whether it serves its story purpose; do not require lead-character depth, a full arc, or complete backstory unless the outline itself makes those expectations relevant.");
+            else if (plan.IsStorySpineCandidate)
+                sb.AppendLine("- This element may carry the story spine. Give it the deepest structural attention and notice whether related elements support or obscure it.");
+            else
+                sb.AppendLine("- Calibrate the depth of critique to this element's support role in the wider outline.");
             sb.AppendLine();
 
             sb.AppendLine("Element data:");
@@ -624,6 +665,339 @@ namespace StoryCADCritter
             }
         }
 
+        // -- Structural planning -------------------------------------------
+
+        private void BuildCritiquePlans(IReadOnlyList<StoryElement> ordered, CritiqueRunResult run)
+        {
+            var referenceCounts = ordered.ToDictionary(e => e.Uuid, _ => 0);
+            foreach (var el in ordered)
+            {
+                foreach (var guid in ExtractGuidsFromJson(GetBody(el.Uuid)).Distinct())
+                {
+                    if (guid != el.Uuid && referenceCounts.ContainsKey(guid))
+                        referenceCounts[guid]++;
+                }
+            }
+
+            var centralCharacters = new HashSet<Guid>();
+            foreach (var character in ordered.Where(e => e.ElementType == StoryItemType.Character))
+            {
+                var body = GetBody(character.Uuid);
+                var storyRole = TryGetStringProperty(body, "StoryRole", out var sr) ? sr : string.Empty;
+                var refCount = referenceCounts.TryGetValue(character.Uuid, out var c) ? c : 0;
+                if (IsCentralStoryRole(storyRole) || refCount >= 4)
+                    centralCharacters.Add(character.Uuid);
+            }
+
+            var spineCandidates = new HashSet<Guid>();
+            foreach (var problem in ordered.Where(e => e.ElementType == StoryItemType.Problem))
+            {
+                var body = GetBody(problem.Uuid);
+                var category = TryGetStringProperty(body, "ProblemCategory", out var pc) ? pc : string.Empty;
+                var conflict = TryGetStringProperty(body, "ConflictType", out var ct) ? ct : string.Empty;
+                TryGetGuidProperty(body, "Protagonist", out var protagonist);
+                TryGetGuidProperty(body, "Antagonist", out var antagonist);
+
+                var declaredStoryProblem = ContainsAny(category, "story problem", "main");
+                var internalConflict = ContainsAny(conflict, "self")
+                    || (protagonist != Guid.Empty && protagonist == antagonist);
+                var centralInternalConflict = internalConflict && centralCharacters.Contains(protagonist);
+
+                if (declaredStoryProblem || centralInternalConflict)
+                    spineCandidates.Add(problem.Uuid);
+            }
+
+            foreach (var element in ordered)
+            {
+                _plansByUuid[element.Uuid] = PlanForElement(
+                    element, referenceCounts, centralCharacters, spineCandidates);
+            }
+
+            run.StructuralOrientation = RenderStructuralOrientation(
+                ordered, referenceCounts, centralCharacters, spineCandidates);
+        }
+
+        private CritiquePlan PlanForElement(
+            StoryElement element,
+            IReadOnlyDictionary<Guid, int> referenceCounts,
+            HashSet<Guid> centralCharacters,
+            HashSet<Guid> spineCandidates)
+        {
+            var body = GetBody(element.Uuid);
+            var refCount = referenceCounts.TryGetValue(element.Uuid, out var rc) ? rc : 0;
+
+            switch (element.ElementType)
+            {
+                case StoryItemType.StoryOverview:
+                    return new CritiquePlan
+                    {
+                        Mode = ModeFull,
+                        Focus = "Use the overview to notice the story's declared premise, problem, genre, and any ambiguity in what appears central."
+                    };
+
+                case StoryItemType.Character:
+                {
+                    var storyRole = TryGetStringProperty(body, "StoryRole", out var sr) ? sr : string.Empty;
+                    var role = TryGetStringProperty(body, "Role", out var r) ? r : string.Empty;
+                    var central = centralCharacters.Contains(element.Uuid);
+                    var functional = IsFunctionalStoryRole(storyRole)
+                        || (!central && refCount <= 1);
+
+                    if (central)
+                    {
+                        return new CritiquePlan
+                        {
+                            Mode = ModeFull,
+                            IsStorySpineCandidate = IsCentralStoryRole(storyRole),
+                            Focus = $"High-signal character: StoryRole='{BlankIfEmpty(storyRole)}', Role='{BlankIfEmpty(role)}', referenced {refCount} time(s). Give this character a full developmental read."
+                        };
+                    }
+
+                    if (functional)
+                    {
+                        return new CritiquePlan
+                        {
+                            Mode = ModeFunctional,
+                            IsFunctional = true,
+                            Focus = $"Functional/minor character: StoryRole='{BlankIfEmpty(storyRole)}', Role='{BlankIfEmpty(role)}', referenced {refCount} time(s). Review role clarity and whether the character earns or duplicates a function; do not require lead-level psychology."
+                        };
+                    }
+
+                    return new CritiquePlan
+                    {
+                        Mode = ModeSupporting,
+                        Focus = $"Supporting character: StoryRole='{BlankIfEmpty(storyRole)}', Role='{BlankIfEmpty(role)}', referenced {refCount} time(s). Review how this character supports the likely spine rather than demanding a full protagonist arc."
+                    };
+                }
+
+                case StoryItemType.Problem:
+                {
+                    var category = TryGetStringProperty(body, "ProblemCategory", out var pc) ? pc : string.Empty;
+                    var conflict = TryGetStringProperty(body, "ConflictType", out var ct) ? ct : string.Empty;
+                    TryGetGuidProperty(body, "Protagonist", out var protagonist);
+                    TryGetGuidProperty(body, "Antagonist", out var antagonist);
+
+                    var declaredStoryProblem = ContainsAny(category, "story problem", "main");
+                    var internalConflict = ContainsAny(conflict, "self")
+                        || (protagonist != Guid.Empty && protagonist == antagonist);
+                    var hasCentralRole = centralCharacters.Contains(protagonist)
+                        || centralCharacters.Contains(antagonist);
+                    var functionalRoles = IsFunctionalCharacter(protagonist, referenceCounts, centralCharacters)
+                        && (antagonist == Guid.Empty || IsFunctionalCharacter(antagonist, referenceCounts, centralCharacters));
+
+                    if (spineCandidates.Contains(element.Uuid))
+                    {
+                        var reason = declaredStoryProblem && internalConflict
+                            ? "declared story problem and internal-conflict signal"
+                            : declaredStoryProblem
+                                ? "declared StoryCAD story-problem signal"
+                                : "internal-conflict signal attached to a high-signal character";
+                        return new CritiquePlan
+                        {
+                            Mode = ModeSpine,
+                            IsStorySpineCandidate = true,
+                            Focus = $"Story-spine candidate ({reason}): ProblemCategory='{BlankIfEmpty(category)}', ConflictType='{BlankIfEmpty(conflict)}'. Give this problem a full read, but surface ambiguity if another problem also appears central."
+                        };
+                    }
+
+                    if (functionalRoles || (ContainsAny(category, "sequence") && !hasCentralRole))
+                    {
+                        return new CritiquePlan
+                        {
+                            Mode = ModeFunctional,
+                            IsFunctional = true,
+                            Focus = $"Functional/pressure-event problem: ProblemCategory='{BlankIfEmpty(category)}', ConflictType='{BlankIfEmpty(conflict)}'. Review whether it pressures, reveals, or turns the likely story spine; do not require it to carry a full balanced protagonist/antagonist arc."
+                        };
+                    }
+
+                    return new CritiquePlan
+                    {
+                        Mode = ModeSupporting,
+                        Focus = $"Supporting problem: ProblemCategory='{BlankIfEmpty(category)}', ConflictType='{BlankIfEmpty(conflict)}'. Review how it connects to the likely story spine and whether its purpose is clear."
+                    };
+                }
+
+                case StoryItemType.Scene:
+                {
+                    TryGetGuidProperty(body, "Protagonist", out var protagonist);
+                    TryGetGuidProperty(body, "Antagonist", out var antagonist);
+                    var cast = TryGetGuidListProperty(body, "CastMembers");
+                    var touchesCentral = centralCharacters.Contains(protagonist)
+                        || centralCharacters.Contains(antagonist)
+                        || cast.Any(centralCharacters.Contains);
+
+                    if (touchesCentral)
+                    {
+                        return new CritiquePlan
+                        {
+                            Mode = ModeSupporting,
+                            Focus = "Scene touches a high-signal character. Review whether the scene changes pressure, understanding, relationship, or stakes around the likely story spine."
+                        };
+                    }
+
+                    return new CritiquePlan
+                    {
+                        Mode = ModeFunctional,
+                        IsFunctional = true,
+                        Focus = "Scene does not directly reference a high-signal character. Review scene purpose and continuity; do not require it to solve the story's central problem by itself."
+                    };
+                }
+
+                case StoryItemType.Setting:
+                    return new CritiquePlan
+                    {
+                        Mode = ModeContext,
+                        Focus = "Review whether the setting is clear, sensory, and useful to the scenes it supports."
+                    };
+
+                default:
+                    return new CritiquePlan();
+            }
+        }
+
+        private bool IsFunctionalCharacter(
+            Guid characterGuid,
+            IReadOnlyDictionary<Guid, int> referenceCounts,
+            HashSet<Guid> centralCharacters)
+        {
+            if (characterGuid == Guid.Empty || !_byUuid.TryGetValue(characterGuid, out var el))
+                return false;
+            if (el.ElementType != StoryItemType.Character)
+                return false;
+            if (centralCharacters.Contains(characterGuid))
+                return false;
+
+            var body = GetBody(characterGuid);
+            var storyRole = TryGetStringProperty(body, "StoryRole", out var sr) ? sr : string.Empty;
+            var refCount = referenceCounts.TryGetValue(characterGuid, out var rc) ? rc : 0;
+            return IsFunctionalStoryRole(storyRole) || refCount <= 1;
+        }
+
+        private string RenderStructuralOrientation(
+            IReadOnlyList<StoryElement> ordered,
+            IReadOnlyDictionary<Guid, int> referenceCounts,
+            HashSet<Guid> centralCharacters,
+            HashSet<Guid> spineCandidates)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("Critter ran a deterministic orientation pass before the LLM walk. No extra LLM call was used for this pass; generated StoryCAD fields are treated as structural signals, not proof of authorial intent.");
+            sb.AppendLine();
+
+            var spineNames = ordered
+                .Where(e => spineCandidates.Contains(e.Uuid))
+                .Select(e =>
+                {
+                    var body = GetBody(e.Uuid);
+                    var category = TryGetStringProperty(body, "ProblemCategory", out var pc) ? pc : string.Empty;
+                    var conflict = TryGetStringProperty(body, "ConflictType", out var ct) ? ct : string.Empty;
+                    return $"[Problem] {e.Name} (ProblemCategory='{BlankIfEmpty(category)}', ConflictType='{BlankIfEmpty(conflict)}')";
+                })
+                .ToList();
+            sb.AppendLine(spineNames.Count == 0
+                ? "- Story-spine candidates: none strongly signaled; element critiques should surface ambiguity."
+                : "- Story-spine candidates: " + string.Join("; ", spineNames));
+
+            var highSignalCharacters = ordered
+                .Where(e => centralCharacters.Contains(e.Uuid))
+                .Select(e =>
+                {
+                    var body = GetBody(e.Uuid);
+                    var storyRole = TryGetStringProperty(body, "StoryRole", out var sr) ? sr : string.Empty;
+                    var refCount = referenceCounts.TryGetValue(e.Uuid, out var rc) ? rc : 0;
+                    return $"{e.Name} (StoryRole='{BlankIfEmpty(storyRole)}', refs={refCount})";
+                })
+                .ToList();
+            if (highSignalCharacters.Count > 0)
+                sb.AppendLine("- High-signal characters: " + string.Join("; ", highSignalCharacters));
+
+            var functionalCharacters = ordered
+                .Where(e => e.ElementType == StoryItemType.Character
+                    && _plansByUuid.TryGetValue(e.Uuid, out var p)
+                    && p.Mode == ModeFunctional)
+                .Select(e => e.Name)
+                .Take(8)
+                .ToList();
+            if (functionalCharacters.Count > 0)
+                sb.AppendLine("- Functional/minor cast: " + string.Join("; ", functionalCharacters));
+
+            sb.AppendLine("- Critique calibration: spine candidates get the deepest read; supporting elements are judged by connection to the likely spine; functional elements are judged by story purpose and economy.");
+            return sb.ToString().Trim();
+        }
+
+        internal static List<(string Topic, string Question)> FilterKeyQuestionsForPlan(
+            StoryItemType elementType,
+            string mode,
+            List<(string Topic, string Question)> questions)
+        {
+            if (questions.Count == 0)
+                return questions;
+
+            bool IsTopic((string Topic, string Question) q, params string[] parts) =>
+                parts.Any(p => q.Topic.Contains(p, StringComparison.OrdinalIgnoreCase));
+
+            bool Mentions((string Topic, string Question) q, params string[] parts) =>
+                parts.Any(p => q.Question.Contains(p, StringComparison.OrdinalIgnoreCase));
+
+            if (elementType == StoryItemType.Character)
+            {
+                if (mode == ModeFunctional)
+                {
+                    return questions
+                        .Where(q => IsTopic(q, "Role", "General")
+                            || Mentions(q, "cast too large", "eliminating characters", "combining"))
+                        .ToList();
+                }
+
+                if (mode == ModeSupporting)
+                {
+                    return questions
+                        .Where(q => !IsTopic(q, "Flaw", "Backstory"))
+                        .ToList();
+                }
+            }
+
+            if (elementType == StoryItemType.Problem)
+            {
+                if (mode == ModeFunctional)
+                {
+                    return questions
+                        .Where(q => Mentions(q,
+                            "struggle between opposing forces",
+                            "problem's premise",
+                            "problem's theme",
+                            "resolution as a scene",
+                            "main or story problem"))
+                        .ToList();
+                }
+
+                if (mode == ModeSupporting)
+                {
+                    return questions
+                        .Where(q => !Mentions(q,
+                            "audience should usually empathize",
+                            "capable of growth",
+                            "worthy opponent",
+                            "evenly matched"))
+                        .ToList();
+                }
+            }
+
+            return questions;
+        }
+
+        private static bool IsCentralStoryRole(string storyRole) =>
+            ContainsAny(storyRole, "protagonist", "antagonist", "major", "lead");
+
+        private static bool IsFunctionalStoryRole(string storyRole) =>
+            ContainsAny(storyRole, "minor", "background", "walk-on", "walk on", "cameo");
+
+        private static bool ContainsAny(string value, params string[] needles) =>
+            !string.IsNullOrWhiteSpace(value)
+            && needles.Any(n => value.Contains(n, StringComparison.OrdinalIgnoreCase));
+
+        private static string BlankIfEmpty(string value) =>
+            string.IsNullOrWhiteSpace(value) ? "(blank)" : value;
+
         /// <summary>
         /// Maps StoryItemType to the element-type name used in the prompt + Key
         /// Questions data (which uses "Overview" rather than "StoryOverview").
@@ -709,6 +1083,36 @@ namespace StoryCADCritter
             return false;
         }
 
+        private static List<Guid> TryGetGuidListProperty(string json, string propertyName)
+        {
+            var values = new List<Guid>();
+            try
+            {
+                using var doc = JsonDocument.Parse(json);
+                if (doc.RootElement.ValueKind != JsonValueKind.Object) return values;
+                foreach (var prop in doc.RootElement.EnumerateObject())
+                {
+                    if (!string.Equals(prop.Name, propertyName, StringComparison.OrdinalIgnoreCase))
+                        continue;
+                    if (prop.Value.ValueKind != JsonValueKind.Array)
+                        return values;
+                    foreach (var item in prop.Value.EnumerateArray())
+                    {
+                        if (item.ValueKind == JsonValueKind.String
+                            && Guid.TryParse(item.GetString(), out var g)
+                            && g != Guid.Empty)
+                            values.Add(g);
+                    }
+                    return values;
+                }
+            }
+            catch
+            {
+                // ignore
+            }
+            return values;
+        }
+
         // -- Key Questions personalization (issue #14) ---------------------
 
         /// <summary>
@@ -736,18 +1140,24 @@ namespace StoryCADCritter
                 case StoryItemType.Problem:
                 {
                     string? protName = null, protSex = null, antName = null, antSex = null;
+                    Guid protGuid = Guid.Empty, antGuid = Guid.Empty;
                     if (TryGetGuidProperty(body, "Protagonist", out var pg) && _byUuid.TryGetValue(pg, out var pEl))
                     {
+                        protGuid = pg;
                         protName = pEl.Name;
                         if (TryGetStringProperty(GetBody(pg), "Sex", out var ps)) protSex = ps;
                     }
                     if (TryGetGuidProperty(body, "Antagonist", out var ag) && _byUuid.TryGetValue(ag, out var aEl))
                     {
+                        antGuid = ag;
                         antName = aEl.Name;
                         if (TryGetStringProperty(GetBody(ag), "Sex", out var asx)) antSex = asx;
                     }
+                    // Person-vs-Self: the same character fills both roles. Compare
+                    // GUIDs, not names — two distinct characters can share a name.
+                    bool samePerson = protGuid != Guid.Empty && protGuid == antGuid;
                     return questions
-                        .Select(q => (q.Topic, PersonalizeProblemQuestion(q.Question, protName, protSex, antName, antSex)))
+                        .Select(q => (q.Topic, PersonalizeProblemQuestion(q.Question, protName, protSex, antName, antSex, samePerson)))
                         .ToList();
                 }
                 default:
@@ -764,27 +1174,50 @@ namespace StoryCADCritter
         }
 
         internal static string PersonalizeProblemQuestion(
-            string text, string? protName, string? protSex, string? antName, string? antSex)
+            string text, string? protName, string? protSex, string? antName, string? antSex,
+            bool samePerson = false)
         {
-            // Decide the pronoun referent from the ORIGINAL text before any
-            // role-noun substitution erases the "protagonist"/"antagonist" cue.
-            bool mentionsProt = Regex.IsMatch(text, @"\bprotagonist\b", RegexOptions.IgnoreCase);
-            bool mentionsAnt  = Regex.IsMatch(text, @"\bantagonist\b", RegexOptions.IgnoreCase);
+            // Walk the original text once. Each role noun ("protagonist" /
+            // "antagonist") sets the current referent, so a pronoun that follows
+            // is gendered by THAT role's character — even when the same sentence
+            // also names the other role ("...are the protagonist and antagonist
+            // evenly matched?"). A question is always about whichever role most
+            // recently appeared before the pronoun.
+            //
+            // Before any role noun appears, default to the protagonist: the
+            // generic "what does the character have at stake?" questions read as
+            // protagonist questions. This is a deliberate default, not a bug.
+            string? curSex = protSex;
+            string curName = protName ?? "the character";
 
-            // Role nouns -> names (safe regardless of how many roles appear).
-            if (!string.IsNullOrEmpty(protName))
-                text = Regex.Replace(text, @"\b(the|your)\s+protagonist\b|\bprotagonist\b", protName, RegexOptions.IgnoreCase);
-            if (!string.IsNullOrEmpty(antName))
-                text = Regex.Replace(text, @"\b(the|your)\s+antagonist\b|\bantagonist\b", antName, RegexOptions.IgnoreCase);
+            const string pattern =
+                @"\b(the|your)\s+(protagonist|antagonist)\b|\b(protagonist|antagonist)\b|\b(he|she|him|her|his|hers)\b";
 
-            // Pronouns only when exactly one role is referenced — otherwise the
-            // referent is ambiguous and we leave them alone.
-            if (mentionsProt && !mentionsAnt && !string.IsNullOrEmpty(protName))
-                text = ApplyGenderedPronouns(text, protSex, protName);
-            else if (mentionsAnt && !mentionsProt && !string.IsNullOrEmpty(antName))
-                text = ApplyGenderedPronouns(text, antSex, antName);
+            return Regex.Replace(text, pattern, m =>
+            {
+                string? role = m.Groups[2].Success ? m.Groups[2].Value
+                             : m.Groups[3].Success ? m.Groups[3].Value
+                             : null;
+                if (role != null)
+                {
+                    bool isAnt = role.Equals("antagonist", StringComparison.OrdinalIgnoreCase);
+                    curSex  = isAnt ? antSex : protSex;
+                    curName = (isAnt ? antName : protName) ?? curName;
 
-            return text;
+                    // Person-vs-Self: keep the literal word "antagonist" for the
+                    // second role so we never render "Becky and Becky" — the
+                    // pronoun referent is still set above, gendered to that person.
+                    if (isAnt && samePerson)
+                        return m.Groups[1].Success ? $"{m.Groups[1].Value} {role}" : role;
+
+                    string? name = isAnt ? antName : protName;
+                    if (string.IsNullOrEmpty(name)) return m.Value;  // no name on file — leave as written
+                    return name;
+                }
+
+                // Pronoun — gender by the most recent role's character.
+                return GenderPronoun(m.Value, curSex, curName, text, m.Index + m.Length);
+            }, RegexOptions.IgnoreCase);
         }
 
         /// <summary>
@@ -794,6 +1227,18 @@ namespace StoryCADCritter
         /// </summary>
         private static string ApplyGenderedPronouns(string text, string? sex, string name)
         {
+            return Regex.Replace(text, @"\b(he|she|him|her|his|hers)\b",
+                m => GenderPronoun(m.Value, sex, name, text, m.Index + m.Length),
+                RegexOptions.IgnoreCase);
+        }
+
+        /// <summary>
+        /// Genders a single pronoun token to the referent's sex, falling back to
+        /// the name when sex is unknown. <paramref name="fullText"/> and
+        /// <paramref name="afterIndex"/> disambiguate "her" (possessive vs object).
+        /// </summary>
+        private static string GenderPronoun(string token, string? sex, string name, string fullText, int afterIndex)
+        {
             bool male   = string.Equals(sex, "Male", StringComparison.OrdinalIgnoreCase);
             bool female = string.Equals(sex, "Female", StringComparison.OrdinalIgnoreCase);
 
@@ -802,23 +1247,20 @@ namespace StoryCADCritter
             else if (female) { subj = "she"; obj = "her"; poss = "her";       possIndep = "hers"; }
             else             { subj = name;  obj = name;  poss = name + "'s"; possIndep = name + "'s"; }
 
-            return Regex.Replace(text, @"\b(he|she|him|her|his|hers)\b", m =>
+            string lower = token.ToLowerInvariant();
+            string repl = lower switch
             {
-                string token = m.Value.ToLowerInvariant();
-                string repl = token switch
-                {
-                    "he" or "she" => subj,
-                    "him"         => obj,
-                    "his"         => poss,
-                    "hers"        => possIndep,
-                    "her"         => IsPossessiveContext(text, m.Index + m.Length) ? poss : obj,
-                    _             => m.Value
-                };
-                // Preserve a leading capital (sentence start).
-                if (char.IsUpper(m.Value[0]) && repl.Length > 0)
-                    repl = char.ToUpperInvariant(repl[0]) + repl.Substring(1);
-                return repl;
-            }, RegexOptions.IgnoreCase);
+                "he" or "she" => subj,
+                "him"         => obj,
+                "his"         => poss,
+                "hers"        => possIndep,
+                "her"         => IsPossessiveContext(fullText, afterIndex) ? poss : obj,
+                _             => token
+            };
+            // Preserve a leading capital (sentence start).
+            if (char.IsUpper(token[0]) && repl.Length > 0)
+                repl = char.ToUpperInvariant(repl[0]) + repl.Substring(1);
+            return repl;
         }
 
         // "her" is possessive when immediately followed by whitespace + a word
@@ -946,6 +1388,14 @@ namespace StoryCADCritter
                 sb.AppendLine($"- LLM call failed: **{errorCount}**");
             sb.AppendLine();
 
+            if (!string.IsNullOrWhiteSpace(run.StructuralOrientation))
+            {
+                sb.AppendLine("## Structural Orientation");
+                sb.AppendLine();
+                sb.AppendLine(run.StructuralOrientation);
+                sb.AppendLine();
+            }
+
             foreach (var critique in run.ElementCritiques)
                 RenderElement(sb, critique, includeKeyQuestions: !separateKeyQuestions);
 
@@ -998,6 +1448,16 @@ namespace StoryCADCritter
             sb.AppendLine();
             sb.AppendLine($"_UUID: `{critique.Uuid}`_");
             sb.AppendLine();
+
+            if (!string.IsNullOrWhiteSpace(critique.CritiqueMode)
+                || !string.IsNullOrWhiteSpace(critique.CritiqueFocus))
+            {
+                if (!string.IsNullOrWhiteSpace(critique.CritiqueMode))
+                    sb.AppendLine($"_Critique mode: {critique.CritiqueMode}_");
+                if (!string.IsNullOrWhiteSpace(critique.CritiqueFocus))
+                    sb.AppendLine($"_Focus: {critique.CritiqueFocus}_");
+                sb.AppendLine();
+            }
 
             if (includeKeyQuestions && critique.KeyQuestions.Count > 0)
             {

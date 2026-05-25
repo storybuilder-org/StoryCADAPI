@@ -36,6 +36,36 @@ public class ReadToolsTests
     }
 
     [TestMethod]
+    public void ListElements_ByDefault_OmitsDescription()
+    {
+        var result = ReadTools.ListElements(TestDataSetup.Api);
+
+        Assert.IsFalse(result.StartsWith("Error:"), result);
+        Assert.IsFalse(result.Contains("description"),
+            $"Default listing should stay compact (no description field): {result}");
+    }
+
+    [TestMethod]
+    public void ListElements_WithIncludeDescription_AddsDescriptionField()
+    {
+        var result = ReadTools.ListElements(TestDataSetup.Api, includeDescription: true);
+
+        Assert.IsFalse(result.StartsWith("Error:"), result);
+        Assert.IsTrue(result.Contains("description"),
+            $"includeDescription:true should add the description field: {result}");
+    }
+
+    [TestMethod]
+    public void ListElements_WithIncludeDescription_StripsRtf()
+    {
+        var result = ReadTools.ListElements(TestDataSetup.Api, includeDescription: true);
+
+        Assert.IsFalse(result.StartsWith("Error:"), result);
+        Assert.IsFalse(result.Contains("\\rtf"),
+            $"Descriptions should be RTF-stripped, not raw control words: {result}");
+    }
+
+    [TestMethod]
     public void ListElements_WithNoOutline_ReturnsError()
     {
         TestDataSetup.Api.SetCurrentModel(null!);
