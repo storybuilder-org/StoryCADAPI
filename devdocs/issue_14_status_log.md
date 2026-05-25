@@ -135,3 +135,17 @@ Open acceptance criteria (issue #14 body):
 Related follow-ups:
 - [ ] Preferences UI iteration (MaxConcurrency, Key Questions placement, model picker).
 - [x] #13 GUID fix stays on `issue-14-critter-rebuild` (pushed as `0b0d370`); merging this branch lands it. No separate branch/PR.
+
+### 2026-05-25 — Handoff for desktop continuation
+
+**State**
+- Branch `issue-14-critter-rebuild` is committed and pushed at `88c9b8c` (`Refactor Critter into shared core project`).
+- Critter now has a shared `StoryCADCritter.Core` project; the Uno app keeps the `StoryCADLib` NuGet package, and the Critter tests reference the core DLL instead of linked source.
+- `dotnet build samples\StoryCADCritter\StoryCADCritter.csproj -p:Platform=x64` succeeds.
+- `dotnet build samples\StoryCADCritter\StoryCADCritterTests\StoryCADCritterTests.csproj -p:Platform=x64` succeeds.
+- `vstest.console.exe` on `samples\StoryCADCritter\StoryCADCritterTests\bin\x64\Debug\net10.0-desktop\StoryCADCritterTests.dll` succeeds: 15/15 tests passing.
+
+**Pick up here**
+- Continue from the core/test split, not from the pre-refactor linked-source test project.
+- The remaining test-host oddity is `dotnet test` on the .NET 10 SDK path; the tests themselves are green under `vstest.console`.
+- The unrelated StoryCADMcp `ReadTools` work is also part of this branch history; review it before closing out if it matters to #14.

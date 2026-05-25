@@ -135,3 +135,14 @@ Open acceptance criteria:
 
 Related sibling work:
 - Issue #15 item 2 — Help button on Outliner nav: not started.
+
+### 2026-05-25 — Handoff for desktop continuation
+
+**State**
+- Current branch `issue-14-critter-rebuild` is committed and pushed at `88c9b8c`.
+- The branch now includes the Critter core/test refactor and the Outliner MCP `ReadTools` include-description change.
+- Critter app build is clean on both TFMs; Critter tests pass under `vstest.console` against the core DLL.
+
+**Pick up here**
+- If you’re continuing on the desktop, start from `88c9b8c` on `issue-14-critter-rebuild`.
+- The remaining work is follow-through: decide whether to keep any additional test-host cleanup or leave the tests on the working `vstest.console` path.
