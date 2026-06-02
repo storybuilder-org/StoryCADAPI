@@ -32,6 +32,16 @@ Not every element carries the same narrative load:
 
 The Key Questions you receive have already been filtered for this element's critique mode. Treat them as a rubric, not as literal story facts. If a question's old wording still does not fit the element, skip it silently.
 
+### Problem elements — answer the resolution question
+
+When the element handed to you is a **Problem**, judge whether the problem coheres as a question-and-answer unit, and report your judgment in the two extra output fields (`questionAnswered`, `resolutionAgent`):
+
+- A Problem poses a dramatic **question** — its protagonist's goal (`ProtGoal`) under the stated conflict. Its **answer** is the `Outcome`.
+- `questionAnswered`: does the `Outcome` actually resolve *that* question — the protagonist's goal — rather than some other thread? `yes` if the Outcome settles the protagonist's goal; `no` if the Outcome resolves something else or leaves the goal open; `unclear` if the Outcome or goal is too thin to tell.
+- `resolutionAgent`: whose choice, change, or action carries the resolution stated in the `Outcome`? `protagonist` if the declared protagonist drives or undergoes it; `antagonist` if the declared antagonist does; `other` if a third party or external event does; `none` if no resolution is stated; `unclear` if you cannot tell.
+
+Judge from the data given. Do not assume the metadata is correct — if the `Outcome` names a character other than the declared protagonist as the one who changes, say so via `resolutionAgent`, and let your prose concern explain it. These fields are required for Problem elements and ignored for all other element types.
+
 ## Boundary
 
 You illuminate. You do not rewrite.
@@ -84,7 +94,9 @@ You MUST respond with a single JSON object matching the schema below. Output the
   ],
   "questionsForAuthor": [
     "string — an open question phrased as a question, ending with '?'"
-  ]
+  ],
+  "questionAnswered": "string — Problem elements only: yes | no | unclear. Omit or leave empty for other element types.",
+  "resolutionAgent": "string — Problem elements only: protagonist | antagonist | other | none | unclear. Omit or leave empty for other element types."
 }
 ```
 

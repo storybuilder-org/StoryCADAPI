@@ -53,10 +53,20 @@ namespace StoryCADCritter
         // visible in the report so the rubric is transparent.
         private readonly Dictionary<string, List<(string Topic, string Question)>> _keyQuestionsByType = new();
         private readonly Dictionary<Guid, CritiquePlan> _plansByUuid = new();
+        private readonly Dictionary<Guid, string> _spineCandidateReasons = new();
 
         private const int MaxRetries = 3;
         private static readonly TimeSpan InitialBackoff = TimeSpan.FromSeconds(2);
         private static readonly TimeSpan PerCallTimeout = TimeSpan.FromSeconds(45);
+        private static readonly HashSet<string> SignalStopWords = new(StringComparer.OrdinalIgnoreCase)
+        {
+            "about", "after", "again", "against", "alone", "before", "being", "between",
+            "could", "does", "from", "have", "into", "more", "must", "than", "that",
+            "their", "them", "there", "they", "this", "through", "when", "where",
+            "which", "while", "with", "without", "woman", "story", "problem",
+            "character", "protagonist", "antagonist", "goal", "motive", "theme",
+            "premise", "learn"
+        };
 
         internal const string ModeFull = "Full structural read";
         internal const string ModeSpine = "Story-spine candidate";
@@ -137,6 +147,7 @@ namespace StoryCADCritter
             _bodyCache.Clear();
             _byUuid.Clear();
             _plansByUuid.Clear();
+            _spineCandidateReasons.Clear();
 
             var allElementsResult = _api.GetAllElements();
             if (allElementsResult == null || !allElementsResult.IsSuccess || allElementsResult.Payload == null)
@@ -233,6 +244,12 @@ namespace StoryCADCritter
                 run.ElementCritiques.Add(c);
                 AccumulateCost(run.Cost, c.Cost);
             }
+
+            // Significance/coherence is emergent: judge it only after the
+            // per-element reads exist. (a) deterministic from the per-element
+            // verdicts + declared roles; (b) one LLM synthesis call only when
+            // (a) is under-determined.
+            await BuildStoryProblemCoherenceAsync(ordered, run, cancellationToken);
 
             async Task RunOne(StoryElement el, int idx)
             {
@@ -491,11 +508,21 @@ namespace StoryCADCritter
                 sb.AppendLine($"- Focus: {plan.Focus}");
             sb.AppendLine("- Treat StoryCAD metadata as structural signals, not certain authorial intent. If signals conflict, surface the ambiguity instead of declaring one interpretation correct.");
             if (plan.IsFunctional)
+            {
                 sb.AppendLine("- This is a functional/minor element. Judge whether it serves its story purpose; do not require lead-character depth, a full arc, or complete backstory unless the outline itself makes those expectations relevant.");
+                if (element.ElementType == StoryItemType.Character)
+                    sb.AppendLine("- For a functional/minor character, acceptable concerns are unclear story function, duplicated cast function, weak connection to central characters, or continuity. Do not raise missing backstory, motivation, dimensionality, physical description, flaw, or arc as a concern unless the missing information blocks that function.");
+            }
             else if (plan.IsStorySpineCandidate)
+            {
                 sb.AppendLine("- This element may carry the story spine. Give it the deepest structural attention and notice whether related elements support or obscure it.");
+            }
             else
+            {
                 sb.AppendLine("- Calibrate the depth of critique to this element's support role in the wider outline.");
+                if (element.ElementType == StoryItemType.Character && plan.Mode == ModeSupporting)
+                    sb.AppendLine("- For a supporting character, focus on role clarity, relationship to high-signal characters, and contribution to the likely spine. Avoid lead-level backstory, psychological depth, visualization, flaw, or full-arc demands unless the outline makes that support role depend on them.");
+            }
             sb.AppendLine();
 
             sb.AppendLine("Element data:");
@@ -669,6 +696,7 @@ namespace StoryCADCritter
 
         private void BuildCritiquePlans(IReadOnlyList<StoryElement> ordered, CritiqueRunResult run)
         {
+            var overviewSignalText = BuildOverviewSignalText(ordered);
             var referenceCounts = ordered.ToDictionary(e => e.Uuid, _ => 0);
             foreach (var el in ordered)
             {
@@ -689,6 +717,7 @@ namespace StoryCADCritter
                     centralCharacters.Add(character.Uuid);
             }
 
+            var problemSignals = new List<(StoryElement Element, int OverviewOverlapScore)>();
             var spineCandidates = new HashSet<Guid>();
             foreach (var problem in ordered.Where(e => e.ElementType == StoryItemType.Problem))
             {
@@ -702,9 +731,46 @@ namespace StoryCADCritter
                 var internalConflict = ContainsAny(conflict, "self")
                     || (protagonist != Guid.Empty && protagonist == antagonist);
                 var centralInternalConflict = internalConflict && centralCharacters.Contains(protagonist);
+                var overviewOverlapScore = ScoreTextOverlap(overviewSignalText, BuildProblemSignalText(problem, body));
+                problemSignals.Add((problem, overviewOverlapScore));
 
                 if (declaredStoryProblem || centralInternalConflict)
+                {
                     spineCandidates.Add(problem.Uuid);
+                    _spineCandidateReasons[problem.Uuid] = declaredStoryProblem && centralInternalConflict
+                        ? "declared story problem and internal-conflict signal"
+                        : declaredStoryProblem
+                            ? "declared StoryCAD story-problem signal"
+                            : "internal-conflict signal attached to a high-signal character";
+                }
+            }
+
+            if (spineCandidates.Count == 0 && problemSignals.Count > 0)
+            {
+                var maxOverlap = problemSignals.Max(s => s.OverviewOverlapScore);
+                if (maxOverlap >= 2)
+                {
+                    foreach (var signal in problemSignals.Where(s => s.OverviewOverlapScore == maxOverlap))
+                    {
+                        spineCandidates.Add(signal.Element.Uuid);
+                        _spineCandidateReasons[signal.Element.Uuid] =
+                            $"overview StoryProblem/Premise overlap ({signal.OverviewOverlapScore} shared signal word(s))";
+                    }
+                }
+            }
+
+            foreach (var problem in problemSignals.Where(s => spineCandidates.Contains(s.Element.Uuid)).Select(s => s.Element))
+            {
+                var body = GetBody(problem.Uuid);
+                foreach (var roleProperty in new[] { "Protagonist", "Antagonist" })
+                {
+                    if (TryGetGuidProperty(body, roleProperty, out var characterGuid)
+                        && _byUuid.TryGetValue(characterGuid, out var character)
+                        && character.ElementType == StoryItemType.Character)
+                    {
+                        centralCharacters.Add(characterGuid);
+                    }
+                }
             }
 
             foreach (var element in ordered)
@@ -715,6 +781,7 @@ namespace StoryCADCritter
 
             run.StructuralOrientation = RenderStructuralOrientation(
                 ordered, referenceCounts, centralCharacters, spineCandidates);
+            run.StructuralCompleteness = RenderStructuralCompleteness(ordered);
         }
 
         private CritiquePlan PlanForElement(
@@ -738,7 +805,6 @@ namespace StoryCADCritter
                 case StoryItemType.Character:
                 {
                     var storyRole = TryGetStringProperty(body, "StoryRole", out var sr) ? sr : string.Empty;
-                    var role = TryGetStringProperty(body, "Role", out var r) ? r : string.Empty;
                     var central = centralCharacters.Contains(element.Uuid);
                     var functional = IsFunctionalStoryRole(storyRole)
                         || (!central && refCount <= 1);
@@ -749,7 +815,7 @@ namespace StoryCADCritter
                         {
                             Mode = ModeFull,
                             IsStorySpineCandidate = IsCentralStoryRole(storyRole),
-                            Focus = $"High-signal character: StoryRole='{BlankIfEmpty(storyRole)}', Role='{BlankIfEmpty(role)}', referenced {refCount} time(s). Give this character a full developmental read."
+                            Focus = $"High-signal character: StoryRole='{BlankIfEmpty(storyRole)}', referenced {refCount} time(s). Give this character a full developmental read."
                         };
                     }
 
@@ -759,14 +825,14 @@ namespace StoryCADCritter
                         {
                             Mode = ModeFunctional,
                             IsFunctional = true,
-                            Focus = $"Functional/minor character: StoryRole='{BlankIfEmpty(storyRole)}', Role='{BlankIfEmpty(role)}', referenced {refCount} time(s). Review role clarity and whether the character earns or duplicates a function; do not require lead-level psychology."
+                            Focus = $"Functional/minor character: StoryRole='{BlankIfEmpty(storyRole)}', referenced {refCount} time(s). Review role clarity and whether the character earns or duplicates a function; do not require lead-level psychology."
                         };
                     }
 
                     return new CritiquePlan
                     {
                         Mode = ModeSupporting,
-                        Focus = $"Supporting character: StoryRole='{BlankIfEmpty(storyRole)}', Role='{BlankIfEmpty(role)}', referenced {refCount} time(s). Review how this character supports the likely spine rather than demanding a full protagonist arc."
+                        Focus = $"Supporting character: StoryRole='{BlankIfEmpty(storyRole)}', referenced {refCount} time(s). Review how this character supports the likely spine rather than demanding a full protagonist arc."
                     };
                 }
 
@@ -787,11 +853,13 @@ namespace StoryCADCritter
 
                     if (spineCandidates.Contains(element.Uuid))
                     {
-                        var reason = declaredStoryProblem && internalConflict
-                            ? "declared story problem and internal-conflict signal"
-                            : declaredStoryProblem
-                                ? "declared StoryCAD story-problem signal"
-                                : "internal-conflict signal attached to a high-signal character";
+                        var reason = _spineCandidateReasons.TryGetValue(element.Uuid, out var storedReason)
+                            ? storedReason
+                            : declaredStoryProblem && internalConflict
+                                ? "declared story problem and internal-conflict signal"
+                                : declaredStoryProblem
+                                    ? "declared StoryCAD story-problem signal"
+                                    : "internal-conflict signal attached to a high-signal character";
                         return new CritiquePlan
                         {
                             Mode = ModeSpine,
@@ -890,7 +958,10 @@ namespace StoryCADCritter
                     var body = GetBody(e.Uuid);
                     var category = TryGetStringProperty(body, "ProblemCategory", out var pc) ? pc : string.Empty;
                     var conflict = TryGetStringProperty(body, "ConflictType", out var ct) ? ct : string.Empty;
-                    return $"[Problem] {e.Name} (ProblemCategory='{BlankIfEmpty(category)}', ConflictType='{BlankIfEmpty(conflict)}')";
+                    var reason = _spineCandidateReasons.TryGetValue(e.Uuid, out var r)
+                        ? $", signal='{r}'"
+                        : string.Empty;
+                    return $"[Problem] {e.Name} (ProblemCategory='{BlankIfEmpty(category)}', ConflictType='{BlankIfEmpty(conflict)}'{reason})";
                 })
                 .ToList();
             sb.AppendLine(spineNames.Count == 0
@@ -924,6 +995,215 @@ namespace StoryCADCritter
             return sb.ToString().Trim();
         }
 
+        // -- Completeness (deterministic, pre-walk) -------------------------
+
+        /// <summary>
+        /// Presence/absence only. Absence is decidable regardless of how messy
+        /// the prose is, so this is reliable on incomplete outlines. It both
+        /// lists structural gaps for the author and explains why significance
+        /// (which problem is central, who really changes) can't be trusted up
+        /// front when the declaring fields are blank.
+        /// </summary>
+        private string RenderStructuralCompleteness(IReadOnlyList<StoryElement> ordered)
+        {
+            var notes = new List<string>();
+
+            var overview = ordered.FirstOrDefault(e => e.ElementType == StoryItemType.StoryOverview);
+            if (overview != null)
+            {
+                // Story Idea is the Overview's base Description field.
+                if (string.IsNullOrWhiteSpace(overview.Description))
+                    notes.Add("- The Story Overview has no Story Idea. Capture the original idea that prompted the story.");
+                if (!TryGetStringProperty(GetBody(overview.Uuid), "Premise", out _))
+                    notes.Add("- The Story Overview has no Premise. A one-sentence premise anchors what the story is about.");
+            }
+
+            if (!HasDeclaredStoryProblem(ordered))
+                notes.Add("- No problem is marked as the story problem. Mark which problem ends the story when it is resolved, so the central question is unambiguous.");
+
+            foreach (var problem in ordered.Where(e => e.ElementType == StoryItemType.Problem))
+            {
+                var body = GetBody(problem.Uuid);
+                var missing = new List<string>();
+                if (!TryGetGuidProperty(body, "Protagonist", out _)) missing.Add("protagonist");
+                if (!TryGetGuidProperty(body, "Antagonist", out _)) missing.Add("antagonist");
+                if (!TryGetStringProperty(body, "ProtGoal", out _)) missing.Add("protagonist goal (the question it poses)");
+                if (!TryGetStringProperty(body, "Outcome", out _)) missing.Add("resolution/outcome (the answer)");
+                if (missing.Count > 0)
+                    notes.Add($"- Problem \"{problem.Name}\" is missing: {string.Join(", ", missing)}.");
+            }
+
+            foreach (var character in ordered.Where(e => e.ElementType == StoryItemType.Character))
+            {
+                if (!TryGetStringProperty(GetBody(character.Uuid), "StoryRole", out _))
+                    notes.Add($"- Character \"{character.Name}\" has no StoryRole. A role (Protagonist, Antagonist, Supporting, etc.) clarifies how central the character is.");
+            }
+
+            if (notes.Count == 0)
+                return string.Empty;
+
+            return "These structural fields are empty in the outline. Filling them sharpens both the critique and the story:"
+                + Environment.NewLine + Environment.NewLine
+                + string.Join(Environment.NewLine, notes);
+        }
+
+        // -- Story-problem coherence (post-walk: (a) deterministic, (b) LLM) --
+
+        /// <summary>
+        /// Judged after the per-element reads exist. (a) reads the per-Problem
+        /// verdicts (questionAnswered / resolutionAgent) the walk produced and
+        /// compares them against the declared roles — no prose re-parsing. (b)
+        /// makes one LLM synthesis call only for declared problems whose verdict
+        /// is missing or unclear.
+        /// </summary>
+        private async Task BuildStoryProblemCoherenceAsync(
+            IReadOnlyList<StoryElement> ordered,
+            CritiqueRunResult run,
+            CancellationToken cancellationToken)
+        {
+            var declaredProblems = GetDeclaredStoryProblems(ordered);
+            if (declaredProblems.Count == 0)
+            {
+                run.StoryProblemCoherence =
+                    "I did not find a problem marked as the story problem, so I can't check whether the story's resolution answers its central question. The next revision should make clear which problem ends the story when it is resolved.";
+                return;
+            }
+
+            var notes = new List<string>();
+            var underdetermined = new List<StoryElement>();
+
+            foreach (var problem in declaredProblems)
+            {
+                var parsed = run.ElementCritiques.FirstOrDefault(c => c.Uuid == problem.Uuid)?.Parsed;
+                var answered = (parsed?.QuestionAnswered ?? string.Empty).Trim().ToLowerInvariant();
+                var agent = (parsed?.ResolutionAgent ?? string.Empty).Trim().ToLowerInvariant();
+
+                var body = GetBody(problem.Uuid);
+                var protagonistName = ResolveRoleName(body, "Protagonist", "the protagonist");
+                var antagonistName = ResolveRoleName(body, "Antagonist", "the antagonist");
+
+                bool answeredKnown = answered is "yes" or "no";
+                bool agentKnown = agent is "protagonist" or "antagonist" or "other" or "none";
+                if (!answeredKnown && !agentKnown)
+                {
+                    underdetermined.Add(problem);
+                    continue;
+                }
+
+                if (agent == "antagonist")
+                    notes.Add($"The outline marks \"{problem.Name}\" as the story problem, with {protagonistName} opposed by {antagonistName}. But its resolution is carried by {antagonistName}, not {protagonistName}. If this is {protagonistName}'s story problem, show how {protagonistName}'s own goal, choice, or understanding resolves it rather than leaving the resolution to {antagonistName}.");
+                else if (agent == "other")
+                    notes.Add($"The outline marks \"{problem.Name}\" as the story problem, but its resolution is carried by someone or something other than {protagonistName}. Consider how {protagonistName}'s own choice or change resolves the problem they own.");
+                else if (agent == "none")
+                    notes.Add($"The outline marks \"{problem.Name}\" as the story problem, but no resolution is stated for it. Define how the problem is settled at the end.");
+                else if (answered == "no")
+                    notes.Add($"The outline marks \"{problem.Name}\" as the story problem, but its Outcome resolves a different thread than {protagonistName}'s goal. Check that the resolution answers the question the problem actually poses.");
+                else // answered == "yes" with agent protagonist or unknown
+                    notes.Add($"The story problem \"{problem.Name}\" is answered by its protagonist {protagonistName}: the question it poses is resolved by the one who owns it.");
+            }
+
+            if (underdetermined.Count > 0)
+            {
+                var synth = await SynthesizeCoherenceAsync(ordered, underdetermined, run, cancellationToken);
+                if (!string.IsNullOrWhiteSpace(synth))
+                    notes.Add(synth);
+            }
+
+            run.StoryProblemCoherence = string.Join(Environment.NewLine + Environment.NewLine, notes);
+        }
+
+        private bool HasDeclaredStoryProblem(IReadOnlyList<StoryElement> ordered) =>
+            GetDeclaredStoryProblems(ordered).Count > 0;
+
+        /// <summary>
+        /// The declared story problem(s): the structured Overview.StoryProblem
+        /// link wins; any Problem whose ProblemCategory marks it story/main is
+        /// also included. Deduplicated.
+        /// </summary>
+        private List<StoryElement> GetDeclaredStoryProblems(IReadOnlyList<StoryElement> ordered)
+        {
+            var result = new List<StoryElement>();
+            var seen = new HashSet<Guid>();
+
+            foreach (var overview in ordered.Where(e => e.ElementType == StoryItemType.StoryOverview))
+            {
+                if (TryGetGuidProperty(GetBody(overview.Uuid), "StoryProblem", out var spGuid)
+                    && _byUuid.TryGetValue(spGuid, out var sp)
+                    && sp.ElementType == StoryItemType.Problem
+                    && seen.Add(sp.Uuid))
+                    result.Add(sp);
+            }
+
+            foreach (var problem in ordered.Where(e => e.ElementType == StoryItemType.Problem))
+            {
+                var category = TryGetStringProperty(GetBody(problem.Uuid), "ProblemCategory", out var pc) ? pc : string.Empty;
+                if (ContainsAny(category, "story problem", "main") && seen.Add(problem.Uuid))
+                    result.Add(problem);
+            }
+
+            return result;
+        }
+
+        private string ResolveRoleName(string body, string role, string fallback) =>
+            TryGetGuidProperty(body, role, out var g) && _byUuid.TryGetValue(g, out var el)
+                ? el.Name
+                : fallback;
+
+        /// <summary>
+        /// (b) fallback: one LLM call to judge coherence for declared problems
+        /// whose per-element verdict was missing/unclear. Failure here is
+        /// non-fatal — the run still returns its deterministic findings.
+        /// </summary>
+        private async Task<string> SynthesizeCoherenceAsync(
+            IReadOnlyList<StoryElement> ordered,
+            IReadOnlyList<StoryElement> problems,
+            CritiqueRunResult run,
+            CancellationToken cancellationToken)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("STORY-PROBLEM COHERENCE SYNTHESIS");
+            sb.AppendLine();
+            sb.AppendLine("The per-element read could not determine whether the declared story problem's resolution is driven by its protagonist. Using the data below, judge whether the Outcome answers the protagonist's question, and if not, name who carries the resolution. Respond in 1-3 plain sentences addressed to the author. Do not propose text edits.");
+            sb.AppendLine();
+
+            foreach (var overview in ordered.Where(e => e.ElementType == StoryItemType.StoryOverview))
+            {
+                sb.AppendLine("Story Overview:");
+                sb.AppendLine(GetBody(overview.Uuid));
+                sb.AppendLine();
+            }
+            foreach (var problem in problems)
+            {
+                sb.AppendLine($"Declared story problem \"{problem.Name}\":");
+                sb.AppendLine(GetBody(problem.Uuid));
+                sb.AppendLine();
+            }
+
+            var history = new ChatHistory();
+            history.AddSystemMessage(_systemPrompt);
+            history.AddUserMessage(sb.ToString());
+            var settings = new OpenAIPromptExecutionSettings { Temperature = 0.4, TopP = 0.9 };
+
+            try
+            {
+                using var perCallCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+                perCallCts.CancelAfter(PerCallTimeout);
+                var result = _kernel != null
+                    ? await _chatService.GetChatMessageContentAsync(history, settings, _kernel, perCallCts.Token)
+                    : await _chatService.GetChatMessageContentAsync(history, settings, null, perCallCts.Token);
+                AccumulateCost(run.Cost, ExtractCost(result));
+                return result.Content?.Trim() ?? string.Empty;
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch
+            {
+                return string.Empty;
+            }
+        }
+
         internal static List<(string Topic, string Question)> FilterKeyQuestionsForPlan(
             StoryItemType elementType,
             string mode,
@@ -951,7 +1231,8 @@ namespace StoryCADCritter
                 if (mode == ModeSupporting)
                 {
                     return questions
-                        .Where(q => !IsTopic(q, "Flaw", "Backstory"))
+                        .Where(q => IsTopic(q, "Role", "Relationships", "General")
+                            || Mentions(q, "cast too large", "eliminating characters", "combining"))
                         .ToList();
                 }
             }
@@ -990,6 +1271,84 @@ namespace StoryCADCritter
 
         private static bool IsFunctionalStoryRole(string storyRole) =>
             ContainsAny(storyRole, "minor", "background", "walk-on", "walk on", "cameo");
+
+        private string BuildOverviewSignalText(IReadOnlyList<StoryElement> ordered)
+        {
+            var parts = new List<string>();
+            foreach (var overview in ordered.Where(e => e.ElementType == StoryItemType.StoryOverview))
+            {
+                parts.Add(overview.Name);
+                parts.Add(overview.Description);
+                parts.AddRange(ExtractStringProperties(GetBody(overview.Uuid),
+                    "StoryProblem", "Premise", "Concept"));
+            }
+            return string.Join(" ", parts);
+        }
+
+        private static string BuildProblemSignalText(StoryElement problem, string body)
+        {
+            var parts = new List<string>
+            {
+                problem.Name,
+                problem.Description
+            };
+            parts.AddRange(ExtractStringProperties(body,
+                "Premise", "Theme", "Subject", "Method",
+                "ProtGoal", "ProtMotive", "ProtConflict",
+                "AntagGoal", "AntagMotive", "AntagConflict"));
+            return string.Join(" ", parts);
+        }
+
+        private static List<string> ExtractStringProperties(string json, params string[] propertyNames)
+        {
+            var values = new List<string>();
+            var wanted = new HashSet<string>(propertyNames, StringComparer.OrdinalIgnoreCase);
+            try
+            {
+                using var doc = JsonDocument.Parse(json);
+                if (doc.RootElement.ValueKind != JsonValueKind.Object)
+                    return values;
+
+                foreach (var prop in doc.RootElement.EnumerateObject())
+                {
+                    if (!wanted.Contains(prop.Name) || prop.Value.ValueKind != JsonValueKind.String)
+                        continue;
+                    var value = prop.Value.GetString();
+                    if (!string.IsNullOrWhiteSpace(value))
+                        values.Add(value);
+                }
+            }
+            catch
+            {
+                // Signal extraction is best-effort; malformed bodies should not
+                // prevent the ordinary per-element critique from running.
+            }
+            return values;
+        }
+
+
+        internal static int ScoreTextOverlap(string left, string right)
+        {
+            var leftTokens = SignalTokens(left);
+            var rightTokens = SignalTokens(right);
+            leftTokens.IntersectWith(rightTokens);
+            return leftTokens.Count;
+        }
+
+        private static HashSet<string> SignalTokens(string value)
+        {
+            var tokens = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (Match match in Regex.Matches(value ?? string.Empty, @"\b[\p{L}\p{N}][\p{L}\p{N}'-]{2,}\b"))
+            {
+                var token = match.Value.ToLowerInvariant().Trim('\'', '-');
+                if (token.EndsWith("'s", StringComparison.Ordinal))
+                    token = token[..^2];
+                if (token.Length < 3 || SignalStopWords.Contains(token))
+                    continue;
+                tokens.Add(token);
+            }
+            return tokens;
+        }
 
         private static bool ContainsAny(string value, params string[] needles) =>
             !string.IsNullOrWhiteSpace(value)
@@ -1202,7 +1561,20 @@ namespace StoryCADCritter
                 {
                     bool isAnt = role.Equals("antagonist", StringComparison.OrdinalIgnoreCase);
                     curSex  = isAnt ? antSex : protSex;
-                    curName = (isAnt ? antName : protName) ?? curName;
+                    string fallbackName = isAnt ? "the antagonist" : "the protagonist";
+                    string? name = isAnt ? antName : protName;
+                    curName = !string.IsNullOrWhiteSpace(name) ? name : fallbackName;
+
+                    // "his/her own antagonist" is structural language for
+                    // Person-vs-Self. Do not render "Becky must be her own
+                    // Joseph" when the current problem's antagonist is a
+                    // separate character.
+                    if (isAnt && IsOwnRoleReference(text, m.Index))
+                    {
+                        curSex = protSex;
+                        curName = protName ?? curName;
+                        return m.Groups[1].Success ? $"{m.Groups[1].Value} {role}" : role;
+                    }
 
                     // Person-vs-Self: keep the literal word "antagonist" for the
                     // second role so we never render "Becky and Becky" — the
@@ -1210,7 +1582,6 @@ namespace StoryCADCritter
                     if (isAnt && samePerson)
                         return m.Groups[1].Success ? $"{m.Groups[1].Value} {role}" : role;
 
-                    string? name = isAnt ? antName : protName;
                     if (string.IsNullOrEmpty(name)) return m.Value;  // no name on file — leave as written
                     return name;
                 }
@@ -1218,6 +1589,13 @@ namespace StoryCADCritter
                 // Pronoun — gender by the most recent role's character.
                 return GenderPronoun(m.Value, curSex, curName, text, m.Index + m.Length);
             }, RegexOptions.IgnoreCase);
+        }
+
+        private static bool IsOwnRoleReference(string text, int roleIndex)
+        {
+            var prefixStart = Math.Max(0, roleIndex - 12);
+            var prefix = text.Substring(prefixStart, roleIndex - prefixStart);
+            return Regex.IsMatch(prefix, @"\bown\s+$", RegexOptions.IgnoreCase);
         }
 
         /// <summary>
@@ -1388,16 +1766,27 @@ namespace StoryCADCritter
                 sb.AppendLine($"- LLM call failed: **{errorCount}**");
             sb.AppendLine();
 
-            if (!string.IsNullOrWhiteSpace(run.StructuralOrientation))
+            RenderHighlights(sb, run);
+
+            if (!string.IsNullOrWhiteSpace(run.StoryProblemCoherence))
             {
-                sb.AppendLine("## Structural Orientation");
+                sb.AppendLine("## Story Problem Check");
                 sb.AppendLine();
-                sb.AppendLine(run.StructuralOrientation);
+                sb.AppendLine(run.StoryProblemCoherence);
                 sb.AppendLine();
             }
 
+            if (!string.IsNullOrWhiteSpace(run.StructuralCompleteness))
+            {
+                sb.AppendLine("## Structural Completeness");
+                sb.AppendLine();
+                sb.AppendLine(run.StructuralCompleteness);
+                sb.AppendLine();
+            }
+
+            var authorFacingAnchors = BuildAuthorFacingAnchors(run);
             foreach (var critique in run.ElementCritiques)
-                RenderElement(sb, critique, includeKeyQuestions: !separateKeyQuestions);
+                RenderElement(sb, critique, authorFacingAnchors);
 
             if (errorCount > 0)
             {
@@ -1408,10 +1797,140 @@ namespace StoryCADCritter
                 sb.AppendLine();
             }
 
-            if (separateKeyQuestions)
-                RenderKeyQuestionsAppendix(sb, run);
-
             return sb.ToString();
+        }
+
+        private static void RenderHighlights(StringBuilder sb, CritiqueRunResult run)
+        {
+            var highlights = run.ElementCritiques
+                .Where(c => c.Parsed != null)
+                .Where(c => c.CritiqueMode != ModeFunctional && c.CritiqueMode != ModeContext)
+                .OrderBy(c => HighlightRank(c))
+                .SelectMany(c => c.Parsed!.Strengths.Select(s => (c.Name, c.ElementType, s.Finding)))
+                .Where(s => !string.IsNullOrWhiteSpace(s.Finding))
+                .Take(4)
+                .ToList();
+
+            if (highlights.Count == 0)
+                return;
+
+            sb.AppendLine("## What's Working");
+            sb.AppendLine();
+            foreach (var item in highlights)
+                sb.AppendLine($"- **{item.Name}**: {item.Finding}");
+            sb.AppendLine();
+        }
+
+        private static int HighlightRank(ElementCritique critique)
+        {
+            if (critique.ElementType == "Overview") return 0;
+            if (critique.CritiqueMode == ModeSpine) return 1;
+            if (critique.CritiqueMode == ModeFull) return 2;
+            if (critique.CritiqueMode == ModeSupporting) return 3;
+            return 4;
+        }
+
+        private static HashSet<string> BuildAuthorFacingAnchors(CritiqueRunResult run)
+        {
+            var anchors = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var critique in run.ElementCritiques.Where(c => !IsPeripheralElement(c)))
+            {
+                var name = critique.Name?.Trim();
+                if (string.IsNullOrWhiteSpace(name))
+                    continue;
+
+                if (name.Length >= 4)
+                    anchors.Add(name);
+
+                foreach (var term in ExtractAuthorAnchorTerms(name))
+                    anchors.Add(term);
+            }
+
+            return anchors;
+        }
+
+        private static bool IsPeripheralElement(ElementCritique critique) =>
+            critique.CritiqueMode == ModeFunctional
+            || critique.CritiqueMode == ModeContext;
+
+        private static List<CritiqueFinding> FilterPeripheralConcerns(
+            ElementCritique critique,
+            IReadOnlySet<string> storyAnchors)
+        {
+            if (critique.Parsed == null)
+                return new List<CritiqueFinding>();
+
+            if (storyAnchors.Count == 0)
+                return critique.Parsed.Concerns;
+
+            return critique.Parsed.Concerns
+                .Where(f => IsActionablePeripheralFinding(f, critique, storyAnchors))
+                .ToList();
+        }
+
+        private static bool IsActionablePeripheralFinding(
+            CritiqueFinding finding,
+            ElementCritique critique,
+            IReadOnlySet<string> storyAnchors)
+        {
+            if (string.IsNullOrWhiteSpace(finding.Finding))
+                return false;
+
+            var ownTerms = ExtractAuthorAnchorTerms(critique.Name)
+                .Append(critique.Name)
+                .Where(s => !string.IsNullOrWhiteSpace(s))
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var anchor in storyAnchors)
+            {
+                if (ownTerms.Contains(anchor))
+                    continue;
+
+                if (ContainsAnchor(finding.Finding, anchor))
+                    return true;
+            }
+
+            return false;
+        }
+
+        private static IEnumerable<string> ExtractAuthorAnchorTerms(string? text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                yield break;
+
+            foreach (Match match in Regex.Matches(text, "[A-Za-z][A-Za-z']+"))
+            {
+                var term = match.Value.Trim('\'');
+                if (term.Length < 5)
+                    continue;
+                if (SignalStopWords.Contains(term))
+                    continue;
+                if (IsGenericAuthorAnchor(term))
+                    continue;
+
+                yield return term;
+            }
+        }
+
+        private static bool IsGenericAuthorAnchor(string term) =>
+            ContainsAny(term,
+                "change", "changed", "changes", "clear", "unclear",
+                "theme", "themes", "conflict", "conflicts", "central",
+                "function", "details", "reader", "readers", "outline",
+                "emotion", "emotional", "physical", "specific", "storycad");
+
+        private static bool ContainsAnchor(string text, string anchor)
+        {
+            if (string.IsNullOrWhiteSpace(text) || string.IsNullOrWhiteSpace(anchor))
+                return false;
+
+            if (anchor.Any(char.IsWhiteSpace))
+                return text.Contains(anchor, StringComparison.OrdinalIgnoreCase);
+
+            return Regex.IsMatch(
+                text,
+                $@"\b{Regex.Escape(anchor)}\b",
+                RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
         }
 
         /// <summary>
@@ -1442,37 +1961,22 @@ namespace StoryCADCritter
             }
         }
 
-        private static void RenderElement(StringBuilder sb, ElementCritique critique, bool includeKeyQuestions)
+        private static void RenderElement(
+            StringBuilder sb,
+            ElementCritique critique,
+            IReadOnlySet<string> storyAnchors)
         {
+            List<CritiqueFinding>? authorFacingConcerns = null;
+            var conciseElement = IsPeripheralElement(critique);
+            if (conciseElement && critique.Parsed != null)
+            {
+                authorFacingConcerns = FilterPeripheralConcerns(critique, storyAnchors);
+                if (authorFacingConcerns.Count == 0)
+                    return;
+            }
+
             sb.AppendLine($"## [{critique.ElementType}] {critique.Name}");
             sb.AppendLine();
-            sb.AppendLine($"_UUID: `{critique.Uuid}`_");
-            sb.AppendLine();
-
-            if (!string.IsNullOrWhiteSpace(critique.CritiqueMode)
-                || !string.IsNullOrWhiteSpace(critique.CritiqueFocus))
-            {
-                if (!string.IsNullOrWhiteSpace(critique.CritiqueMode))
-                    sb.AppendLine($"_Critique mode: {critique.CritiqueMode}_");
-                if (!string.IsNullOrWhiteSpace(critique.CritiqueFocus))
-                    sb.AppendLine($"_Focus: {critique.CritiqueFocus}_");
-                sb.AppendLine();
-            }
-
-            if (includeKeyQuestions && critique.KeyQuestions.Count > 0)
-            {
-                sb.AppendLine("<details><summary>Key Questions used</summary>");
-                sb.AppendLine();
-                foreach (var grp in critique.KeyQuestions.GroupBy(q => q.Topic))
-                {
-                    sb.AppendLine($"**{grp.Key}**");
-                    foreach (var q in grp)
-                        sb.AppendLine($"- {q.Question}");
-                    sb.AppendLine();
-                }
-                sb.AppendLine("</details>");
-                sb.AppendLine();
-            }
 
             if (critique.CallFailed)
             {
@@ -1493,10 +1997,13 @@ namespace StoryCADCritter
             }
 
             var p = critique.Parsed;
-            RenderSection(sb, "Strengths", p.Strengths);
-            RenderSection(sb, "Concerns", p.Concerns);
+            var concerns = authorFacingConcerns ?? p.Concerns;
 
-            if (p.QuestionsForAuthor.Count > 0)
+            if (!conciseElement)
+                RenderSection(sb, "Strengths", p.Strengths);
+            RenderSection(sb, "Concerns", concerns);
+
+            if (!conciseElement && p.QuestionsForAuthor.Count > 0)
             {
                 sb.AppendLine("### Questions for the author");
                 sb.AppendLine();
@@ -1505,7 +2012,7 @@ namespace StoryCADCritter
                 sb.AppendLine();
             }
 
-            if (p.Strengths.Count == 0 && p.Concerns.Count == 0 && p.QuestionsForAuthor.Count == 0)
+            if (p.Strengths.Count == 0 && concerns.Count == 0 && p.QuestionsForAuthor.Count == 0)
             {
                 sb.AppendLine("_The reader returned no findings — element may be too sparse to critique meaningfully._");
                 sb.AppendLine();
@@ -1518,11 +2025,7 @@ namespace StoryCADCritter
             sb.AppendLine($"### {heading}");
             sb.AppendLine();
             foreach (var item in items)
-            {
-                if (!string.IsNullOrWhiteSpace(item.KeyQuestion) && !item.KeyQuestion.Equals("general", StringComparison.OrdinalIgnoreCase))
-                    sb.AppendLine($"- _Re: {item.KeyQuestion}_");
-                sb.AppendLine($"  - {item.Finding}");
-            }
+                sb.AppendLine($"- {item.Finding}");
             sb.AppendLine();
         }
     }

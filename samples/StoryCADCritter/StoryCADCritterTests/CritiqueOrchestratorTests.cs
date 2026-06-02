@@ -125,6 +125,236 @@ public class CritiqueOrchestratorTests
     }
 
     [TestMethod]
+    public async Task StubbedWalk_SparseMetadata_WeightsByOverviewOverlapAndLinks()
+    {
+        await LighthouseKeeperFixture.BuildAsync(_api);
+
+        var stub = new StubChatCompletionService();
+        var orchestrator = new CritiqueOrchestrator(_api, stub, _systemPrompt);
+        var outlinePath = Path.Combine(_outputDir, "SparseMetadataWeights.demo");
+        var run = await orchestrator.RunAsync(outlinePath, progress: null, outputDirectory: _outputDir);
+
+        Assert.IsFalse(run.HardFailed, $"HardFailureMessage: {run.HardFailureMessage}");
+
+        var saveLighthouse = run.ElementCritiques.Single(c => c.Name == "Save the Lighthouse");
+        Assert.AreEqual(CritiqueOrchestrator.ModeSpine, saveLighthouse.CritiqueMode);
+        StringAssert.Contains(saveLighthouse.CritiqueFocus, "overview StoryProblem/Premise overlap");
+
+        var trustAgain = run.ElementCritiques.Single(c => c.Name == "Trust Again");
+        Assert.AreEqual(CritiqueOrchestrator.ModeSupporting, trustAgain.CritiqueMode);
+
+        Assert.AreEqual(CritiqueOrchestrator.ModeFull,
+            run.ElementCritiques.Single(c => c.Name == "Elara Marsh").CritiqueMode);
+        Assert.AreEqual(CritiqueOrchestrator.ModeFull,
+            run.ElementCritiques.Single(c => c.Name == "Silas Croft").CritiqueMode);
+
+        StringAssert.Contains(run.StructuralOrientation, "[Problem] Save the Lighthouse");
+        StringAssert.Contains(run.StructuralOrientation, "overview StoryProblem/Premise overlap");
+        Assert.IsFalse(run.StructuralOrientation.Contains("[Problem] Trust Again"),
+            "The weaker secondary problem should not be promoted as a spine candidate by this sparse fixture.");
+    }
+
+    [TestMethod]
+    public async Task StubbedWalk_PromptCarriesSparseMetadataWeights()
+    {
+        var overviewGuid = await LighthouseKeeperFixture.BuildAsync(_api);
+        _api.AddElement(StoryItemType.Character, overviewGuid.ToString(), "Harbor Clerk",
+            new Dictionary<string, object> { { "Role", "Clerk" } });
+
+        var prompts = new List<string>();
+        var stub = new StubChatCompletionService
+        {
+            Respond = userMessage =>
+            {
+                lock (prompts) prompts.Add(userMessage);
+                return StubChatCompletionService.DefaultValidJson;
+            }
+        };
+
+        var orchestrator = new CritiqueOrchestrator(_api, stub, _systemPrompt);
+        var outlinePath = Path.Combine(_outputDir, "SparseMetadataPrompts.demo");
+        var run = await orchestrator.RunAsync(outlinePath, progress: null, outputDirectory: _outputDir);
+
+        Assert.IsFalse(run.HardFailed, $"HardFailureMessage: {run.HardFailureMessage}");
+
+        List<string> snapshot;
+        lock (prompts) snapshot = prompts.ToList();
+
+        var spinePrompt = snapshot.FirstOrDefault(p => p.Contains("Element name: Save the Lighthouse"));
+        Assert.IsNotNull(spinePrompt, "No prompt for the story-spine candidate was captured.");
+        StringAssert.Contains(spinePrompt, "- Mode: Story-spine candidate");
+        StringAssert.Contains(spinePrompt, "overview StoryProblem/Premise overlap");
+        StringAssert.Contains(spinePrompt, "This element may carry the story spine.");
+
+        var clerkPrompt = snapshot.FirstOrDefault(p => p.Contains("Element name: Harbor Clerk"));
+        Assert.IsNotNull(clerkPrompt, "No prompt for the unreferenced character was captured.");
+        StringAssert.Contains(clerkPrompt, "- Mode: Functional element read");
+        StringAssert.Contains(clerkPrompt, "This is a functional/minor element.");
+        StringAssert.Contains(clerkPrompt, "do not require lead-character depth");
+
+        var clerkCritique = run.ElementCritiques.Single(c => c.Name == "Harbor Clerk");
+        Assert.AreEqual(CritiqueOrchestrator.ModeFunctional, clerkCritique.CritiqueMode);
+        StringAssert.Contains(clerkCritique.CritiqueFocus, "StoryRole='(blank)'");
+    }
+
+    // Builds the "Long Ride Home"-shaped outline: declared story problem
+    // "Desire for freedom" (Becky vs. Joseph) whose Outcome resolves through
+    // Joseph. Returns the problem GUID. The walk won't short-circuit (5 non-
+    // overview elements incl. 2 scenes).
+    private static async Task<Guid> BuildLongRideHomeAsync()
+    {
+        var created = await _api.CreateEmptyOutline("Coherence Demo", "Test Author", "0");
+        Assert.IsTrue(created.IsSuccess, $"CreateEmptyOutline failed: {created.ErrorMessage}");
+        var overviewGuid = created.Payload.First();
+        var overviewKey = overviewGuid.ToString();
+
+        var becky = _api.AddElement(StoryItemType.Character, overviewKey, "Becky");
+        var joseph = _api.AddElement(StoryItemType.Character, overviewKey, "Joseph");
+        _api.UpdateElementProperties(becky.Payload, new Dictionary<string, object> { { "StoryRole", "Protagonist" } });
+        _api.UpdateElementProperties(joseph.Payload, new Dictionary<string, object> { { "StoryRole", "Antagonist" } });
+
+        var problem = _api.AddElement(StoryItemType.Problem, overviewKey, "Desire for freedom");
+        _api.UpdateElementProperties(problem.Payload, new Dictionary<string, object>
+        {
+            { "ProblemCategory", "Story problem" },
+            { "ConflictType", "Person vs. Person" },
+            { "Protagonist", becky.Payload.ToString() },
+            { "Antagonist", joseph.Payload.ToString() },
+            { "ProtGoal", "Attend the fair and experience freedom" },
+            { "Outcome", "The accident causes Joseph to reconsider his views." }
+        });
+        // Declare it as the story problem at the structured Overview link.
+        _api.UpdateElementProperties(overviewGuid, new Dictionary<string, object>
+        {
+            { "StoryProblem", problem.Payload.ToString() }
+        });
+
+        _api.AddElement(StoryItemType.Scene, overviewKey, "Accident on the road");
+        _api.AddElement(StoryItemType.Scene, overviewKey, "Joseph's change of heart");
+        return problem.Payload;
+    }
+
+    // A Problem-element LLM response carrying the structured verdict fields.
+    private static string ProblemVerdictJson(string questionAnswered, string resolutionAgent) => $$"""
+        {
+          "elementUuid": "00000000-0000-0000-0000-000000000000",
+          "elementType": "Problem",
+          "elementName": "Stub",
+          "strengths": [],
+          "concerns": [{"keyQuestion": "general", "finding": "stub concern"}],
+          "questionsForAuthor": [],
+          "questionAnswered": "{{questionAnswered}}",
+          "resolutionAgent": "{{resolutionAgent}}"
+        }
+        """;
+
+    [TestMethod]
+    public async Task StubbedWalk_StoryProblemCoherence_FlagsResolutionCarriedByAntagonist()
+    {
+        await BuildLongRideHomeAsync();
+
+        // The per-element Problem read judges: the Outcome does not answer
+        // Becky's goal; the resolution is carried by the antagonist.
+        var stub = new StubChatCompletionService
+        {
+            Respond = msg => msg.Contains("Element type: Problem")
+                ? ProblemVerdictJson("no", "antagonist")
+                : StubChatCompletionService.DefaultValidJson
+        };
+        var orchestrator = new CritiqueOrchestrator(_api, stub, _systemPrompt);
+        var run = await orchestrator.RunAsync(
+            Path.Combine(_outputDir, "CoherenceAntag.demo"), progress: null, outputDirectory: _outputDir);
+
+        // (a) deterministic synthesis carries it — no fallback LLM call.
+        Assert.AreEqual(run.ElementCritiques.Count, stub.CallCount,
+            "Deterministic synthesis should not trigger a fallback LLM call when verdicts are clear.");
+        StringAssert.Contains(run.StoryProblemCoherence, "Desire for freedom");
+        StringAssert.Contains(run.StoryProblemCoherence, "Becky");
+        StringAssert.Contains(run.StoryProblemCoherence, "Joseph");
+        StringAssert.Contains(run.StoryProblemCoherence, "not",
+            "Should say the resolution is carried by the antagonist, not the protagonist.");
+    }
+
+    [TestMethod]
+    public async Task StubbedWalk_StoryProblemCoherence_CoherentWhenProtagonistResolves()
+    {
+        await BuildLongRideHomeAsync();
+
+        var stub = new StubChatCompletionService
+        {
+            Respond = msg => msg.Contains("Element type: Problem")
+                ? ProblemVerdictJson("yes", "protagonist")
+                : StubChatCompletionService.DefaultValidJson
+        };
+        var orchestrator = new CritiqueOrchestrator(_api, stub, _systemPrompt);
+        var run = await orchestrator.RunAsync(
+            Path.Combine(_outputDir, "CoherenceOk.demo"), progress: null, outputDirectory: _outputDir);
+
+        Assert.AreEqual(run.ElementCritiques.Count, stub.CallCount);
+        StringAssert.Contains(run.StoryProblemCoherence, "Desire for freedom");
+        StringAssert.Contains(run.StoryProblemCoherence, "answered by its protagonist");
+    }
+
+    [TestMethod]
+    public async Task StubbedWalk_StoryProblemCoherence_FallsBackToLlmWhenVerdictUnclear()
+    {
+        await BuildLongRideHomeAsync();
+
+        const string synthAnswer = "Synthesis: define which character's change resolves the declared problem.";
+        var stub = new StubChatCompletionService
+        {
+            Respond = msg =>
+            {
+                if (msg.Contains("STORY-PROBLEM COHERENCE SYNTHESIS"))
+                    return synthAnswer;
+                return msg.Contains("Element type: Problem")
+                    ? ProblemVerdictJson("unclear", "unclear")
+                    : StubChatCompletionService.DefaultValidJson;
+            }
+        };
+        var orchestrator = new CritiqueOrchestrator(_api, stub, _systemPrompt);
+        var run = await orchestrator.RunAsync(
+            Path.Combine(_outputDir, "CoherenceFallback.demo"), progress: null, outputDirectory: _outputDir);
+
+        // (a) under-determined → one extra (b) synthesis call.
+        Assert.AreEqual(run.ElementCritiques.Count + 1, stub.CallCount,
+            "Unclear verdicts should trigger exactly one fallback synthesis call.");
+        StringAssert.Contains(run.StoryProblemCoherence, synthAnswer);
+    }
+
+    [TestMethod]
+    public async Task StubbedWalk_StructuralCompleteness_FlagsMissingFields()
+    {
+        var created = await _api.CreateEmptyOutline("Completeness Demo", "Test Author", "0");
+        Assert.IsTrue(created.IsSuccess, $"CreateEmptyOutline failed: {created.ErrorMessage}");
+        var overviewGuid = created.Payload.First();
+        var overviewKey = overviewGuid.ToString();
+
+        // No Premise, no StoryRole, no Antagonist/ProtGoal/Outcome, no declared story problem.
+        var hero = _api.AddElement(StoryItemType.Character, overviewKey, "Nameless Hero");
+        var problem = _api.AddElement(StoryItemType.Problem, overviewKey, "Vague Trouble");
+        _api.UpdateElementProperties(problem.Payload, new Dictionary<string, object>
+        {
+            { "Protagonist", hero.Payload.ToString() }
+        });
+        _api.AddElement(StoryItemType.Scene, overviewKey, "Scene one");
+        _api.AddElement(StoryItemType.Scene, overviewKey, "Scene two");
+
+        var stub = new StubChatCompletionService();
+        var orchestrator = new CritiqueOrchestrator(_api, stub, _systemPrompt);
+        var run = await orchestrator.RunAsync(
+            Path.Combine(_outputDir, "Completeness.demo"), progress: null, outputDirectory: _outputDir);
+
+        Assert.IsFalse(run.HardFailed, $"HardFailureMessage: {run.HardFailureMessage}");
+        var c = run.StructuralCompleteness;
+        Assert.IsFalse(string.IsNullOrWhiteSpace(c), "Completeness pass produced no findings.");
+        StringAssert.Contains(c, "Premise");
+        StringAssert.Contains(c, "story problem");
+        StringAssert.Contains(c, "Nameless Hero");   // missing StoryRole
+        StringAssert.Contains(c, "Vague Trouble");    // missing antagonist/goal/outcome
+    }
+
+    [TestMethod]
     public void PreferencesService_RoundTripsAllFields()
     {
         var path = Path.Combine(_outputDir, $"prefs_{Guid.NewGuid():N}.json");
@@ -149,7 +379,7 @@ public class CritiqueOrchestratorTests
     }
 
     [TestMethod]
-    public void RenderReport_SeparatePlacement_ConsolidatesKeyQuestions()
+    public void RenderReport_HidesTechnicalDiagnostics()
     {
         var run = new CritiqueRunResult { OutlinePath = "demo.stbx" };
         run.ElementCritiques.Add(new ElementCritique
@@ -157,26 +387,41 @@ public class CritiqueOrchestratorTests
             Uuid = Guid.NewGuid(),
             Name = "Joseph",
             ElementType = "Character",
+            CritiqueMode = CritiqueOrchestrator.ModeFull,
+            CritiqueFocus = "diagnostic focus",
             KeyQuestions = new() { ("Role Tab", "Is Joseph fleshed out?") },
             Parsed = new CritiqueElementResponse { ElementName = "Joseph", ElementType = "Character" }
         });
+        run.ElementCritiques[0].Parsed!.Concerns.Add(new CritiqueFinding
+        {
+            KeyQuestion = "What is Joseph's role in the story?",
+            Finding = "Joseph's resistance gives the story a clear pressure point."
+        });
 
-        var inline = CritiqueOrchestrator.RenderReport(run, "demo", separateKeyQuestions: false);
-        StringAssert.Contains(inline, "<details><summary>Key Questions used</summary>");
+        var report = CritiqueOrchestrator.RenderReport(run, "demo", separateKeyQuestions: true);
 
-        var separate = CritiqueOrchestrator.RenderReport(run, "demo", separateKeyQuestions: true);
-        StringAssert.Contains(separate, "## Key Questions");
-        Assert.IsFalse(separate.Contains("<details>"),
-            "Separate placement should not emit inline <details> blocks.");
+        Assert.IsFalse(report.Contains("Critique mode:"),
+            "Author-facing report should not expose internal critique modes.");
+        Assert.IsFalse(report.Contains("diagnostic focus"),
+            "Author-facing report should not expose internal focus diagnostics.");
+        Assert.IsFalse(report.Contains("## Key Questions"),
+            "Author-facing report should not include rubric/log appendix.");
+        Assert.IsFalse(report.Contains("UUID:"),
+            "Author-facing report should not expose UUIDs.");
+        Assert.IsFalse(report.Contains("_Re:"),
+            "Author-facing report should not expose rubric labels before findings.");
+        Assert.IsFalse(report.Contains("What is Joseph's role in the story?"),
+            "Author-facing report should keep the Key Questions in raw diagnostics, not in Markdown.");
     }
 
     [TestMethod]
-    public void RenderReport_IncludesStructuralOrientation()
+    public void RenderReport_IncludesStoryProblemCheckAndHighlights()
     {
         var run = new CritiqueRunResult
         {
             OutlinePath = "demo.stbx",
-            StructuralOrientation = "Story-spine candidates: [Problem] Demo"
+            StructuralOrientation = "Story-spine candidates: [Problem] Demo",
+            StoryProblemCoherence = "The outline marks Demo as the story problem, but the resolution points elsewhere."
         };
         run.ElementCritiques.Add(new ElementCritique
         {
@@ -185,14 +430,139 @@ public class CritiqueOrchestratorTests
             ElementType = "Overview",
             CritiqueMode = CritiqueOrchestrator.ModeFull,
             CritiqueFocus = "orientation test",
-            Parsed = new CritiqueElementResponse { ElementName = "Demo", ElementType = "Overview" }
+            Parsed = new CritiqueElementResponse
+            {
+                ElementName = "Demo",
+                ElementType = "Overview",
+                Strengths = new()
+                {
+                    new CritiqueFinding { KeyQuestion = "general", Finding = "The premise has a strong emotional center." }
+                }
+            }
         });
 
         var report = CritiqueOrchestrator.RenderReport(run, "demo");
 
-        StringAssert.Contains(report, "## Structural Orientation");
-        StringAssert.Contains(report, "Story-spine candidates");
-        StringAssert.Contains(report, "Critique mode: Full structural read");
+        StringAssert.Contains(report, "## What's Working");
+        StringAssert.Contains(report, "The premise has a strong emotional center.");
+        StringAssert.Contains(report, "## Story Problem Check");
+        StringAssert.Contains(report, "The outline marks Demo as the story problem");
+        Assert.IsFalse(report.Contains("## Structural Orientation"),
+            "Structural orientation is raw/log data, not author-facing report content.");
+        Assert.IsFalse(report.Contains("Story-spine candidates"),
+            "Structural orientation details should stay out of the Markdown report.");
+    }
+
+    [TestMethod]
+    public void RenderReport_FunctionalElementsAreConcise()
+    {
+        var run = new CritiqueRunResult { OutlinePath = "demo.stbx" };
+        run.ElementCritiques.Add(new ElementCritique
+        {
+            Uuid = Guid.NewGuid(),
+            Name = "Becky",
+            ElementType = "Character",
+            CritiqueMode = CritiqueOrchestrator.ModeFull,
+            Parsed = new CritiqueElementResponse { ElementName = "Becky", ElementType = "Character" }
+        });
+        run.ElementCritiques.Add(new ElementCritique
+        {
+            Uuid = Guid.NewGuid(),
+            Name = "Walk-on",
+            ElementType = "Character",
+            CritiqueMode = CritiqueOrchestrator.ModeFunctional,
+            Parsed = new CritiqueElementResponse
+            {
+                ElementName = "Walk-on",
+                ElementType = "Character",
+                Strengths = new()
+                {
+                    new CritiqueFinding { KeyQuestion = "general", Finding = "This character adds color." }
+                },
+                Concerns = new()
+                {
+                    new CritiqueFinding
+                    {
+                        KeyQuestion = "What is Walk-on's role in the story?",
+                        Finding = "Walk-on's warning pressures Becky's choice without asking Walk-on to carry a lead arc."
+                    }
+                },
+                QuestionsForAuthor = new() { "What should this character change?" }
+            }
+        });
+
+        var report = CritiqueOrchestrator.RenderReport(run, "demo");
+
+        StringAssert.Contains(report, "Walk-on's warning pressures Becky's choice");
+        Assert.IsFalse(report.Contains("This character adds color."),
+            "Functional elements should not force a strengths section into the author-facing report.");
+        Assert.IsFalse(report.Contains("Questions for the author"),
+            "Functional elements should not force questions into the author-facing report.");
+        Assert.IsFalse(report.Contains("_Re:"),
+            "Functional elements should render as direct advice, not rubric tracebacks.");
+    }
+
+    [TestMethod]
+    public void RenderReport_SuppressesLowSignalPeripheralElements()
+    {
+        var run = new CritiqueRunResult { OutlinePath = "demo.stbx" };
+        run.ElementCritiques.Add(new ElementCritique
+        {
+            Uuid = Guid.NewGuid(),
+            Name = "Becky",
+            ElementType = "Character",
+            CritiqueMode = CritiqueOrchestrator.ModeFull,
+            Parsed = new CritiqueElementResponse { ElementName = "Becky", ElementType = "Character" }
+        });
+        run.ElementCritiques.Add(new ElementCritique
+        {
+            Uuid = Guid.NewGuid(),
+            Name = "The Roadway",
+            ElementType = "Setting",
+            CritiqueMode = CritiqueOrchestrator.ModeContext,
+            Parsed = new CritiqueElementResponse
+            {
+                ElementName = "The Roadway",
+                ElementType = "Setting",
+                Concerns = new()
+                {
+                    new CritiqueFinding
+                    {
+                        KeyQuestion = "Does the setting appeal to the senses?",
+                        Finding = "While the setting includes some sensory details, it lacks tactile sensations and specific visual imagery."
+                    }
+                }
+            }
+        });
+        run.ElementCritiques.Add(new ElementCritique
+        {
+            Uuid = Guid.NewGuid(),
+            Name = "Arrogance",
+            ElementType = "Character",
+            CritiqueMode = CritiqueOrchestrator.ModeFunctional,
+            Parsed = new CritiqueElementResponse
+            {
+                ElementName = "Arrogance",
+                ElementType = "Character",
+                Concerns = new()
+                {
+                    new CritiqueFinding
+                    {
+                        KeyQuestion = "What is Arrogance's role in the story?",
+                        Finding = "Arrogance's role is unclear as a supporting character, and it is not evident how this character contributes."
+                    }
+                }
+            }
+        });
+
+        var report = CritiqueOrchestrator.RenderReport(run, "demo");
+
+        Assert.IsFalse(report.Contains("## [Setting] The Roadway"),
+            "Generic sensory-setting advice should not appear just because the LLM returned a concern.");
+        Assert.IsFalse(report.Contains("## [Character] Arrogance"),
+            "Generic role-clarity advice should not appear for a low-signal functional character.");
+        Assert.IsFalse(report.Contains("lacks tactile sensations"));
+        Assert.IsFalse(report.Contains("Arrogance's role is unclear"));
     }
 
     [TestMethod]
@@ -215,6 +585,33 @@ public class CritiqueOrchestratorTests
         CollectionAssert.Contains(filtered.Select(q => q.Topic).ToList(), "General Questions");
         Assert.IsFalse(filtered.Any(q => q.Topic.Contains("Flaw") || q.Topic.Contains("Backstory") || q.Topic.Contains("Psychological")),
             $"Functional character questions should not demand lead depth: {string.Join(" | ", filtered.Select(q => q.Topic))}");
+    }
+
+    [TestMethod]
+    public void FilterKeyQuestions_SupportingCharacter_RemovesLeadDepthQuestions()
+    {
+        var questions = new List<(string Topic, string Question)>
+        {
+            ("Role Tab", "What is the character's role in the story?"),
+            ("Physical and Appearance Tabs", "Is your character fleshed out?"),
+            ("Psychological and Inner Traits Tabs", "Does your character have traits?"),
+            ("Flaw Tab", "Does your character have both good and bad qualities?"),
+            ("Relationships", "How does your character feel about the other characters?"),
+            ("Backstory", "Are your character's traits consistent with his background?"),
+            ("General Questions", "Is your cast too large, or too small?")
+        };
+
+        var filtered = CritiqueOrchestrator.FilterKeyQuestionsForPlan(
+            StoryItemType.Character, CritiqueOrchestrator.ModeSupporting, questions);
+
+        CollectionAssert.Contains(filtered.Select(q => q.Topic).ToList(), "Role Tab");
+        CollectionAssert.Contains(filtered.Select(q => q.Topic).ToList(), "Relationships");
+        CollectionAssert.Contains(filtered.Select(q => q.Topic).ToList(), "General Questions");
+        Assert.IsFalse(filtered.Any(q => q.Topic.Contains("Physical")
+            || q.Topic.Contains("Psychological")
+            || q.Topic.Contains("Flaw")
+            || q.Topic.Contains("Backstory")),
+            $"Supporting character questions should not demand lead depth: {string.Join(" | ", filtered.Select(q => q.Topic))}");
     }
 
     [TestMethod]
@@ -324,6 +721,31 @@ public class CritiqueOrchestratorTests
         Assert.IsFalse(System.Text.RegularExpressions.Regex.IsMatch(result, @"\b(he|him|his)\b",
             System.Text.RegularExpressions.RegexOptions.IgnoreCase),
             $"No masculine pronouns should remain for a female character: {result}");
+    }
+
+    [TestMethod]
+    public void PersonalizeProblemQuestion_OwnAntagonistPhrase_StaysGeneric()
+    {
+        const string q = "If the story is internal conflict, the protagonist must be his own antagonist.";
+
+        var result = CritiqueOrchestrator.PersonalizeProblemQuestion(q, "Becky", "Female", "Joseph", "Male");
+
+        StringAssert.Contains(result, "Becky must be her own antagonist.");
+        Assert.IsFalse(result.Contains("own Joseph"),
+            $"Generic Person-vs-Self wording must not become a named external antagonist: {result}");
+    }
+
+    [TestMethod]
+    public void PersonalizeProblemQuestion_MissingAntagonist_DoesNotReuseProtagonist()
+    {
+        const string q = "What does your antagonist have at stake? What goal or desire matters more to him than anything?";
+
+        var result = CritiqueOrchestrator.PersonalizeProblemQuestion(q, "Joseph", "Male", null, null);
+
+        StringAssert.Contains(result, "your antagonist");
+        StringAssert.Contains(result, "matters more to the antagonist");
+        Assert.IsFalse(result.Contains("matters more to Joseph"),
+            $"Missing antagonist pronouns must not fall back to the protagonist: {result}");
     }
 
     [TestMethod]

@@ -122,6 +122,86 @@ Branch: `issue-14-critter-rebuild` (not yet pushed/merged).
 - Run a live Critter pass against `The Long Ride Home_outline.stbx` to compare whether minor/catalyst elements are now critiqued by function instead of lead-depth standards.
 - Consider a later optional compressed LLM orientation pass only if deterministic planning is not enough; keep it behind a preference or classroom-safe mode.
 
+### 2026-05-25 — Sparse-metadata structural planner coverage (Codex)
+
+**Done (all uncommitted in working tree)**
+- `CritiqueOrchestrator.cs` — kept the deterministic appraisal conservative when `StoryRole`, `ProblemCategory`, and `ConflictType` are blank. The planner still prefers explicit structural fields, but if no problem is explicitly marked it can use transparent text overlap between the Story Overview's `StoryProblem`/`Premise`/`Concept` and Problem premise/goal/theme fields to flag a story-spine candidate. That signal is recorded in the report/prompt as an overlap signal, not as proof of authorial intent.
+- The planner no longer uses `Role` as a structural fallback. `Role` may be a job/social/world role such as student, clerk, soldier, etc.; it remains ordinary element data for the LLM but is not used to infer protagonist/antagonist/minor status.
+- Spine-candidate problem links now promote the linked Protagonist/Antagonist characters to high-signal status, so sparse beginner/Outliner-created outlines can still weight central cast when the problem itself is identified by safer signals.
+- Added two deterministic tests against the sparse Lighthouse fixture:
+  - `StubbedWalk_SparseMetadata_WeightsByOverviewOverlapAndLinks`
+  - `StubbedWalk_PromptCarriesSparseMetadataWeights`
+
+**Worked / didn't**
+- Critter tests: **17/17 passing** via VS `vstest.console`.
+- App build: `dotnet build samples\StoryCADCritter\StoryCADCritter.csproj -p:Platform=x64` succeeds on both TFMs. Existing warnings remain: `Tmds.DBus.Protocol` NU1903 and Uno generated `GlobalStaticResources` conflicts.
+- This does not prove the algorithm understands the story. It proves Critter exposes and consistently uses its stated deterministic signals. A later non-deterministic orientation pass may still be needed for outlines with weak or contradictory metadata.
+
+### 2026-05-25 — Live run against "The Long Ride Home" (Codex)
+
+**Done (all uncommitted in working tree)**
+- Ran Critter live against `C:\temp\outlinerfiles\output\The Long Ride Home.stbx` using `gpt-4o-mini`. Final output is under `D:\tmp\CritterLiveOutput3\`:
+  - `The Long Ride Home.critique.md`
+  - `The Long Ride Home.raw.json`
+  - `The Long Ride Home.costs.json`
+- Result: 14 LLM calls, no per-element failures, total cost about `$0.00765`.
+- Structural orientation matched the intended StoryCAD weighting: `Desire for freedom and new experiences` was the story-spine candidate via `ProblemCategory='Story problem'`; Becky and Joseph were high-signal characters by reference count; Arrogance and Sara were functional/minor cast.
+- The first live report showed the planner worked but the prompt/question filter still let supporting/minor characters receive lead-depth critique. Tightened `BuildUserMessage` and `FilterKeyQuestionsForPlan` so functional characters keep role/cast-economy questions and supporting characters keep role/relationship/cast-economy questions, not physical/psychological/flaw/backstory questions.
+- Fixed two Key Questions personalization bugs surfaced by the live report:
+  - "own antagonist" now stays generic, so it no longer renders as "Becky must be her own Joseph."
+  - Missing antagonist pronouns no longer fall back to the protagonist name; they stay generic ("the antagonist").
+- Added tests:
+  - `FilterKeyQuestions_SupportingCharacter_RemovesLeadDepthQuestions`
+  - `PersonalizeProblemQuestion_OwnAntagonistPhrase_StaysGeneric`
+  - `PersonalizeProblemQuestion_MissingAntagonist_DoesNotReuseProtagonist`
+
+**Worked / didn't**
+- Critter tests: **20/20 passing** via VS `vstest.console`.
+- App build: `dotnet build samples\StoryCADCritter\StoryCADCritter.csproj -p:Platform=x64` succeeds on both TFMs; same existing `Tmds.DBus.Protocol` NU1903 + Uno generated resource warnings.
+- The final live report is materially better for Josh/Sara/Arrogance: critique focuses on role clarity, relationship to central characters, and cast economy rather than lead-character depth.
+- Remaining rough edge: non-person / abstract antagonists still inherit some awkward generic Problem rubric wording. The wording is no longer wrong-person personalized, but StoryCAD's Problem Key Questions may need a separate cleanup for non-human / abstract opponents.
+
+### 2026-05-26 — Author-facing report + story-problem coherence (Codex)
+
+**Done (all uncommitted in working tree)**
+- Report Markdown is now aimed at the outline author rather than Critter diagnostics:
+  - removed `Structural Orientation` from the Markdown report;
+  - removed UUIDs, critique modes, focus strings, and Key Questions appendix/details from per-element sections;
+  - added a top-level `What's Working` section that selects stronger praise from important story signals;
+  - functional/context elements render more concisely and do not force strengths/questions into the author-facing report.
+- Added deterministic `StoryProblemCoherence` to `CritiqueRunResult`. It checks the outline's own declared story-problem signal against protagonist/antagonist links and scene-level resolution/change signals. The check does not infer the true story problem; it flags internal mismatch in the `.stbx` as written.
+- Raw JSON now retains both `structuralOrientation` and `storyProblemCoherence`, plus each element's critique mode/focus.
+- Added tests:
+  - `StubbedWalk_StoryProblemCoherence_FlagsResolutionCenteredOnAntagonist`
+  - `RenderReport_HidesTechnicalDiagnostics`
+  - `RenderReport_IncludesStoryProblemCheckAndHighlights`
+  - `RenderReport_FunctionalElementsAreConcise`
+
+**Worked / didn't**
+- Critter tests: **22/22 passing** via VS `vstest.console`.
+- App build still succeeds on both TFMs with the existing Uno/package warnings.
+- Live run against `C:\temp\outlinerfiles\output\The Long Ride Home.stbx` succeeded: 14 LLM calls, no failures, about `$0.00754`.
+- Latest outputs copied to `C:\temp`:
+  - `The Long Ride Home.critique.md`
+  - `The Long Ride Home.raw.json`
+  - `The Long Ride Home.costs.json`
+- The new Story Problem Check correctly says the outline marks `Desire for freedom and new experiences` as the story problem, but the clearest resolution/change signal is `Joseph's change of heart`, centered on Joseph. It asks the author to clarify how Becky's goal, choice, or understanding is resolved if this is Becky's story problem.
+
+### 2026-05-26 — Suppress low-signal peripheral sections (Codex)
+
+**Done (all uncommitted in working tree)**
+- Tightened author-facing Markdown so functional/context elements are omitted unless their concern connects to named, important story material. Generic checklist findings like "the setting lacks tactile detail" or "the minor character's role is unclear" now stay out of the writer-facing report.
+- Key Question labels (`_Re: ..._`) are no longer emitted in Markdown findings. The questions and critique focus remain available in raw JSON diagnostics.
+- Added tests:
+  - `RenderReport_SuppressesLowSignalPeripheralElements`
+  - updated `RenderReport_FunctionalElementsAreConcise`
+  - extended `RenderReport_HidesTechnicalDiagnostics`
+
+**Worked / didn't**
+- Critter tests: **23/23 passing** via VS `vstest.console`.
+- Test project build succeeds: `dotnet build samples\StoryCADCritter\StoryCADCritterTests\StoryCADCritterTests.csproj -p:Platform=x64`.
+- App build succeeds on both TFMs with the existing `Tmds.DBus.Protocol` NU1903 warning and Uno generated `GlobalStaticResources` conflicts.
+
 ## Carry-forward for #14 completion
 
 Open acceptance criteria (issue #14 body):
@@ -149,3 +229,36 @@ Related follow-ups:
 - Continue from the core/test split, not from the pre-refactor linked-source test project.
 - The remaining test-host oddity is `dotnet test` on the .NET 10 SDK path; the tests themselves are green under `vstest.console`.
 - The unrelated StoryCADMcp `ReadTools` work is also part of this branch history; review it before closing out if it matters to #14.
+
+### 2026-05-26 — Story-problem coherence redesign (approved)
+
+**Why**
+- The deterministic `StoryProblemCoherence` check (added earlier same day, uncommitted) was overfit: `FindChangeSignalScenes` matched a hardcoded keyword list ("change of heart", "forgive", ...) against *scene* prose, then picked whichever change-flavored scene touched the protagonist. On "The Long Ride Home" it grabbed "Tragic accident on the road" (because it touches Becky) and emitted a benign "just confirm this scene resolves her problem" note — silently skipping the real flaw (the declared story problem resolves through the antagonist Joseph, not protagonist Becky). It was a "Long Ride Home detector", not a story detector.
+- Resolution data is the Problem's `Outcome` free-text field ("The accident causes Joseph to reconsider his views"), not a structured agent link. StoryCAD is "text all the way down" — whose change resolves the problem is semantic, not deterministically decidable from fields alone.
+
+**Approved design (significance-after-detail)**
+- Separate two tangled jobs. **Completeness** (presence/absence — fully deterministic, reliable on messy outlines): Overview Story Idea (`Description`) + `Premise` + declared `StoryProblem`; each Problem's `Protagonist`/`Antagonist`/`ProtGoal`/`Outcome`; each Character's `StoryRole`. **Significance/coherence** (emergent — determined *after* the per-element reads).
+- Per-element walk emits a structured verdict for Problem elements: `questionAnswered` (yes|no|unclear), `resolutionAgent` (protagonist|antagonist|other|none|unclear). These are the machine-readable signals the synthesis aggregates instead of re-parsing prose.
+- Coherence synthesis moves to *after* the walk: **(a) deterministic** — read the per-Problem verdicts + declared role GUIDs; flag when the declared story problem's resolution isn't carried by its protagonist. **(b) LLM fallback** — one synthesis call only when (a) is under-determined (verdicts unclear/contradictory).
+- **Removed**: `FindChangeSignalScenes`, `SceneTouches`, `SceneTitleCentersOn`, the keyword `RenderStoryProblemCoherence`.
+
+**Scope decision (deviates from the written plan, grounded in code)**
+- The plan's "drop pre-pass depth calibration, read at consistent depth" was **not** done: suppression (`IsPeripheralElement`) keys on the critique modes that calibration produces, so removing it regresses the 2026-05-26 author-facing suppression feature and its tests. Calibration is orthogonal to the coherence bug (the verdict comes from the per-element read + role comparison). Kept calibration; coherence fix is surgical. Calibration removal is a separable refactor if ever wanted.
+
+**Model field names confirmed (StoryCADLib)**
+- `OverviewModel`: `Premise`, `StoryProblem` (Guid), `Concept`; Story Idea is the base `StoryElement.Description`.
+- `ProblemModel`: `Protagonist`/`Antagonist` (Guid), `ProtGoal`, `Outcome`, `ProblemCategory`, `ConflictType`.
+
+**Done (uncommitted in working tree)**
+- `CritiqueResponse.cs` — added `QuestionAnswered`/`ResolutionAgent` to `CritiqueElementResponse` (Problem-only verdict); added `StructuralCompleteness` to `CritiqueRunResult`.
+- `Prompts/CritiquePrompt.md` — added the Problem question/answer instruction + the two output-schema fields.
+- `CritiqueOrchestrator.cs` — removed `FindChangeSignalScenes`/`SceneTouches`/`SceneTitleCentersOn`/keyword `RenderStoryProblemCoherence` (and now-dead `ExtractAllStringProperties`/`CollectStrings`). Added deterministic `RenderStructuralCompleteness` (runs in `BuildCritiquePlans`, pre-walk) and post-walk `BuildStoryProblemCoherenceAsync` ((a) deterministic from verdicts + declared roles; (b) one `SynthesizeCoherenceAsync` LLM call only when verdicts are unclear). `GetDeclaredStoryProblems` keys off the structured `Overview.StoryProblem` link first, then `ProblemCategory`. Report gained a `## Structural Completeness` section.
+- Tests: rewrote the overfit `..._FlagsResolutionCenteredOnAntagonist` to verdict-driven `..._FlagsResolutionCarriedByAntagonist`; added `..._CoherentWhenProtagonistResolves`, `..._FallsBackToLlmWhenVerdictUnclear`, `StubbedWalk_StructuralCompleteness_FlagsMissingFields`.
+
+**Worked / didn't**
+- `dotnet build StoryCADCritterTests.csproj -p:Platform=x64`: clean (0 warnings). `vstest.console` on the test DLL: **26/26 passing** (incl. the prior suppression/personalization tests — calibration kept, not regressed).
+- Full app build (`StoryCADCritter.csproj -p:Platform=x64`) compiled both TFMs but failed the post-compile **copy** of `StoryCADCritter.Core.dll` (MSB3027) because a running Critter instance + VS held the DLL. Code compiles; this is a file lock, not a code error.
+
+**Remains**
+- Live run against "The Long Ride Home" to confirm the new check flags the Becky/Joseph mismatch via the LLM verdict (needs the app + an API key; app was running/locked during this session).
+- Code-reviewer pass; human final approval.

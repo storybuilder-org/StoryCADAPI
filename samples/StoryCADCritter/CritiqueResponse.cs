@@ -17,6 +17,23 @@ namespace StoryCADCritter
         public List<CritiqueFinding> Strengths { get; set; } = new();
         public List<CritiqueFinding> Concerns { get; set; } = new();
         public List<string> QuestionsForAuthor { get; set; } = new();
+
+        /// <summary>
+        /// Problem elements only. Does the Problem's Outcome answer the question
+        /// the Problem itself poses (ProtGoal + conflict)? One of:
+        /// yes | no | unclear. Empty for non-Problem elements. Consumed by the
+        /// post-walk coherence synthesis; the deterministic (a) pass reads this
+        /// instead of re-parsing prose.
+        /// </summary>
+        public string QuestionAnswered { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Problem elements only. Whose choice/change carries the resolution
+        /// stated in the Outcome? One of:
+        /// protagonist | antagonist | other | none | unclear. Empty for
+        /// non-Problem elements.
+        /// </summary>
+        public string ResolutionAgent { get; set; } = string.Empty;
     }
 
     public sealed class CritiqueFinding
@@ -77,6 +94,15 @@ namespace StoryCADCritter
         public string RawPath { get; set; } = string.Empty;
         public List<ElementCritique> ElementCritiques { get; set; } = new();
         public string StructuralOrientation { get; set; } = string.Empty;
+        public string StoryProblemCoherence { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Deterministic presence/absence findings (missing Story Idea, Premise,
+        /// declared story problem, problem roles/goal/outcome, character
+        /// StoryRole). Reliable on incomplete outlines because absence is
+        /// decidable regardless of prose. Empty string when nothing is missing.
+        /// </summary>
+        public string StructuralCompleteness { get; set; } = string.Empty;
         public bool ShortCircuited { get; set; }
         public string? ShortCircuitReason { get; set; }
         public string? HardFailureMessage { get; set; }

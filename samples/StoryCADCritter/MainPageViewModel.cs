@@ -386,6 +386,7 @@ public class MainPageViewModel : ObservableObject
             {
                 model = run.Cost.ModelId,
                 structuralOrientation = run.StructuralOrientation,
+                storyProblemCoherence = run.StoryProblemCoherence,
                 elements = run.ElementCritiques.ConvertAll(e => (object)new
                 {
                     uuid = e.Uuid,
