@@ -439,3 +439,5 @@ samples/Outliner/OutlinerTests/**/*.rating.json
 !samples/Outliner/OutlinerTests/ManualTests/Fixtures/**
 
 
+/samples/Outliner/.idea
+.DS_Store
