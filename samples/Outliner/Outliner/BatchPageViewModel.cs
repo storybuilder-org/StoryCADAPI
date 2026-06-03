@@ -94,7 +94,9 @@ namespace Outliner
         private async Task PickInputFolderAsync()
         {
             var picker = new FolderPicker();
+#if WINDOWS
             WinRT.Interop.InitializeWithWindow.Initialize(picker, WindowHandle);
+#endif
             picker.FileTypeFilter.Add("*");
 
             var folder = await picker.PickSingleFolderAsync();
@@ -114,7 +116,9 @@ namespace Outliner
         private async Task PickOutputFolderAsync()
         {
             var picker = new FolderPicker();
+#if WINDOWS
             WinRT.Interop.InitializeWithWindow.Initialize(picker, WindowHandle);
+#endif
             picker.FileTypeFilter.Add("*");
 
             var folder = await picker.PickSingleFolderAsync();

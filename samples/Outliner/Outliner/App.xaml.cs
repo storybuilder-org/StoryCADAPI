@@ -65,9 +65,10 @@ namespace Outliner
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
             MWindow = new MainWindow();
+#if WINDOWS
             MWindowHandle = WinRT.Interop.WindowNative.GetWindowHandle(MWindow);
+#endif
             MWindow.Activate();
-
         }
 
         public void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
