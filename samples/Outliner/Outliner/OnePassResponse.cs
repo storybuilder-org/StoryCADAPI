@@ -116,5 +116,6 @@ namespace Outliner
         public string? AntagMotive { get; set; }
         public string? AntagConflict { get; set; }
         public string? Outcome { get; set; }
+        public string? Premise { get; set; }
     }
 }

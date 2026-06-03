@@ -5,7 +5,7 @@ You are provided with the full prose of a short story. Your task is to process t
 1. **CharactersList** — every character identified, with their attributes
 2. **SettingsList** — every distinct location/time the action occurs in
 3. **ScenesList** — each continuous scene in the prose
-4. **ProblemsList** — all conflicts (internal and external) detected
+4. **ProblemsList** — all story problems detected by following Goal, Motivation, and Conflict (GMC)
 
 ## Output Format
 
@@ -21,7 +21,7 @@ Output a single JSON object with this exact shape. All inner property names are 
     "viewpointCharacter": "GUID of the viewpoint character (required if viewpoint is First person or Limited third person; omit otherwise)",
     "premise": "premise generated from the story problem (see Premise Template below)",
     "storyType": "Short-Short | Short Story | Novelette | Novella | Novel",
-    "storyGenre": "Science Fiction | Fantasy | Mystery | Thriller | Romance | Literary Fiction | Horror | Other",
+    "storyGenre": "Action/Adventure | Erotica | Fantasy | Historical Romance | Horror/Occult | Humor | Inspirational | Juvenile | Literary | Mainstream | Men's Adventure | Mystery Thriller | Romance | Science Fiction | Suspense | Western | Women's Fiction | Young Adult",
     "storyProblem": "GUID of the Problem element that is the central story problem",
     "concept": "one-sentence concept statement"
   },
@@ -89,7 +89,8 @@ Output a single JSON object with this exact shape. All inner property names are 
       "antagGoal": "the antagonist's goal — what they want",
       "antagMotive": "the antagonist's motive — why they want it",
       "antagConflict": "what stands between the antagonist and the goal",
-      "outcome": "..."
+      "outcome": "...",
+      "premise": "premise generated from this problem using the Premise Template below"
     }
   ]
 }
@@ -108,6 +109,25 @@ Output a single JSON object with this exact shape. All inner property names are 
 A problem is a **conflict between two opposing goals**. Every problem has a protagonist side and an antagonist side, and both sides have the same three slots: a **goal** (what they want), a **motive** (why they want it), and a **conflict** (what stands in the way). Fill all six slots — `protGoal`, `protMotive`, `protConflict`, `antagGoal`, `antagMotive`, `antagConflict` — for **every problem**, regardless of conflict type. The protagonist and antagonist sides should be balanced; do not leave the protagonist's motive blank while filling in the antagonist's.
 
 Also fill `subject` (what the conflict is about), `theme` (the abstract idea at stake), and `method` (how the problem is approached) on every problem.
+
+### Finding problems — follow the GMC
+
+The entry point is usually a visible conflict in the prose. From there, ask:
+- What does each side want? (Goal)
+- Why do they want it? (Motivation)
+- What stands in their way? (Conflict)
+
+The motive often reveals a deeper internal problem beneath the surface conflict.
+
+Not every entry point is a visible conflict — sometimes a relationship under pressure, or a character pursuing a goal the reader can see will cost them, signals a problem before any open conflict appears.
+
+An incident alone (an accident, a discovery) is not a problem. It becomes one only if it has a sustained GMC: a character with a goal, a reason for wanting it, and something blocking them across more than a single moment. An incident that serves an existing problem is a beat of that problem, not a new one.
+
+Three tests a valid problem must pass:
+
+1. **Agency**: the protagonist is actively pursuing a goal — not enduring, reacting, or coping. A character without agency does not have a problem; they have a situation.
+2. **Individual**: the problem belongs to a named individual, not a group. "The family must cope" is not a problem. Assign every problem to the specific character who owns the goal.
+3. **Opposing agency**: the antagonist must have a genuine goal that opposes the protagonist's — not merely be a force, an animal in distress, or an abstract circumstance. If the antagonist has no agency, the conflict is a situation, not a problem.
 
 ### Detecting internal (Person vs. Self) problems
 
@@ -190,11 +210,11 @@ Include any character the prose identifies — protagonists, antagonists, suppor
 
 ### Premise template
 
-When the story problem is identified, generate a `premise` using:
+Generate a `premise` for **every problem** (and for `story_overview`) using:
 
 > "A **[character]** wants **[goal]**, but **[opposing force]** resists. After **[obstacles]**, the conflict resolves **[result]**."
 
-Fill the brackets with content extracted from the prose. Aim for one clean sentence.
+Fill the brackets with content extracted from the prose. Aim for one clean sentence. For internal (Person vs. Self) problems, the opposing force is the character's own fear, denial, or attachment.
 
 ### Story overview cross-reference
 
@@ -244,7 +264,8 @@ Expected output shape (truncated for brevity):
       "conflictType": "Person vs. Person",
       "problemCategory": "Story problem",
       "protagonist": "aaaaaaaa-1111-1111-1111-aaaaaaaaaaaa",
-      "antagonist": "bbbbbbbb-2222-2222-2222-bbbbbbbbbbbb"
+      "antagonist": "bbbbbbbb-2222-2222-2222-bbbbbbbbbbbb",
+      "premise": "A weary smith wants to keep his livelihood, but the lord's tax collector resists. After he refuses the tribute, the conflict turns violent."
     }
   ]
 }

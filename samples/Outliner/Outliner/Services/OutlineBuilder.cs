@@ -281,6 +281,7 @@ namespace Outliner.Services
             AddIfPresent(props, "Outcome",          problem.Outcome);
             AddIfPresent(props, "Method",           problem.Method);
             AddIfPresent(props, "Theme",            problem.Theme);
+            AddIfPresent(props, "Premise",          problem.Premise);
             // "Story Question" on the Problem page binds to StoryElement.Description.
             AddIfPresent(props, "Description",      problem.StoryQuestion);
             return props;
