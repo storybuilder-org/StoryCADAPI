@@ -104,7 +104,7 @@ Open acceptance criteria:
 ### 2026-06-03 afternoon — Solution cleanup + session end
 
 - Removed `StoryCADLib` from `Outliner.sln`. It was added 2026-05-06 to fix a VS NU1105 error, but is now vestigial since `UseStoryCADLibNuGet=true`. Users must not need a sibling StoryCAD clone; NuGet is the only user path. The ProjectReference toggle in `Directory.Build.props` remains available for API development only — changes must reach NuGet.org before users can see them.
-- `Outliner.sln` change is uncommitted (on `issue-13-harden-outliner`); stash from `issue-13-convert-to-uno-app` is also pending.
+- `Outliner.sln` change committed at `c281bc6` on `issue-13-harden-outliner`; stash from `issue-13-convert-to-uno-app` is still pending.
 - Manual end-to-end test against "The Long Ride Home" not yet run — needed to verify internal conflict (Person vs. Self) prompt changes before PR on `issue-13-harden-outliner`.
 - Wiki `StoryCADAPI.md` page is stale re: NuGet flip — needs updating via proper wiki ingest process (not direct edit).
 - Session ended due to workflow discipline loss; start fresh next session.
