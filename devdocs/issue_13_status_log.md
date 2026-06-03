@@ -101,6 +101,20 @@ Open acceptance criteria:
 - [ ] CI workflow for tests on push to `main` / `dev`. Only `.github/workflows/deploy-docs.yml` exists today; per Terry, adding a CI pipeline for samples is unlikely but worth a conversation with Jake. Manual test plan now stands in for the live-LLM half.
 - [ ] `samples/Outliner/Outliner/README.md` rewrite. Current README pre-dates this branch and references stale prompt filenames (`StoryCAD-SystemPrompt.md`, `OutliningHeuristics.md` vs actual `OnePassSystemPrompt.md`); needs API key requirement, runtime expectations on small/medium/large inputs, known limitations, single vs batch modes, cost-capture artifacts.
 
+### 2026-06-03 — Problem Premise field, genre fix, GMC problem detection hardening
+
+- VS update caused `$(UnoSdkExtrasTasksAssembly)` load failure on Outliner + OutlinerTests. Fixed by clearing NuGet cache (`dotnet nuget locals all --clear`) and restoring.
+- `OnePassResponse.cs` — added `Premise` to `ProblemElement`.
+- `OutlineBuilder.cs` — mapped `Premise` in `BuildProblemProperties`.
+- `OnePassSystemPrompt.md`:
+  - Fixed `storyGenre` value list to match `Lists.json` exactly (was "Literary Fiction", "Thriller", "Horror"; now "Literary", "Mystery Thriller", "Horror/Occult" etc.).
+  - Added `premise` field to problem JSON schema and worked example.
+  - Updated Premise template to apply to every problem (not just story overview); added Person vs. Self note.
+  - Added "Finding problems — follow the GMC" section: GMC-based detection, agency test, individual-not-group test, opposing-agency test. Prevents fabricated problems like "The family must cope…" (no protagonist agency, collective subject, animal antagonist).
+- Manual live-LLM tests against "The Long Ride Home" and "Macbeth": three problems each, premises populated, genre correct. Accident scene correctly NOT a separate problem (beat of Joseph's subplot). GMC/agency rules held.
+- `CLAUDE.md` — added Task Self-Check section.
+- Committed at `a1f3890` on `issue-13-harden-outliner`.
+
 ### 2026-06-03 afternoon — Solution cleanup + session end
 
 - Removed `StoryCADLib` from `Outliner.sln`. It was added 2026-05-06 to fix a VS NU1105 error, but is now vestigial since `UseStoryCADLibNuGet=true`. Users must not need a sibling StoryCAD clone; NuGet is the only user path. The ProjectReference toggle in `Directory.Build.props` remains available for API development only — changes must reach NuGet.org before users can see them.
