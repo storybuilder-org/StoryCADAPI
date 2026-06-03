@@ -26,6 +26,9 @@ namespace Outliner
     {
         public string? Title { get; set; }
         public string? Author { get; set; }
+        public string? StoryIdea { get; set; }
+        public string? Viewpoint { get; set; }
+        public string? ViewpointCharacter { get; set; }
         public string? Premise { get; set; }
         public string? StoryType { get; set; }
         public string? StoryGenre { get; set; }

@@ -95,12 +95,15 @@ namespace Outliner.Services
             if (overview != null)
             {
                 var props = new Dictionary<string, object>();
-                AddIfPresent(props, "Author",       overview.Author);
-                AddIfPresent(props, "Premise",      overview.Premise);
-                AddIfPresent(props, "StoryType",    overview.StoryType);
-                AddIfPresent(props, "StoryGenre",   overview.StoryGenre);
-                AddIfPresent(props, "StoryProblem", overview.StoryProblem);
-                AddIfPresent(props, "Concept",      overview.Concept);
+                AddIfPresent(props, "Author",             overview.Author);
+                AddIfPresent(props, "Description",       overview.StoryIdea);
+                AddIfPresent(props, "Viewpoint",         overview.Viewpoint);
+                AddIfPresent(props, "ViewpointCharacter",overview.ViewpointCharacter);
+                AddIfPresent(props, "Premise",           overview.Premise);
+                AddIfPresent(props, "StoryType",         overview.StoryType);
+                AddIfPresent(props, "StoryGenre",        overview.StoryGenre);
+                AddIfPresent(props, "StoryProblem",      overview.StoryProblem);
+                AddIfPresent(props, "Concept",           overview.Concept);
 
                 if (props.Count > 0)
                 {
