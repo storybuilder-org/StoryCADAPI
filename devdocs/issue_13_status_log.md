@@ -123,12 +123,24 @@ Open acceptance criteria:
 - Wiki `StoryCADAPI.md` page is stale re: NuGet flip — needs updating via proper wiki ingest process (not direct edit).
 - Session ended due to workflow discipline loss; start fresh next session.
 
+### 2026-06-04 — Merged hardening + Uno conversion; CI requirement dropped
+
+**Branch cleanup and merge:**
+- Dropped CI-pipeline acceptance criterion from issue #13 (further testing with additional prose stories is the priority; manual test plan stands).
+- Assessed acceptance criteria: error handling, progress surface, and tests all confirmed done. CI and README remain open; README not yet written.
+- Pushed `issue-13-harden-outliner` to `origin`; opened and merged **PR #27** (`feat(outliner): harden outline building — Premise, genre, GMC/agency, conflict, viewpoint, concrete outcome`). Branch retained locally (clean, no uncommitted changes); remote branch deleted by GitHub.
+- Rebased `issue-13-convert-to-uno-app` onto updated `main` (picked up the two post-branch-point harden commits `a1f3890` and `5bcb4a1`). Pushed to `origin`; opened and merged **PR #28** (`feat(outliner): convert to Uno.Sdk multi-TFM for Windows + macOS`). Local and remote branches deleted.
+- Repo now on `main` at `d1b6e98`. `issue-13-harden-outliner` is the only active issue-13 local branch.
+
+**Open acceptance criteria after this session:**
+- [ ] `samples/Outliner/README.md` — needed before #13 closes.
+- [ ] `.stbx` round-trip verification in StoryCAD without warnings (manual test, needs a live run).
+- [ ] Further live-LLM testing with additional prose stories (next priority).
+
 ## Next session priorities
 
-1. Restore stash on `issue-13-convert-to-uno-app` and commit the `Outliner.sln` change there as well.
-2. Switch to `issue-13-harden-outliner`, run the manual end-to-end test against "The Long Ride Home.docx" to verify internal conflict detection.
-3. If test passes, open PR for `issue-13-harden-outliner`.
-4. Then open PR for `issue-13-convert-to-uno-app` (depends on harden branch merging first).
-5. Update `StoryCADAPI.md` in the wiki via proper ingest (write raw source, run wiki compiler).
+1. Run manual end-to-end test against at least one new prose story (verify internal conflict, GMC/agency, Premise, genre under live conditions).
+2. Write `samples/Outliner/README.md`.
+3. Update `StoryCADAPI.md` in the wiki via proper ingest.
 
 ## Carry-forward for #13 completion
