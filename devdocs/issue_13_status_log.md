@@ -92,6 +92,20 @@ Branch: `issue-13-outliner-hardening` — merged to `main` via PR #19 at `a94474
 - Live-LLM verification deferred to the next manual run. Schema/builder coverage is deterministic; whether the LLM honors the strengthened prompt rules under the v4 instructions needs an actual run against a real model.
 - Merged via PR #21 at `a771b0e` (merge commit); remote and local branches deleted. Manual re-run against "Mirror, Mirror" verified the five fixes before merge.
 
+### 2026-06-03 — Internal conflict detection + Uno conversion planning
+
+**Branch `issue-13-harden-outliner`** — committed `b30b3e6`:
+- `OnePassResponse.cs`: added `StoryIdea`, `Viewpoint`, `ViewpointCharacter` fields to `StoryOverviewElement`
+- `OnePassSystemPrompt.md`: added viewpoint fields to JSON schema; new "Detecting internal (Person vs. Self) problems" section with four-category taxonomy (came-to-realize, want/need, flaw, blind spot), external/internal pairing guidance, foil pattern; "Problem outcomes — be concrete" rule
+- `OutlineBuilder.cs`: wired new fields (`Description`, `Viewpoint`, `ViewpointCharacter`) to StoryCADLib API
+- `CLAUDE.md`: added repo-level CLAUDE.md (new file)
+
+**Branch `issue-13-convert-to-uno-app`** — created from `issue-13-harden-outliner`; no code yet.
+- Plan written to `devdocs/issue_13_uno_conversion_plan.md`
+- Goal: convert Outliner from `Microsoft.NET.Sdk` / `net10.0-windows10.0.22621` (WinAppSDK-only) to `Uno.Sdk` with OS-conditioned multi-TFM (Windows: both `net10.0-windows10.0.22621` + `net10.0-desktop`; macOS: `net10.0-desktop` only), matching the pattern in `StoryCAD/StoryCAD/StoryCAD.csproj`
+- Four files need `#if WINDOWS` guards around `WinRT.Interop` calls: `App.xaml.cs`, `ContentPageViewModel.cs`, `BatchPageViewModel.cs`, `SettingsPageViewModel.cs`
+- Implementation not yet started (pending plan approval)
+
 ## Carry-forward for #13 completion
 
 Open acceptance criteria:

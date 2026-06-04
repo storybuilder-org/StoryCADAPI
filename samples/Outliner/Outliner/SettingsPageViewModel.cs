@@ -180,7 +180,9 @@ namespace Outliner
         private async Task PickFolderAsync(Action<string> assign)
         {
             var picker = new FolderPicker();
+#if WINDOWS
             WinRT.Interop.InitializeWithWindow.Initialize(picker, WindowHandle);
+#endif
             picker.FileTypeFilter.Add("*");
 
             var folder = await picker.PickSingleFolderAsync();
