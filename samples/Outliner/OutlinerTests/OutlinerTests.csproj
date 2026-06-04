@@ -1,22 +1,43 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Uno.Sdk">
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <CopyBuildOutputToOutputDirectory>true</CopyBuildOutputToOutputDirectory>
-    <CopyOutputSymbolsToOutputDirectory>true</CopyOutputSymbolsToOutputDirectory>
-    <SkipCopyBuildProduct>false</SkipCopyBuildProduct>
-    <TargetFramework>net10.0-windows10.0.22621</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <UnoSingleProject>true</UnoSingleProject>
     <LangVersion>latest</LangVersion>
-    <TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
-    <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
-    <TargetPlatformVersion>10.0.22621.0</TargetPlatformVersion>
     <RootNamespace>OutlinerTests</RootNamespace>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Platforms>x86;x64;arm64</Platforms>
-    <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
-    <EnableMsixTooling>false</EnableMsixTooling>
-    <UseWinUI>true</UseWinUI>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <IsTestProject>true</IsTestProject>
+    <TestProjectType>UnitTest</TestProjectType>
+    <EnableMSTestRunner>true</EnableMSTestRunner>
+    <GenerateUnoMain>false</GenerateUnoMain>
+    <GenerateLibraryLayout>true</GenerateLibraryLayout>
+    <!-- Suppress CS8892: MSTest and Uno both generate Main entry points, this is expected -->
+    <NoWarn>$(NoWarn);CS8892</NoWarn>
+    <Platforms>x86;x64;arm64</Platforms>
+    <UnoFeatures>SkiaRenderer;</UnoFeatures>
+  </PropertyGroup>
+
+  <!-- On Windows, build both WinAppSDK and Skia Desktop -->
+  <PropertyGroup Condition="'$(OS)'=='Windows_NT'">
+    <TargetFrameworks>net10.0-desktop;net10.0-windows10.0.22621</TargetFrameworks>
+  </PropertyGroup>
+
+  <!-- On macOS/Linux, build only Skia Desktop -->
+  <PropertyGroup Condition="'$(OS)'!='Windows_NT'">
+    <TargetFrameworks>net10.0-desktop</TargetFrameworks>
+  </PropertyGroup>
+
+  <!-- Windows-specific settings -->
+  <PropertyGroup Condition="'$(TargetFramework)'=='net10.0-windows10.0.22621'">
+    <UseWinUI>true</UseWinUI>
+    <EnableMsixTooling>false</EnableMsixTooling>
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+    <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+    <GenerateProgramFile>false</GenerateProgramFile>
+  </PropertyGroup>
+
+  <!-- Desktop-specific settings -->
+  <PropertyGroup Condition="'$(TargetFramework)'=='net10.0-desktop'">
+    <UseWinUI>false</UseWinUI>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,13 +46,11 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
+  <!-- Windows-specific content -->
+  <ItemGroup Condition="'$(TargetFramework)'=='net10.0-windows10.0.22621'">
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
     <Content Include="Assets\Square150x150Logo.scale-200.png" />
@@ -39,6 +58,7 @@
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    <Manifest Include="app.manifest" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,8 +66,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250909003" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7463" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250909003"
+                      Condition="'$(TargetFramework)'=='net10.0-windows10.0.22621'" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7463"
+                      Condition="'$(TargetFramework)'=='net10.0-windows10.0.22621'" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="3.10.1" />
     <PackageReference Include="MSTest.TestFramework" Version="3.10.1" />
@@ -55,7 +77,6 @@
       <ExcludeAssets>build</ExcludeAssets>
     </PackageReference>
     <PackageReference Include="Moq" Version="4.20.72" />
-    <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 
   <ItemGroup>
