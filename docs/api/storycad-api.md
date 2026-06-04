@@ -1,12 +1,28 @@
+---
+layout: default
+title: "StoryCADApi"
+parent: "API Reference"
+nav_order: 1
+---
+
 # StoryCADApi Class
 
 The main entry point for StoryCADLib API operations.
+
+<div class="code-tabs" markdown="1">
 
 ```csharp
 namespace StoryCADLib.Services.API
 
 public class StoryCADApi : IStoryCADAPI
 ```
+
+```python
+# In Python, the API is the StoryCAD object itself.
+from storycad import StoryCAD
+```
+
+</div>
 
 ## Overview
 
@@ -18,6 +34,8 @@ public class StoryCADApi : IStoryCADAPI
 - Set `CurrentModel` via `CreateEmptyOutline()` or `OpenOutline()` before other operations
 
 ## Getting an Instance
+
+<div class="code-tabs" markdown="1">
 
 ```csharp
 using StoryCADLib.Services.IoC;
@@ -31,6 +49,15 @@ ServiceLocator.Initialize(headless: true);
 var api = Ioc.Default.GetRequiredService<StoryCADApi>();
 ```
 
+```python
+from storycad import StoryCAD
+
+# Initialize (once at startup) — the sc object is the API instance
+sc = StoryCAD(headless=True)
+```
+
+</div>
+
 ---
 
 ## Outline Operations
@@ -39,12 +66,21 @@ var api = Ioc.Default.GetRequiredService<StoryCADApi>();
 
 Creates a new empty story outline based on a template.
 
+<div class="code-tabs" markdown="1">
+
 ```csharp
 public async Task<OperationResult<List<Guid>>> CreateEmptyOutline(
     string name,
     string author,
     string templateIndex)
 ```
+
+```python
+def create_empty_outline(title, author, template_index="0"):
+    ...  # returns a list of element handles; [0] is the Story Overview
+```
+
+</div>
 
 **Parameters:**
 | Name | Type | Description |
@@ -56,6 +92,8 @@ public async Task<OperationResult<List<Guid>>> CreateEmptyOutline(
 **Returns:** `OperationResult<List<Guid>>` - GUIDs of created elements
 
 **Example:**
+<div class="code-tabs" markdown="1">
+
 ```csharp
 var result = await api.CreateEmptyOutline("My Story", "Jane Doe", "0");
 if (result.IsSuccess)
@@ -64,15 +102,31 @@ if (result.IsSuccess)
 }
 ```
 
+```python
+elements = sc.create_empty_outline("My Story", "Jane Doe", template_index="0")
+print(f"Created {len(elements)} elements")
+```
+
+</div>
+
 ---
 
 ### OpenOutline
 
 Opens an existing story outline from disk.
 
+<div class="code-tabs" markdown="1">
+
 ```csharp
 public async Task<OperationResult<bool>> OpenOutline(string path)
 ```
+
+```python
+def open_outline(path):
+    ...
+```
+
+</div>
 
 **Parameters:**
 | Name | Type | Description |
@@ -82,6 +136,8 @@ public async Task<OperationResult<bool>> OpenOutline(string path)
 **Returns:** `OperationResult<bool>` - true on success
 
 **Example:**
+<div class="code-tabs" markdown="1">
+
 ```csharp
 var result = await api.OpenOutline("C:/Stories/my-story.stbx");
 if (result.IsSuccess)
@@ -90,15 +146,31 @@ if (result.IsSuccess)
 }
 ```
 
+```python
+sc.open_outline("C:/Stories/my-story.stbx")
+elements = sc.get_all_elements()
+```
+
+</div>
+
 ---
 
 ### WriteOutline
 
 Saves the current outline to disk.
 
+<div class="code-tabs" markdown="1">
+
 ```csharp
 public async Task<OperationResult<string>> WriteOutline(string filePath)
 ```
+
+```python
+def write_outline(path):
+    ...
+```
+
+</div>
 
 **Parameters:**
 | Name | Type | Description |
@@ -108,6 +180,8 @@ public async Task<OperationResult<string>> WriteOutline(string filePath)
 **Returns:** `OperationResult<string>` - Success message
 
 **Example:**
+<div class="code-tabs" markdown="1">
+
 ```csharp
 var result = await api.WriteOutline("C:/Stories/my-story.stbx");
 if (!result.IsSuccess)
@@ -115,6 +189,15 @@ if (!result.IsSuccess)
     Console.WriteLine($"Save failed: {result.ErrorMessage}");
 }
 ```
+
+```python
+try:
+    sc.write_outline("C:/Stories/my-story.stbx")
+except Exception as error:
+    print(f"Save failed: {error}")  # the wrapper raises instead of returning a result
+```
+
+</div>
 
 ---
 
@@ -124,9 +207,18 @@ if (!result.IsSuccess)
 
 Returns all elements in the current model.
 
+<div class="code-tabs" markdown="1">
+
 ```csharp
 public OperationResult<ObservableCollection<StoryElement>> GetAllElements()
 ```
+
+```python
+def get_all_elements():
+    ...  # iterable of element handles
+```
+
+</div>
 
 **Returns:** `OperationResult<ObservableCollection<StoryElement>>` - All story elements
 
@@ -136,9 +228,18 @@ public OperationResult<ObservableCollection<StoryElement>> GetAllElements()
 
 Gets all elements of a specific type.
 
+<div class="code-tabs" markdown="1">
+
 ```csharp
 public OperationResult<List<StoryElement>> GetElementsByType(StoryItemType elementType)
 ```
+
+```python
+def get_elements_by_type(item_type):
+    ...  # iterable of element handles
+```
+
+</div>
 
 **Parameters:**
 | Name | Type | Description |
@@ -148,6 +249,8 @@ public OperationResult<List<StoryElement>> GetElementsByType(StoryItemType eleme
 **Valid Types:** `Problem`, `Character`, `Setting`, `Scene`, `Folder`, `Section`, `Web`, `Notes`, `StoryWorld`
 
 **Example:**
+<div class="code-tabs" markdown="1">
+
 ```csharp
 var result = api.GetElementsByType(StoryItemType.Character);
 if (result.IsSuccess)
@@ -159,15 +262,31 @@ if (result.IsSuccess)
 }
 ```
 
+```python
+for character in sc.get_elements_by_type(sc.item_type.Character):
+    print(character.name)
+```
+
+</div>
+
 ---
 
 ### GetStoryElement
 
 Gets a specific element by its GUID.
 
+<div class="code-tabs" markdown="1">
+
 ```csharp
 public OperationResult<StoryElement> GetStoryElement(Guid guid)
 ```
+
+```python
+def get_element(element):
+    ...  # returns the element's full state as a JSON string
+```
+
+</div>
 
 **Parameters:**
 | Name | Type | Description |
@@ -182,6 +301,8 @@ public OperationResult<StoryElement> GetStoryElement(Guid guid)
 
 Creates a new story element.
 
+<div class="code-tabs" markdown="1">
+
 ```csharp
 public OperationResult<Guid> AddElement(
     StoryItemType typeToAdd,
@@ -189,6 +310,13 @@ public OperationResult<Guid> AddElement(
     string name,
     string description = "")
 ```
+
+```python
+def add_element(item_type, parent, name):
+    ...  # returns an element handle
+```
+
+</div>
 
 **Parameters:**
 | Name | Type | Description |
@@ -201,6 +329,8 @@ public OperationResult<Guid> AddElement(
 **Returns:** `OperationResult<Guid>` - GUID of created element
 
 **Example:**
+<div class="code-tabs" markdown="1">
+
 ```csharp
 // Get the story overview (root) GUID
 var overview = api.GetElementsByType(StoryItemType.StoryOverview);
@@ -219,6 +349,17 @@ if (result.IsSuccess)
 }
 ```
 
+```python
+# Get the story overview (root)
+overview = next(iter(sc.get_elements_by_type(sc.item_type.StoryOverview)))
+
+# Add a character
+character = sc.add_element(sc.item_type.Character, overview, "Alex")
+print(f"Created character with GUID: {character.uuid}")
+```
+
+</div>
+
 ---
 
 ### AddElementWithProperties
@@ -226,6 +367,8 @@ if (result.IsSuccess)
 Creates a new story element with initial properties and an optional GUID override.
 
 > **Semantic Kernel name:** This method is registered as `AddElementWithProperties` via `[KernelFunction("AddElementWithProperties")]` to distinguish it from the basic `AddElement` overload in SK plugin registration.
+
+<div class="code-tabs" markdown="1">
 
 ```csharp
 public OperationResult<Guid> AddElement(
@@ -235,6 +378,14 @@ public OperationResult<Guid> AddElement(
     Dictionary<string, object> properties,
     string GUIDOverride = "")
 ```
+
+```python
+# Add the element, then set its initial properties.
+element = sc.add_element(item_type, parent, name)
+sc.update_element_properties(element, {"Role": "Protagonist"})
+```
+
+</div>
 
 **Parameters:**
 | Name | Type | Description |
@@ -248,6 +399,8 @@ public OperationResult<Guid> AddElement(
 **Returns:** `OperationResult<Guid>` - GUID of created element
 
 **Example:**
+<div class="code-tabs" markdown="1">
+
 ```csharp
 var props = new Dictionary<string, object>
 {
@@ -263,11 +416,23 @@ var result = api.AddElement(
     props);
 ```
 
+```python
+elena = sc.add_element(sc.item_type.Character, overview, "Elena")
+sc.update_element_properties(
+    elena,
+    {"Role": "Protagonist", "Age": "28", "Archetype": "The Hero"},
+)
+```
+
+</div>
+
 ---
 
 ### UpdateElementProperty
 
 Updates a single property on an element.
+
+<div class="code-tabs" markdown="1">
 
 ```csharp
 public OperationResult<StoryElement> UpdateElementProperty(
@@ -275,6 +440,13 @@ public OperationResult<StoryElement> UpdateElementProperty(
     string propertyName,
     object value)
 ```
+
+```python
+def update_element_property(element, property_name, value):
+    ...
+```
+
+</div>
 
 **Parameters:**
 | Name | Type | Description |
@@ -286,6 +458,8 @@ public OperationResult<StoryElement> UpdateElementProperty(
 **Returns:** `OperationResult<StoryElement>` - Updated element
 
 **Example:**
+<div class="code-tabs" markdown="1">
+
 ```csharp
 var result = api.UpdateElementProperty(
     characterGuid,
@@ -293,17 +467,32 @@ var result = api.UpdateElementProperty(
     "Protagonist");
 ```
 
+```python
+sc.update_element_property(character, "Role", "Protagonist")
+```
+
+</div>
+
 ---
 
 ### UpdateElementProperties
 
 Updates multiple properties on an element.
 
+<div class="code-tabs" markdown="1">
+
 ```csharp
 public OperationResult<bool> UpdateElementProperties(
     Guid elementGuid,
     Dictionary<string, object> properties)
 ```
+
+```python
+def update_element_properties(element, properties):
+    ...
+```
+
+</div>
 
 **Parameters:**
 | Name | Type | Description |
@@ -312,6 +501,8 @@ public OperationResult<bool> UpdateElementProperties(
 | `properties` | Dictionary | Property names and values |
 
 **Example:**
+<div class="code-tabs" markdown="1">
+
 ```csharp
 var props = new Dictionary<string, object>
 {
@@ -322,15 +513,33 @@ var props = new Dictionary<string, object>
 api.UpdateElementProperties(characterGuid, props);
 ```
 
+```python
+sc.update_element_properties(
+    character,
+    {"Name": "Alex", "Role": "Protagonist", "Age": "32"},
+)
+```
+
+</div>
+
 ---
 
 ### DeleteElement
 
 Moves an element to the trash.
 
+<div class="code-tabs" markdown="1">
+
 ```csharp
 public Task<OperationResult<bool>> DeleteElement(Guid elementToDelete)
 ```
+
+```python
+def delete_element(element):
+    ...
+```
+
+</div>
 
 **Parameters:**
 | Name | Type | Description |
@@ -345,9 +554,18 @@ public Task<OperationResult<bool>> DeleteElement(Guid elementToDelete)
 
 Returns a single element with all its fields as a serialized object. Unlike `GetStoryElement` which returns a typed `StoryElement`, this returns the full serialized representation including all fields.
 
+<div class="code-tabs" markdown="1">
+
 ```csharp
 public OperationResult<object> GetElement(Guid guid)
 ```
+
+```python
+def get_element(element):
+    ...  # returns the full serialized element as a JSON string
+```
+
+</div>
 
 **Parameters:**
 | Name | Type | Description |
@@ -357,6 +575,8 @@ public OperationResult<object> GetElement(Guid guid)
 **Returns:** `OperationResult<object>` - Serialized element with all fields
 
 **Example:**
+<div class="code-tabs" markdown="1">
+
 ```csharp
 var result = api.GetElement(characterGuid);
 if (result.IsSuccess)
@@ -365,15 +585,33 @@ if (result.IsSuccess)
 }
 ```
 
+```python
+import json
+
+detail = json.loads(sc.get_element(character))
+print(detail)  # Full serialized element
+```
+
+</div>
+
 ---
 
 ### UpdateStoryElement
 
 Replaces an entire story element by deserializing a new element and updating it in the model. For updating individual properties, prefer `UpdateElementProperty` or `UpdateElementProperties`.
 
+<div class="code-tabs" markdown="1">
+
 ```csharp
 public OperationResult<bool> UpdateStoryElement(object newElement, Guid guid)
 ```
+
+```python
+# Prefer update_element_property / update_element_properties for individual fields.
+sc.update_element_properties(element, {"Name": "Alex"})
+```
+
+</div>
 
 **Parameters:**
 | Name | Type | Description |
@@ -389,9 +627,18 @@ public OperationResult<bool> UpdateStoryElement(object newElement, Guid guid)
 
 Moves an element to a new parent in the outline's ExplorerView tree. Validates against circular references, moving the root element, and moving the TrashCan.
 
+<div class="code-tabs" markdown="1">
+
 ```csharp
 public OperationResult<bool> MoveElement(Guid elementGuid, Guid newParentGuid)
 ```
+
+```python
+def move_element(element, new_parent, index=None):
+    ...
+```
+
+</div>
 
 **Parameters:**
 | Name | Type | Description |
@@ -408,6 +655,8 @@ public OperationResult<bool> MoveElement(Guid elementGuid, Guid newParentGuid)
 - Cannot move an element to one of its own descendants (circular reference check)
 
 **Example:**
+<div class="code-tabs" markdown="1">
+
 ```csharp
 // Move a scene under a different folder
 var result = api.MoveElement(sceneGuid, newFolderGuid);
@@ -418,6 +667,15 @@ if (result.IsSuccess)
 }
 ```
 
+```python
+# Move a scene under a different folder
+sc.move_element(scene, new_folder)
+print("Element moved successfully")
+sc.write_outline("my-story.stbx")  # Save changes
+```
+
+</div>
+
 ---
 
 ## Search Operations
@@ -426,9 +684,18 @@ if (result.IsSuccess)
 
 Searches for text across all elements.
 
+<div class="code-tabs" markdown="1">
+
 ```csharp
 public OperationResult<List<Dictionary<string, object>>> SearchForText(string searchText)
 ```
+
+```python
+def search_for_text(text):
+    ...
+```
+
+</div>
 
 **Returns:** List of dictionaries containing matching elements and properties.
 
@@ -438,9 +705,18 @@ public OperationResult<List<Dictionary<string, object>>> SearchForText(string se
 
 Finds elements that reference a target element.
 
+<div class="code-tabs" markdown="1">
+
 ```csharp
 public OperationResult<List<Dictionary<string, object>>> SearchForReferences(Guid targetUuid)
 ```
+
+```python
+def search_for_references(element):
+    ...
+```
+
+</div>
 
 ---
 
@@ -448,11 +724,20 @@ public OperationResult<List<Dictionary<string, object>>> SearchForReferences(Gui
 
 Searches within a subtree of the outline.
 
+<div class="code-tabs" markdown="1">
+
 ```csharp
 public OperationResult<List<Dictionary<string, object>>> SearchInSubtree(
     Guid rootNodeGuid,
     string searchText)
 ```
+
+```python
+def search_in_subtree(element, text):
+    ...
+```
+
+</div>
 
 ---
 
@@ -460,9 +745,18 @@ public OperationResult<List<Dictionary<string, object>>> SearchInSubtree(
 
 Removes all references to a target element from other elements in the outline.
 
+<div class="code-tabs" markdown="1">
+
 ```csharp
 public OperationResult<int> RemoveReferences(Guid targetUuid)
 ```
+
+```python
+def remove_references(element):
+    ...  # returns the number of references removed
+```
+
+</div>
 
 **Parameters:**
 | Name | Type | Description |
@@ -479,15 +773,26 @@ public OperationResult<int> RemoveReferences(Guid targetUuid)
 
 Adds a character to a scene's cast.
 
+<div class="code-tabs" markdown="1">
+
 ```csharp
 public OperationResult<bool> AddCastMember(Guid scene, Guid character)
 ```
+
+```python
+def add_cast_member(scene, character):
+    ...
+```
+
+</div>
 
 ---
 
 ### AddRelationship
 
 Creates a relationship between two characters.
+
+<div class="code-tabs" markdown="1">
 
 ```csharp
 public OperationResult<bool> AddRelationship(
@@ -496,6 +801,13 @@ public OperationResult<bool> AddRelationship(
     string desc,
     bool mirror = false)
 ```
+
+```python
+def add_relationship(a, b, desc, mirror=False):
+    ...
+```
+
+</div>
 
 **Parameters:**
 | Name | Type | Description |
@@ -513,9 +825,18 @@ public OperationResult<bool> AddRelationship(
 
 Restores a deleted element from the trash.
 
+<div class="code-tabs" markdown="1">
+
 ```csharp
 public Task<OperationResult<bool>> RestoreFromTrash(Guid elementToRestore)
 ```
+
+```python
+def restore_from_trash(element):
+    ...
+```
+
+</div>
 
 ---
 
@@ -523,9 +844,18 @@ public Task<OperationResult<bool>> RestoreFromTrash(Guid elementToRestore)
 
 Permanently deletes all trashed elements.
 
+<div class="code-tabs" markdown="1">
+
 ```csharp
 public Task<OperationResult<bool>> EmptyTrash()
 ```
+
+```python
+def empty_trash():
+    ...
+```
+
+</div>
 
 ---
 
@@ -537,9 +867,18 @@ These methods provide access to StoryCAD's built-in reference data.
 
 Gets example values for a property.
 
+<div class="code-tabs" markdown="1">
+
 ```csharp
 public OperationResult<IEnumerable<string>> GetExamples(string propertyName)
 ```
+
+```python
+def get_examples(property_name):
+    ...
+```
+
+</div>
 
 ---
 
@@ -547,9 +886,18 @@ public OperationResult<IEnumerable<string>> GetExamples(string propertyName)
 
 Gets available conflict type categories.
 
+<div class="code-tabs" markdown="1">
+
 ```csharp
 public OperationResult<IEnumerable<string>> GetConflictCategories()
 ```
+
+```python
+def get_conflict_categories():
+    ...
+```
+
+</div>
 
 ---
 
@@ -557,9 +905,18 @@ public OperationResult<IEnumerable<string>> GetConflictCategories()
 
 Gets key question prompts for story development.
 
+<div class="code-tabs" markdown="1">
+
 ```csharp
 public OperationResult<IEnumerable<string>> GetKeyQuestionElements()
 ```
+
+```python
+def get_key_question_elements():
+    ...
+```
+
+</div>
 
 ---
 
@@ -571,9 +928,18 @@ These methods are used internally by StoryCAD and the Collaborator plugin. They 
 
 Sets the active StoryModel. Used by the Collaborator plugin to synchronize the API with StoryCAD's active outline.
 
+<div class="code-tabs" markdown="1">
+
 ```csharp
 public void SetCurrentModel(StoryModel model)
 ```
+
+```python
+# (no direct Python equivalent — this is a .NET Collaborator-plugin
+# synchronization hook used internally by StoryCAD)
+```
+
+</div>
 
 **Parameters:**
 | Name | Type | Description |
@@ -588,9 +954,19 @@ public void SetCurrentModel(StoryModel model)
 
 Moves an element to the trash. This is an older variant that accepts a string GUID. Prefer `DeleteElement(Guid)` for new code.
 
+<div class="code-tabs" markdown="1">
+
 ```csharp
 public OperationResult<bool> DeleteStoryElement(string uuid)
 ```
+
+```python
+# Older string-GUID variant; prefer delete_element(element) for new code.
+def delete_element(element):
+    ...
+```
+
+</div>
 
 **Parameters:**
 | Name | Type | Description |

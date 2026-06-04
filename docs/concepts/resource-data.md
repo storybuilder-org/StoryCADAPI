@@ -1,3 +1,10 @@
+---
+layout: default
+title: "Resource Data and Writing Tools"
+parent: "Concepts"
+nav_order: 3
+---
+
 # Resource Data and Writing Tools
 
 StoryCADLib ships with built-in reference data designed to help fiction writers develop their stories. The API exposes this data through discovery methods that follow a consistent pattern: call a listing method first, then drill into specifics.
@@ -17,10 +24,19 @@ StoryCADLib ships with built-in reference data designed to help fiction writers 
 
 The simplest resource — a single call returns valid values for a property.
 
+<div class="code-tabs" markdown="1">
+
 ```csharp
 var tones = api.GetExamples("Tone").Payload;
 // ["Humorous", "Serious", "Dark", "Light", ...]
 ```
+
+```python
+tones = sc.get_examples("Tone")
+# ["Humorous", "Serious", "Dark", "Light", ...]
+```
+
+</div>
 
 **Available property names**: Tone, Role, Archetype, Sex, Age, Build, Complexion, EyeColor, HairColor, HairStyle, Demeanor, Enneagram, Intelligence, Values, Abnormality, Focus, Adventuresome, Aggression, Confidence, Conscientiousness, Creativity, Dominance, Enthusiasm, Assurance, Sensitivity, Shrewdness, Sociability, Stability, ScenePurpose, SceneType, SceneValueExchange, SettingCountry, Locale, Season
 

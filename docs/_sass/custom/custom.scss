@@ -1,0 +1,64 @@
+// Tabbed code blocks (C# | Python). Markup authored as:
+//
+//   <div class="code-tabs" markdown="1">
+//   ```csharp
+//   ...
+//   ```
+//   ```python
+//   ...
+//   ```
+//   </div>
+//
+// assets/js/code-tabs.js builds the tab bar at runtime from each fenced block's
+// language class. An optional data-tabs="C#|Python" attribute overrides the
+// labels (used when both tabs share a language, e.g. shell commands).
+//
+// Style goal: read as an ordinary code block with a small language toggle above
+// it — no heavy frame — so tabbed snippets flow with the surrounding text the
+// same way the plain code blocks do.
+
+.code-tabs {
+  margin-top: 0;
+  margin-bottom: $sp-3; // match a normal code block's spacing
+}
+
+.code-tab-bar {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: $sp-2;
+  border-bottom: 1px solid $border-color;
+}
+
+.code-tab-btn {
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0 0 -1px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  padding: 0.25rem 0.7rem;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: $grey-dk-000;
+  cursor: pointer;
+}
+
+.code-tab-btn:hover {
+  color: $body-text-color;
+}
+
+.code-tab-btn.active {
+  color: $link-color;
+  border-bottom-color: $link-color;
+}
+
+// Let each code block keep its native look; the wrapper owns the spacing.
+.code-tabs .highlighter-rouge {
+  margin: 0 !important;
+}
+
+.code-tabs .highlighter-rouge[hidden] {
+  display: none;
+}

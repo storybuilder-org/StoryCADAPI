@@ -1,3 +1,10 @@
+---
+layout: default
+title: "Story Metrics"
+parent: "Samples"
+nav_order: 2
+---
+
 # Story Metrics
 
 Builds a richer story outline and computes analytics from it, displaying a formatted dashboard of story metrics. This sample shows how to use the query and inspection APIs to extract meaningful statistics from an outline.

@@ -1,3 +1,10 @@
+---
+layout: default
+title: "Consistency Validation"
+parent: "Samples"
+nav_order: 3
+---
+
 # Consistency Validation
 
 Creates an outline with intentional structural problems and runs six validation checks against it, printing a quality report. This sample demonstrates how to build automated validation tools using the StoryCADLib query APIs.

@@ -1,3 +1,10 @@
+---
+layout: default
+title: "StoryCADCritter"
+parent: "Samples"
+nav_order: 5
+---
+
 # StoryCADCritter
 
 Uses Semantic Kernel and an LLM to evaluate a story outline against five craft criteria, producing a scored checklist with recommendations. This is the most advanced sample, combining the full breadth of StoryCADLib's query APIs with structured LLM prompting.
