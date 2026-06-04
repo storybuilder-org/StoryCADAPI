@@ -137,10 +137,23 @@ Open acceptance criteria:
 - [ ] `.stbx` round-trip verification in StoryCAD without warnings (manual test, needs a live run).
 - [ ] Further live-LLM testing with additional prose stories (next priority).
 
+### 2026-06-04 afternoon — Issue housekeeping: IP cleanup, Gutenberg sample set, progress estimate
+
+- Dropped CI pipeline requirement from issue #13 (manual test plan stands in; further prose testing is the priority).
+- Confirmed `.stbx` round-trip verification done; updated issue checkboxes to reflect all completed hardening/test criteria.
+- Added **Live-LLM verification** section to issue with five tasks:
+  1. Remove non-PD prose (`Mirror, Mirror` — published anthology 2020; `The Long Ride Home` — author's own work; verify `Mister Death`).
+  2. Assemble five Project Gutenberg stories and commit to `OutlinerInput/`: *The Monkey's Paw* (Jacobs), *The Tell-Tale Heart* (Poe), *The Yellow Wallpaper* (Gilman), *The Story of an Hour* (Chopin), *Macbeth* (Shakespeare).
+  3. Run live-LLM tests against the PD collection; record word count + elapsed time per run to calibrate `k`.
+  4. Add elapsed/estimated progress display to `OutlineRunner` using calibrated `k` (words/second); add measurement logging; no changes to `ProseAnalyzer`, prompt, or `OutlineBuilder`.
+  5. `samples/Outliner/README.md`.
+- Classified prose stories in `C:/temp/outlinertestfiles/input/`: five PD works identified for bundling; `Rocky`, `Star Wars IV`, `The Old Man and the Sea`, `The Star-Bear` (Swanwick) are test-only, not distributable; `Mirror, Mirror` and `The Long Ride Home` to be removed.
+
 ## Next session priorities
 
-1. Run manual end-to-end test against at least one new prose story (verify internal conflict, GMC/agency, Premise, genre under live conditions).
-2. Write `samples/Outliner/README.md`.
-3. Update `StoryCADAPI.md` in the wiki via proper ingest.
+1. Download five Gutenberg stories, commit to `OutlinerInput/`, remove non-PD prose from repo.
+2. Run live-LLM end-to-end tests against the PD collection; record timing data.
+3. Write `samples/Outliner/README.md`.
+4. Update `StoryCADAPI.md` in the wiki via proper ingest.
 
 ## Carry-forward for #13 completion
