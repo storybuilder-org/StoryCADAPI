@@ -447,3 +447,4 @@ docs/_site/
 docs/.jekyll-cache/
 .jekyll-metadata
 /samples/Outliner/.idea
+.DS_Store
