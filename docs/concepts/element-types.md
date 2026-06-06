@@ -1,3 +1,10 @@
+---
+layout: default
+title: "Element Types and Properties"
+parent: "Concepts"
+nav_order: 2
+---
+
 # Element Types and Properties
 
 Every element in a StoryCAD outline is a `StoryElement` subclass identified by its `StoryItemType`. This page documents all 11 types, their properties, and the rules for creating and linking them.
@@ -17,6 +24,8 @@ Use the `Name` and `Description` property names with `UpdateElementProperty`.
 
 ## StoryItemType Enum
 
+<div class="code-tabs" markdown="1">
+
 ```csharp
 public enum StoryItemType
 {
@@ -33,6 +42,23 @@ public enum StoryItemType
     StoryWorld      // Singleton (optional) — worldbuilding
 }
 ```
+
+```python
+# The StoryItemType enum is exposed as sc.item_type (C#-type concept):
+sc.item_type.StoryOverview  # Singleton — story metadata
+sc.item_type.Problem        # Story problem / conflict
+sc.item_type.Character      # Character profile
+sc.item_type.Setting        # Location / environment
+sc.item_type.Scene          # A scene in the story
+sc.item_type.Folder         # Explorer View organizer
+sc.item_type.Section        # Narrator View organizer (chapter, act)
+sc.item_type.Web            # Web bookmark
+sc.item_type.Notes          # Notes element (uses base properties only)
+sc.item_type.TrashCan       # Singleton — deleted elements container
+sc.item_type.StoryWorld     # Singleton (optional) — worldbuilding
+```
+
+</div>
 
 **Creatable via `AddElement`**: Problem, Character, Setting, Scene, Folder, Section, Web, Notes
 
@@ -313,22 +339,48 @@ Properties fall into three categories:
 
 ### Plain Strings
 Free text — pass any string value:
+<div class="code-tabs" markdown="1">
+
 ```csharp
 api.UpdateElementProperty(guid, "ProtGoal", "Find the treasure");
 ```
 
+```python
+sc.update_element_property(problem, "ProtGoal", "Find the treasure")
+```
+
+</div>
+
 ### GUID References
 Link to another element — pass the target element's GUID as a string:
+<div class="code-tabs" markdown="1">
+
 ```csharp
 api.UpdateElementProperty(problemGuid, "Protagonist", characterGuid.ToString());
 ```
+
+```python
+sc.update_element_property(problem, "Protagonist", str(character))
+```
+
+</div>
 The API auto-converts the string to a `Guid`. Use `Guid.Empty` (all zeros) to clear a reference.
 
 ### Enum-Sourced Values
 Use `GetExamples` to discover valid values:
+<div class="code-tabs" markdown="1">
+
 ```csharp
 var roles = api.GetExamples("Role").Payload;
 // Returns: ["Protagonist", "Antagonist", "Confidant", ...]
 api.UpdateElementProperty(charGuid, "Role", "Protagonist");
 ```
+
+```python
+roles = sc.get_examples("Role")
+# Returns: ["Protagonist", "Antagonist", "Confidant", ...]
+sc.update_element_property(character, "Role", "Protagonist")
+```
+
+</div>
 You can also pass free text for these properties — the examples are suggestions, not constraints.

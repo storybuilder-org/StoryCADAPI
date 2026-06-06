@@ -1,3 +1,10 @@
+---
+layout: default
+title: "Story Graph Basics"
+parent: "Samples"
+nav_order: 1
+---
+
 # Story Graph Basics
 
 The foundational walkthrough of the StoryCADLib API. This sample takes you through the complete lifecycle of a story outline: creating it, populating it with elements, linking those elements together, saving to disk, and reloading to verify the round-trip.

@@ -439,5 +439,12 @@ samples/Outliner/OutlinerTests/**/*.rating.json
 !samples/Outliner/OutlinerTests/ManualTests/Fixtures/**
 
 
+
+# Jekyll / Just the Docs documentation build output
+_site/
+docs/_site/
+.jekyll-cache/
+docs/.jekyll-cache/
+.jekyll-metadata
 /samples/Outliner/.idea
 .DS_Store

@@ -1,3 +1,10 @@
+---
+layout: default
+title: "Story Diagnostic Agent"
+parent: "Samples"
+nav_order: 4
+---
+
 # Story Diagnostic Agent
 
 Uses Semantic Kernel and an LLM to analyze a story outline and produce a diagnostic report identifying structural issues. This is the first of two samples that demonstrate AI-powered story analysis.

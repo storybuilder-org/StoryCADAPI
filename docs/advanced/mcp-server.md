@@ -1,3 +1,10 @@
+---
+layout: default
+title: "MCP Server"
+parent: "Advanced"
+nav_order: 2
+---
+
 # MCP Server (StoryCADMcp)
 
 StoryCADMcp is a [Model Context Protocol](https://modelcontextprotocol.io/) server that exposes the StoryCAD API as MCP tools. This allows any MCP-compatible client — such as Claude Desktop, Claude Code, or other LLM-powered tools — to read, write, and manage story outlines through natural language.

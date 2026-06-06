@@ -1,12 +1,19 @@
 ---
-_layout: landing
+layout: default
+title: Home
+nav_order: 1
+description: "Build story outlines programmatically with the StoryCADLib API."
+permalink: /
 ---
 
 # StoryCAD API
+{: .no_toc }
 
 Build story outlines programmatically with the StoryCADLib API.
 
 ## Quick Example
+
+<div class="code-tabs" markdown="1">
 
 ```csharp
 using StoryCADLib.Services.IoC;
@@ -28,6 +35,22 @@ if (result.IsSuccess)
 await api.WriteOutline("my-story.stbx");
 ```
 
+```python
+from storycad import StoryCAD
+
+# Initialize in headless mode (no UI required)
+sc = StoryCAD(headless=True)
+
+# Create a new outline (raises on error instead of returning a result)
+elements = sc.create_empty_outline("My Story", "Author Name", template_index="0")
+print(f"Created outline with {len(elements)} elements")
+
+# Save to file
+sc.write_outline("my-story.stbx")
+```
+
+</div>
+
 ## Features
 
 - **Outline Management** - Create, open, save story outlines (.stbx files)
@@ -39,7 +62,7 @@ await api.WriteOutline("my-story.stbx");
 
 ## Getting Started
 
-- [Installation](getting-started/index.md) - Install the NuGet package
+- [Installation](getting-started/installation.md) - Add the library to your project
 - [Quick Start](getting-started/quick-start.md) - Build your first outline (Hello World) in 5 minutes
 
 ## Documentation
@@ -47,7 +70,7 @@ await api.WriteOutline("my-story.stbx");
 - [Concepts](concepts/story-model.md) - Understand the story model, element types, and resource data
 - [Operations](operations/search.md) - Search, resource workflows, and beat sheet operations
 - [Samples](samples/index.md) - Working code examples
-- [Advanced](advanced/semantic-kernel.md) - Semantic Kernel integration, MCP server, and migration guide
+- [Advanced](advanced/semantic-kernel.md) - Semantic Kernel integration and MCP server
 - [API Reference](api/index.md) - Complete technical documentation
 
 ## About StoryCAD

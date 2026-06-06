@@ -56,7 +56,8 @@ public partial class App : Application
     /// <param name="args">Details about the launch request and process.</param>
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
-        // Run MSTest unit tests
+#if WINDOWS10_0_22621_0_OR_GREATER
         Microsoft.VisualStudio.TestPlatform.TestExecutor.UnitTestClient.Run(Environment.CommandLine);
+#endif
     }
 }

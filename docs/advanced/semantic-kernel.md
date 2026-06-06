@@ -1,3 +1,10 @@
+---
+layout: default
+title: "Semantic Kernel Integration"
+parent: "Advanced"
+nav_order: 1
+---
+
 # Semantic Kernel Integration
 
 The StoryCAD API is designed for use with [Microsoft Semantic Kernel](https://learn.microsoft.com/en-us/semantic-kernel/overview/). Every public method on `StoryCADApi` is decorated with `[KernelFunction]` and `[Description]` attributes, making the API directly registerable as an SK plugin.
@@ -5,6 +12,8 @@ The StoryCAD API is designed for use with [Microsoft Semantic Kernel](https://le
 ## How It Works
 
 Semantic Kernel uses `[KernelFunction]` attributes to discover methods that an LLM can invoke via function calling. The `[Description]` attributes provide the LLM with documentation about what each method does, its parameters, and its constraints.
+
+<div class="code-tabs" markdown="1">
 
 ```csharp
 // From StoryCADAPI.cs — every method looks like this:
@@ -14,9 +23,24 @@ public async Task<OperationResult<List<Guid>>> CreateEmptyOutline(
     string name, string author, string templateIndex)
 ```
 
+```python
+# (no direct Python equivalent — [KernelFunction]/[Description] attributes and
+# the OperationResult<T> return type are .NET / Semantic Kernel concepts.)
+# In Python, the same method is just a plain call that returns the payload
+# directly and raises on error:
+from storycad import StoryCAD
+
+sc = StoryCAD(headless=True)
+overview = sc.create_empty_outline("My Story", "Jake", template_index="0")[0]
+```
+
+</div>
+
 When you register the API as a plugin, the LLM sees a catalog of 48+ functions it can call to create, query, and modify story outlines.
 
 ## Registering as a Plugin
+
+<div class="code-tabs" markdown="1">
 
 ```csharp
 using Microsoft.SemanticKernel;
@@ -39,11 +63,27 @@ var kernel = builder.Build();
 kernel.ImportPluginFromObject(api, "StoryCAD");
 ```
 
+```python
+# 1 + 2. Initialize StoryCADLib and get the API instance (BootStrapper.Initialise
+#        + Ioc.Default.GetRequiredService collapse into one call).
+from storycad import StoryCAD
+
+sc = StoryCAD(headless=True)
+
+# 3 + 4. Building a Semantic Kernel and registering the API as an SK plugin have
+#        no direct Python equivalent — Kernel.CreateBuilder, AddOpenAIChatCompletion,
+#        and ImportPluginFromObject are .NET / Semantic Kernel concepts.
+```
+
+</div>
+
 After step 4, the kernel exposes all `[KernelFunction]` methods as callable functions. The LLM can invoke them through function calling.
 
 ## Enabling Automatic Function Calling
 
 For the LLM to call API methods autonomously, enable automatic function calling in the execution settings:
+
+<div class="code-tabs" markdown="1">
 
 ```csharp
 using Microsoft.SemanticKernel.Connectors.OpenAI;
@@ -54,11 +94,20 @@ var settings = new OpenAIPromptExecutionSettings
 };
 ```
 
+```python
+# (no direct Python equivalent — OpenAIPromptExecutionSettings and
+# FunctionChoiceBehavior.Auto() are .NET / Semantic Kernel concepts.)
+```
+
+</div>
+
 With `Auto` behavior, the LLM decides when to call functions based on the conversation context. It sees the `[Description]` text for each method and chooses which to invoke.
 
 ## Building an Agent
 
 Combine the plugin registration with a system prompt to create an agent that builds outlines through natural language:
+
+<div class="code-tabs" markdown="1">
 
 ```csharp
 using Microsoft.SemanticKernel;
@@ -113,6 +162,27 @@ while (true)
 }
 ```
 
+```python
+# Initialize StoryCADLib (BootStrapper.Initialise + Ioc.Default.GetRequiredService
+# collapse into one call).
+from storycad import StoryCAD
+
+sc = StoryCAD(headless=True)
+
+# (no direct Python equivalent — building a Kernel, registering the API as an SK
+# plugin, IChatCompletionService, OpenAIPromptExecutionSettings, ChatHistory, and
+# the automatic-function-calling chat loop are all .NET / Semantic Kernel
+# concepts. The `sc` object exposes the same story-building methods the agent
+# would call autonomously, e.g.:)
+overview = sc.create_empty_outline("My Story", "Jake", template_index="2")[0]
+hero = sc.add_element(sc.item_type.Character, overview, "Protagonist")
+problem = sc.add_element(sc.item_type.Problem, overview, "Central Problem")
+sc.apply_beat_sheet_to_problem(problem, "Save The Cat")
+sc.write_outline("/tmp/agent_demo.stbx")
+```
+
+</div>
+
 In this example, the LLM autonomously calls `CreateEmptyOutline`, `AddElement`, `UpdateElementProperty`, `ApplyBeatSheetToProblem`, and other API methods as it builds the outline through conversation.
 
 ## Multi-Step Agent Patterns
@@ -120,6 +190,8 @@ In this example, the LLM autonomously calls `CreateEmptyOutline`, `AddElement`, 
 ### Analysis Then Modification
 
 An agent that reads an existing outline, analyzes it, and suggests or applies improvements:
+
+<div class="code-tabs" markdown="1">
 
 ```csharp
 // Open an existing outline
@@ -133,9 +205,25 @@ await api.OpenOutline("my-story.stbx");
 // 5. Call ApplyBeatSheetToProblem to add structure
 ```
 
+```python
+# Open an existing outline
+sc.open_outline("my-story.stbx")
+
+# The same methods are available on `sc`:
+# 1. sc.get_all_elements() to see the full outline
+# 2. sc.search_for_references(element) to find orphan elements
+# 3. sc.get_key_questions(element_type) to identify undeveloped areas
+# 4. sc.update_element_property(element, "Prop", "value") to fill in gaps
+# 5. sc.apply_beat_sheet_to_problem(problem, "Save The Cat") to add structure
+```
+
+</div>
+
 ### Resource-Driven Development
 
 An agent that uses StoryCAD's built-in writing tools to guide story development:
+
+<div class="code-tabs" markdown="1">
 
 ```csharp
 // The LLM can combine resource APIs with element creation:
@@ -146,6 +234,18 @@ An agent that uses StoryCAD's built-in writing tools to guide story development:
 // 5. ApplyConflictToProtagonist → apply to problems
 // 6. GetKeyQuestions → guide deeper element development
 ```
+
+```python
+# The same resource methods can be combined with element creation on `sc`:
+# 1. sc.get_master_plot_names() → choose a plot pattern
+# 2. sc.get_master_plot_scenes(plot) → get the scene breakdown
+# 3. sc.add_element(sc.item_type.Scene, overview, name) for each plot beat
+# 4. sc.get_conflict_categories() → build character conflicts
+# 5. sc.apply_conflict_to_protagonist(problem, "text") → apply to problems
+# 6. sc.get_key_questions(element_type) → guide deeper element development
+```
+
+</div>
 
 ## Tips for System Prompts
 

@@ -92,6 +92,20 @@ Branch: `issue-13-outliner-hardening` — merged to `main` via PR #19 at `a94474
 - Live-LLM verification deferred to the next manual run. Schema/builder coverage is deterministic; whether the LLM honors the strengthened prompt rules under the v4 instructions needs an actual run against a real model.
 - Merged via PR #21 at `a771b0e` (merge commit); remote and local branches deleted. Manual re-run against "Mirror, Mirror" verified the five fixes before merge.
 
+### 2026-06-03 — Internal conflict detection + Uno conversion planning
+
+**Branch `issue-13-harden-outliner`** — committed `b30b3e6`:
+- `OnePassResponse.cs`: added `StoryIdea`, `Viewpoint`, `ViewpointCharacter` fields to `StoryOverviewElement`
+- `OnePassSystemPrompt.md`: added viewpoint fields to JSON schema; new "Detecting internal (Person vs. Self) problems" section with four-category taxonomy (came-to-realize, want/need, flaw, blind spot), external/internal pairing guidance, foil pattern; "Problem outcomes — be concrete" rule
+- `OutlineBuilder.cs`: wired new fields (`Description`, `Viewpoint`, `ViewpointCharacter`) to StoryCADLib API
+- `CLAUDE.md`: added repo-level CLAUDE.md (new file)
+
+**Branch `issue-13-convert-to-uno-app`** — created from `issue-13-harden-outliner`; no code yet.
+- Plan written to `devdocs/issue_13_uno_conversion_plan.md`
+- Goal: convert Outliner from `Microsoft.NET.Sdk` / `net10.0-windows10.0.22621` (WinAppSDK-only) to `Uno.Sdk` with OS-conditioned multi-TFM (Windows: both `net10.0-windows10.0.22621` + `net10.0-desktop`; macOS: `net10.0-desktop` only), matching the pattern in `StoryCAD/StoryCAD/StoryCAD.csproj`
+- Four files need `#if WINDOWS` guards around `WinRT.Interop` calls: `App.xaml.cs`, `ContentPageViewModel.cs`, `BatchPageViewModel.cs`, `SettingsPageViewModel.cs`
+- Implementation not yet started (pending plan approval)
+
 ## Carry-forward for #13 completion
 
 Open acceptance criteria:
@@ -101,5 +115,34 @@ Open acceptance criteria:
 - [ ] CI workflow for tests on push to `main` / `dev`. Only `.github/workflows/deploy-docs.yml` exists today; per Terry, adding a CI pipeline for samples is unlikely but worth a conversation with Jake. Manual test plan now stands in for the live-LLM half.
 - [ ] `samples/Outliner/Outliner/README.md` rewrite. Current README pre-dates this branch and references stale prompt filenames (`StoryCAD-SystemPrompt.md`, `OutliningHeuristics.md` vs actual `OnePassSystemPrompt.md`); needs API key requirement, runtime expectations on small/medium/large inputs, known limitations, single vs batch modes, cost-capture artifacts.
 
-Related sibling work:
-- Issue #15 item 2 — Help button on Outliner nav: not started.
+### 2026-06-03 — Problem Premise field, genre fix, GMC problem detection hardening
+
+- VS update caused `$(UnoSdkExtrasTasksAssembly)` load failure on Outliner + OutlinerTests. Fixed by clearing NuGet cache (`dotnet nuget locals all --clear`) and restoring.
+- `OnePassResponse.cs` — added `Premise` to `ProblemElement`.
+- `OutlineBuilder.cs` — mapped `Premise` in `BuildProblemProperties`.
+- `OnePassSystemPrompt.md`:
+  - Fixed `storyGenre` value list to match `Lists.json` exactly (was "Literary Fiction", "Thriller", "Horror"; now "Literary", "Mystery Thriller", "Horror/Occult" etc.).
+  - Added `premise` field to problem JSON schema and worked example.
+  - Updated Premise template to apply to every problem (not just story overview); added Person vs. Self note.
+  - Added "Finding problems — follow the GMC" section: GMC-based detection, agency test, individual-not-group test, opposing-agency test. Prevents fabricated problems like "The family must cope…" (no protagonist agency, collective subject, animal antagonist).
+- Manual live-LLM tests against "The Long Ride Home" and "Macbeth": three problems each, premises populated, genre correct. Accident scene correctly NOT a separate problem (beat of Joseph's subplot). GMC/agency rules held.
+- `CLAUDE.md` — added Task Self-Check section.
+- Committed at `a1f3890` on `issue-13-harden-outliner`.
+
+### 2026-06-03 afternoon — Solution cleanup + session end
+
+- Removed `StoryCADLib` from `Outliner.sln`. It was added 2026-05-06 to fix a VS NU1105 error, but is now vestigial since `UseStoryCADLibNuGet=true`. Users must not need a sibling StoryCAD clone; NuGet is the only user path. The ProjectReference toggle in `Directory.Build.props` remains available for API development only — changes must reach NuGet.org before users can see them.
+- `Outliner.sln` change committed at `c281bc6` on `issue-13-harden-outliner`; stash from `issue-13-convert-to-uno-app` is still pending.
+- Manual end-to-end test against "The Long Ride Home" not yet run — needed to verify internal conflict (Person vs. Self) prompt changes before PR on `issue-13-harden-outliner`.
+- Wiki `StoryCADAPI.md` page is stale re: NuGet flip — needs updating via proper wiki ingest process (not direct edit).
+- Session ended due to workflow discipline loss; start fresh next session.
+
+## Next session priorities
+
+1. Restore stash on `issue-13-convert-to-uno-app` and commit the `Outliner.sln` change there as well.
+2. Switch to `issue-13-harden-outliner`, run the manual end-to-end test against "The Long Ride Home.docx" to verify internal conflict detection.
+3. If test passes, open PR for `issue-13-harden-outliner`.
+4. Then open PR for `issue-13-convert-to-uno-app` (depends on harden branch merging first).
+5. Update `StoryCADAPI.md` in the wiki via proper ingest (write raw source, run wiki compiler).
+
+## Carry-forward for #13 completion

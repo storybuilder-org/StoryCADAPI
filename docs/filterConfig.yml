@@ -1,7 +1,0 @@
-apiRules:
-- include:
-    uidRegex: ^StoryCADLib\.Services\.API
-- include:
-    uidRegex: ^StoryCADLib\.Models
-- exclude:
-    uidRegex: .
