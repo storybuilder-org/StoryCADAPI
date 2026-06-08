@@ -7,13 +7,13 @@ nav_order: 4
 
 # Models.Tools
 
-Auto-generated reference for the `StoryCADLib.Models.Tools` namespace (10 types).
+Reference for the `StoryCADLib.Models.Tools` namespace.
 
 {: .fs-6 .fw-300 }
 
 ## ConflictCategoryModel
 
-*Class* — `StoryCADLib.Models.Tools.ConflictCategoryModel`
+*Class*: `StoryCADLib.Models.Tools.ConflictCategoryModel`
 
 ```csharp
 public class ConflictCategoryModel
@@ -61,7 +61,7 @@ public string TopicName
 
 ## DramaticSituationModel
 
-*Class* — `StoryCADLib.Models.Tools.DramaticSituationModel`
+*Class*: `StoryCADLib.Models.Tools.DramaticSituationModel`
 
 ```csharp
 public class DramaticSituationModel
@@ -165,7 +165,7 @@ public string Notes { get; set; }
 
 ## KeyQuestionModel
 
-*Class* — `StoryCADLib.Models.Tools.KeyQuestionModel`
+*Class*: `StoryCADLib.Models.Tools.KeyQuestionModel`
 
 ```csharp
 public class KeyQuestionModel : ObservableObject
@@ -217,7 +217,7 @@ public string Question { get; set; }
 
 ## PlotPatternModel
 
-*Class* — `StoryCADLib.Models.Tools.PlotPatternModel`
+*Class*: `StoryCADLib.Models.Tools.PlotPatternModel`
 
 ```csharp
 public class PlotPatternModel
@@ -265,7 +265,7 @@ public List<PlotPatternScene> PlotPatternScenes
 
 ## PlotPatternScene
 
-*Class* — `StoryCADLib.Models.Tools.PlotPatternScene`
+*Class*: `StoryCADLib.Models.Tools.PlotPatternScene`
 
 ```csharp
 public class PlotPatternScene
@@ -305,7 +305,7 @@ public string SceneTitle
 
 ## PreferencesModel
 
-*Class* — `StoryCADLib.Models.Tools.PreferencesModel`
+*Class*: `StoryCADLib.Models.Tools.PreferencesModel`
 
 PreferencesModel contains StoryCAD User preferences.
 The model is maintained from a Shell Preferences() method
@@ -679,7 +679,7 @@ public bool ShowFilePickerOnStartup { get; set; }
 
 ## SubTopicModel
 
-*Class* — `StoryCADLib.Models.Tools.SubTopicModel`
+*Class*: `StoryCADLib.Models.Tools.SubTopicModel`
 
 ```csharp
 public class SubTopicModel
@@ -719,7 +719,7 @@ public string SubTopicNotes
 
 ## ToolsData
 
-*Class* — `StoryCADLib.Models.Tools.ToolsData`
+*Class*: `StoryCADLib.Models.Tools.ToolsData`
 
 This stores the tools for StoryCAD's Tools.json.
 Previously tools were stored in GlobalData.
@@ -827,7 +827,7 @@ public SortedDictionary<string, TopicModel> TopicsSource
 
 ## TopicModel
 
-*Class* — `StoryCADLib.Models.Tools.TopicModel`
+*Class*: `StoryCADLib.Models.Tools.TopicModel`
 
 ```csharp
 public class TopicModel
@@ -894,7 +894,7 @@ public TopicTypeEnum TopicType
 
 ## TopicTypeEnum
 
-*Enum* — `StoryCADLib.Models.Tools.TopicTypeEnum`
+*Enum*: `StoryCADLib.Models.Tools.TopicTypeEnum`
 
 ```csharp
 public enum TopicTypeEnum

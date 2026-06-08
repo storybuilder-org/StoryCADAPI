@@ -41,11 +41,11 @@ for match in sc.search_for_text("treasure"):
 | `Name` | `string` | Element's display name |
 | `Type` | `string` | Element type (e.g., "Scene", "Character") |
 
-The search covers all `[JsonInclude]` string properties — names, descriptions, notes, goals, conflicts, and any other text field on any element type.
+The search covers all `[JsonInclude]` string properties: names, descriptions, notes, goals, conflicts, and any other text field on any element type.
 
 ## SearchForReferences
 
-Finds all elements that contain a specific GUID in any of their properties. This is the inverse of reading a GUID property — instead of asking "what Setting does this Scene use?", you ask "which Scenes use this Setting?"
+Finds all elements that contain a specific GUID in any of their properties. This is the inverse of reading a GUID property: instead of asking "what Setting does this Scene use?", you ask "which Scenes use this Setting?"
 
 <div class="code-tabs" markdown="1">
 
@@ -105,7 +105,7 @@ foreach (var character in characters)
     var refs = api.SearchForReferences(character.Uuid).Payload;
     if (refs.Count == 0)
     {
-        Console.WriteLine($"Orphan: {character.Name} — not referenced by any scene or problem");
+        Console.WriteLine($"Orphan: {character.Name}, not referenced by any scene or problem");
     }
 }
 ```
@@ -114,7 +114,7 @@ foreach (var character in characters)
 for character in sc.get_elements_by_type(sc.item_type.Character):
     refs = sc.search_for_references(character)
     if len(refs) == 0:
-        print(f"Orphan: {character.name} — not referenced by any scene or problem")
+        print(f"Orphan: {character.name}, not referenced by any scene or problem")
 ```
 
 </div>
@@ -173,8 +173,8 @@ for match in sc.search_in_subtree(folder, "conflict"):
 </div>
 
 **Parameters**:
-- `rootNodeGuid` — the GUID of the element whose subtree to search
-- `searchText` — case-insensitive text to find
+- `rootNodeGuid`: the GUID of the element whose subtree to search
+- `searchText`: case-insensitive text to find
 
 **Returns**: Same dictionary structure as `SearchForText`, but only elements that are descendants of the specified root node.
 
@@ -182,7 +182,7 @@ This is useful when an outline has many elements and you want to narrow results.
 
 ## RemoveReferences
 
-Clears all GUID references to a specified element from the entire model. This is a cleanup operation — use it when you want to ensure no dangling references remain after conceptually removing an element.
+Clears all GUID references to a specified element from the entire model. This is a cleanup operation. Use it when you want to ensure no dangling references remain after conceptually removing an element.
 
 <div class="code-tabs" markdown="1">
 
@@ -210,9 +210,9 @@ sc.delete_element(character)
 
 </div>
 
-**Returns**: An `int` — the number of elements that had references removed.
+**Returns**: An `int`: the number of elements that had references removed.
 
-> **Note**: `DeleteElement` moves an element to the trash but does **not** automatically clean up references from other elements. If you want a clean deletion, call `RemoveReferences` first, then `DeleteElement`. Alternatively, leave the references in place — they'll point to `Guid.Empty` (unresolved) once the element is trashed.
+> **Note**: `DeleteElement` moves an element to the trash but does **not** automatically clean up references from other elements. If you want a clean deletion, call `RemoveReferences` first, then `DeleteElement`. Alternatively, leave the references in place: they'll point to `Guid.Empty` (unresolved) once the element is trashed.
 
 ## Method Summary
 

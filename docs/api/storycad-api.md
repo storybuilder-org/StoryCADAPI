@@ -43,7 +43,7 @@ using StoryCADLib.Services.API;
 using CommunityToolkit.Mvvm.DependencyInjection;
 
 // Initialize (once at startup)
-ServiceLocator.Initialize(headless: true);
+BootStrapper.Initialise(headless: true);
 
 // Get the API instance
 var api = Ioc.Default.GetRequiredService<StoryCADApi>();
@@ -52,7 +52,7 @@ var api = Ioc.Default.GetRequiredService<StoryCADApi>();
 ```python
 from storycad import StoryCAD
 
-# Initialize (once at startup) — the sc object is the API instance
+# Initialize (once at startup): the sc object is the API instance
 sc = StoryCAD(headless=True)
 ```
 
@@ -87,7 +87,7 @@ def create_empty_outline(title, author, template_index="0"):
 |------|------|-------------|
 | `name` | string | Title of the story |
 | `author` | string | Author name |
-| `templateIndex` | string | Template index: "0" for blank, "1" for basic |
+| `templateIndex` | string | Starter template as a string, `"0"` to `"5"`: `"0"` Blank, `"1"` Overview + Story Problem, `"2"` Folders, `"3"` External + Internal Problems, `"4"` Protagonist + Antagonist, `"5"` Problems + Characters |
 
 **Returns:** `OperationResult<List<Guid>>` - GUIDs of created elements
 
@@ -246,7 +246,7 @@ def get_elements_by_type(item_type):
 |------|------|-------------|
 | `elementType` | StoryItemType | The type to filter by |
 
-**Valid Types:** `Problem`, `Character`, `Setting`, `Scene`, `Folder`, `Section`, `Web`, `Notes`, `StoryWorld`
+**Valid Types:** `Problem`, `Character`, `Setting`, `Scene`, `Folder`, `Section`, `Web`, `Notes`, `StoryWorld`. `StoryOverview` is also accepted and returns the singleton overview element.
 
 **Example:**
 <div class="code-tabs" markdown="1">
@@ -935,7 +935,7 @@ public void SetCurrentModel(StoryModel model)
 ```
 
 ```python
-# (no direct Python equivalent — this is a .NET Collaborator-plugin
+# (no direct Python equivalent: this is a .NET Collaborator-plugin
 # synchronization hook used internally by StoryCAD)
 ```
 

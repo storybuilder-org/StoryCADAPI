@@ -22,7 +22,7 @@ Five self-contained console applications that show you the StoryCADLib API in ac
 Every sample needs:
 
 - **.NET 10.0 SDK**
-- **StoryCADLib** -- each sample references it via `ProjectReference` to a local checkout of the [StoryCAD](https://github.com/storybuilder-org/StoryCAD) repository
+- **StoryCADLib**: each sample references it as a NuGet package by default (version pinned by `StoryCADLibVersion` in `Directory.Build.props`). Set `UseStoryCADLibNuGet=false` to build against a local [StoryCAD](https://github.com/storybuilder-org/StoryCAD) checkout via `ProjectReference` instead.
 
 The two Semantic Kernel samples also need:
 

@@ -7,11 +7,11 @@ nav_order: 2
 
 # MCP Server (StoryCADMcp)
 
-StoryCADMcp is a [Model Context Protocol](https://modelcontextprotocol.io/) server that exposes the StoryCAD API as MCP tools. This allows any MCP-compatible client — such as Claude Desktop, Claude Code, or other LLM-powered tools — to read, write, and manage story outlines through natural language.
+StoryCADMcp is a [Model Context Protocol](https://modelcontextprotocol.io/) server that exposes the StoryCAD API as MCP tools. This allows any MCP-compatible client (such as Claude Desktop, Claude Code, or other LLM-powered tools) to read, write, and manage story outlines through natural language.
 
 ## Overview
 
-The server wraps `StoryCADApi` and exposes 21 tools across four categories:
+The server wraps `StoryCADApi` and exposes 24 tools across four categories:
 
 | Category | Tools | Purpose |
 |----------|-------|---------|
@@ -377,8 +377,8 @@ Gets valid example values for a story element property.
 
 StoryCADMcp bridges two dependency injection containers:
 
-1. **StoryCADLib DI** — initialized via `BootStrapper.Initialise(headless: true)`, which populates `Ioc.Default` with all StoryCADLib services
-2. **MCP Host DI** — the .NET Generic Host container, which gets the `StoryCADApi` singleton registered into it
+1. **StoryCADLib DI**: initialized via `BootStrapper.Initialise(headless: true)`, which populates `Ioc.Default` with all StoryCADLib services
+2. **MCP Host DI**: the .NET Generic Host container, which gets the `StoryCADApi` singleton registered into it
 
 ```
 Program.cs
@@ -404,5 +404,5 @@ StoryCADLib is referenced as a `ProjectReference` (not a NuGet package), so it a
 
 ## See Also
 
-- [Semantic Kernel Integration](semantic-kernel.md) — alternative integration via SK plugins
-- [StoryCADApi Reference](../api/storycad-api.md) — underlying API documentation
+- [Semantic Kernel Integration](semantic-kernel.md): alternative integration via SK plugins
+- [StoryCADApi Reference](../api/storycad-api.md): underlying API documentation

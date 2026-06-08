@@ -8,7 +8,7 @@ nav_order: 2
 # 2. Adding Story Elements
 {: .no_toc }
 
-An empty outline isn't much of a story. In this lesson you'll add the building blocks — characters, a setting, and a few scenes — and then read them back to check your work.
+An empty outline isn't much of a story. In this lesson you'll add the building blocks (characters, a setting, and a few scenes) and then read them back to check your work.
 
 1. TOC
 {:toc}
@@ -60,7 +60,7 @@ broker = sc.add_element(sc.item_type.Character, overview, "The Broker")
 
 </div>
 
-Notice the type comes from `StoryItemType` in C# and from `sc.item_type` in Python. Besides `Character`, you have `Setting`, `Scene`, `Problem`, `Folder`, `Section`, `Web`, and `Notes` — the [Element Types](../concepts/element-types.md) page lists them all.
+Notice the type comes from `StoryItemType` in C# and from `sc.item_type` in Python. Besides `Character`, you have `Setting`, `Scene`, `Problem`, `Folder`, `Section`, `Web`, and `Notes`: the [Element Types](../concepts/element-types.md) page lists them all.
 
 ## Add a setting and some scenes
 
@@ -86,7 +86,7 @@ getaway  = sc.add_element(sc.item_type.Scene, overview, "The Getaway")
 
 </div>
 
-Your outline now holds three characters, one setting, and three scenes — all sitting directly under the overview.
+Your outline now holds three characters, one setting, and three scenes, all sitting directly under the overview.
 
 ## Read them back
 
@@ -139,7 +139,7 @@ sc.write_outline("the-vault.stbx")
 
 - `AddElement` creates an element of a given `StoryItemType` under a parent, and hands you a reference to it.
 - The Story Overview is the parent for top-level elements.
-- `GetElementsByType` lists every element of one kind — handy for checking your work.
+- `GetElementsByType` lists every element of one kind, handy for checking your work.
 
 Your cast exists, but right now they're just names. Next we'll give them roles, ages, and notes.
 

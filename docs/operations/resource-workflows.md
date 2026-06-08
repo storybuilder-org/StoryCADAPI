@@ -366,7 +366,7 @@ sc.update_element_property(scene, "Notes", selected_scene)
 
 ## Combining Workflows
 
-Resources are most powerful when combined. Here's an example that creates a Problem with conflict and structure:
+Resources work best when combined. Here's an example that creates a Problem with conflict and structure:
 
 <div class="code-tabs" markdown="1">
 
@@ -387,7 +387,7 @@ api.ApplyBeatSheetToProblem(problemGuid, "Three Act Structure");
 
 // Use master plot scenes to inspire the beat assignments
 var plotScenes = api.GetMasterPlotScenes("Quest").Payload.ToList();
-// Create scenes and assign them to beats — see Beat Sheet Operations
+// Create scenes and assign them to beats: see Beat Sheet Operations
 ```
 
 ```python
@@ -403,7 +403,7 @@ sc.apply_beat_sheet_to_problem(problem, "Three Act Structure")
 
 # Use master plot scenes to inspire the beat assignments
 plot_scenes = sc.get_master_plot_scenes("Quest")
-# Create scenes and assign them to beats — see Beat Sheet Operations
+# Create scenes and assign them to beats: see Beat Sheet Operations
 ```
 
 </div>

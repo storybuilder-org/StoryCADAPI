@@ -7,7 +7,7 @@ nav_order: 3
 
 # Beat Sheet Operations
 
-Beat sheets define a story's structure as a sequence of narrative beats. Each beat has a title, description, and an optional link to a Scene or Problem element. Beat sheets are applied to Problem elements — a Problem's structure tab holds the beat sheet data.
+Beat sheets define a story's structure as a sequence of narrative beats. Each beat has a title, description, and an optional link to a Scene or Problem element. Beat sheets are applied to Problem elements. A Problem's structure tab holds the beat sheet data.
 
 ## Workflow Overview
 
@@ -318,7 +318,7 @@ api.SaveBeatSheet(problemGuid, "my-structure.stbeat");
 
 ```python
 # Save the Problem's current beat structure to a file
-# (no documented Python equivalent for save_beat_sheet — see the C# tab)
+# (no documented Python equivalent for save_beat_sheet: see the C# tab)
 sc.save_beat_sheet(problem, "my-structure.stbeat")
 ```
 
@@ -339,7 +339,7 @@ api.LoadBeatSheet(otherProblemGuid, "my-structure.stbeat");
 ```python
 # Load a .stbeat file into a different Problem
 other_problem = ...  # handle of another Problem
-# (no documented Python equivalent for load_beat_sheet — see the C# tab)
+# (no documented Python equivalent for load_beat_sheet: see the C# tab)
 sc.load_beat_sheet(other_problem, "my-structure.stbeat")
 ```
 
@@ -444,7 +444,7 @@ sc.write_outline("mystery-novel.stbx")
 
 | Method | Parameters | Returns | Modifies? |
 |--------|-----------|---------|-----------|
-| `GetBeatSheetNames()` | — | `IEnumerable<string>` | No |
+| `GetBeatSheetNames()` | (none) | `IEnumerable<string>` | No |
 | `GetBeatSheet(name)` | Template name | `(Description, Beats)` | No |
 | `ApplyBeatSheetToProblem(guid, name)` | Problem GUID, template name | `bool` | **Yes** |
 | `GetProblemStructure(guid)` | Problem GUID | `(Title, Description, Beats)` | No |

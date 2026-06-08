@@ -13,9 +13,9 @@ The `StoryModel` class is the root data structure for every StoryCAD outline. Un
 
 A `StoryModel` contains three things:
 
-1. **A flat element collection** (`StoryElementCollection`) — every story element stored in a dictionary keyed by GUID
-2. **Two tree views** — `ExplorerView` (for authoring) and `NarratorView` (for reading order)
-3. **A trash view** — `TrashView` for soft-deleted elements
+1. **A flat element collection** (`StoryElementCollection`): every story element stored in a dictionary keyed by GUID
+2. **Two tree views**: `ExplorerView` (for authoring) and `NarratorView` (for reading order)
+3. **A trash view**: `TrashView` for soft-deleted elements
 
 ```
 StoryModel
@@ -29,8 +29,8 @@ StoryModel
 
 `StoryElementCollection` extends `ObservableCollection<StoryElement>` and automatically maintains:
 
-- `StoryElementGuids` — a `Dictionary<Guid, StoryElement>` for O(1) lookup by GUID
-- `Characters`, `Settings`, `Problems`, `Scenes` — filtered sub-collections by type
+- `StoryElementGuids`: a `Dictionary<Guid, StoryElement>` for O(1) lookup by GUID
+- `Characters`, `Settings`, `Problems`, `Scenes`: filtered sub-collections by type
 
 When you call `GetAllElements()`, you receive the full `StoryElementCollection`. When you call `GetElement(guid)`, the API looks up the element in `StoryElementGuids`.
 
@@ -126,7 +126,7 @@ To follow a GUID reference, look up the target element:
 ```csharp
 // Get a scene
 var sceneResult = api.GetElement(sceneGuid);
-// The scene's Setting field is a GUID string — parse it and look up the setting
+// The scene's Setting field is a GUID string: parse it and look up the setting
 var settingGuid = /* extract from scene data */;
 var settingResult = api.GetElement(settingGuid);
 ```
@@ -134,7 +134,7 @@ var settingResult = api.GetElement(settingGuid);
 ```python
 # Get a scene's full state as JSON
 scene_data = json.loads(sc.get_element(scene))
-# The scene's Setting field is a GUID string — extract it and look up the setting
+# The scene's Setting field is a GUID string: extract it and look up the setting
 setting_guid = scene_data.get("Setting")
 setting_data = json.loads(sc.get_element(setting_guid))
 ```
@@ -205,15 +205,15 @@ Three element types have at most one instance per story:
 
 | Type | Purpose | Always present? |
 |------|---------|----------------|
-| `StoryOverview` | Story metadata (title, author, premise) | Yes — root of ExplorerView |
-| `TrashCan` | Container for soft-deleted elements | Yes — root of TrashView |
-| `StoryWorld` | Worldbuilding data | No — optional, created on demand |
+| `StoryOverview` | Story metadata (title, author, premise) | Yes, root of ExplorerView |
+| `TrashCan` | Container for soft-deleted elements | Yes, root of TrashView |
+| `StoryWorld` | Worldbuilding data | No, optional, created on demand |
 
 Access the overview via `GetElementsByType(StoryItemType.StoryOverview)`. Access the StoryWorld via `GetStoryWorld()`.
 
 ## The Changed Flag
 
-`StoryModel.Changed` is a dirty bit. It becomes `true` whenever an element is added, removed, moved, or has a property updated. The API sets this automatically — you don't need to manage it. It's used internally by auto-save.
+`StoryModel.Changed` is a dirty bit. It becomes `true` whenever an element is added, removed, moved, or has a property updated. The API sets this automatically; you don't need to manage it. It's used internally by auto-save.
 
 ## File Format
 

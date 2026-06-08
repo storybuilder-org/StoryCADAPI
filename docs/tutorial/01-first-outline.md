@@ -15,7 +15,7 @@ In this first lesson you'll create an outline, save it to a file, and open it ba
 
 ## Start the library
 
-Before you call any method, you start the library in **headless** mode — no windows, no UI, just the API. You do this once, when your program starts.
+Before you call any method, you start the library in **headless** mode: no windows, no UI, just the API. You do this once, when your program starts.
 
 <div class="code-tabs" markdown="1">
 
@@ -35,7 +35,7 @@ var api = Ioc.Default.GetRequiredService<StoryCADApi>();
 from storycad import StoryCAD
 
 # Start StoryCADLib in headless mode. The object you get back
-# is the API — you'll use it for everything.
+# is the API: you'll use it for everything.
 sc = StoryCAD(headless=True)
 ```
 
@@ -45,23 +45,23 @@ In C# the library uses a dependency-injection container, so you initialize it an
 
 ## Create an outline
 
-Now make an empty outline. You give it a title, an author, and a *template* — `"0"` is a blank outline, which is exactly what we want to start with.
+Now make an empty outline. You give it a title, an author, and a *template*: `"0"` is a blank outline, which is exactly what we want to start with.
 
 <div class="code-tabs" markdown="1">
 
 ```csharp
 var result = await api.CreateEmptyOutline("The Vault", "Jane Doe", "0");
-var overview = result.Payload[0];   // the Story Overview — the root of your outline
+var overview = result.Payload[0];   // the Story Overview: the root of your outline
 ```
 
 ```python
 overview = sc.create_empty_outline("The Vault", "Jane Doe", template_index="0")[0]
-# the first element back is the Story Overview — the root of your outline
+# the first element back is the Story Overview: the root of your outline
 ```
 
 </div>
 
-Creating an outline hands you back its elements. The very first one is the **Story Overview** — the root that everything else hangs off. Hold on to it; in the next lesson you'll add characters and scenes underneath it.
+Creating an outline hands you back its elements. The very first one is the **Story Overview**, the root that everything else hangs off. Hold on to it; in the next lesson you'll add characters and scenes underneath it.
 
 {: .note }
 > **A quick word on results.** In C#, every API call returns an `OperationResult`. You read the data from its `Payload`, and you can check `IsSuccess` to see whether the call worked. Python skips the wrapper: a call returns its value directly and raises an error if something goes wrong. We'll keep the examples simple and trust the calls to succeed; [the OperationResult page](../api/operation-result.md) shows how to check for errors when you need to.
@@ -82,7 +82,7 @@ sc.write_outline("the-vault.stbx")
 
 </div>
 
-That's a real, openable file. If you have the StoryCAD app, open `the-vault.stbx` and you'll see your outline — empty for now, but yours.
+That's a real, openable file. If you have the StoryCAD app, open `the-vault.stbx` and you'll see your outline, empty for now, but yours.
 
 ## Open it again
 
@@ -102,7 +102,7 @@ sc.open_outline("the-vault.stbx")
 
 ## The whole program
 
-Here's everything together — create, save, reopen:
+Here's everything together: create, save, reopen:
 
 <div class="code-tabs" markdown="1">
 

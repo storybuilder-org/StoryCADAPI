@@ -17,11 +17,11 @@ The sample creates a mystery outline called "Murder at Whitmore Manor" with 2 Pr
 
 It then computes and displays five categories of analytics:
 
-- **Element counts by type** — how many Characters, Scenes, Problems, Settings, and Folders the outline contains
-- **Character appearances** — using `SearchForReferences` to find every scene and problem that references each character
-- **Setting usage** — how many scenes use each setting
-- **Problem scope** — whether each problem has a protagonist and antagonist assigned
-- **Summary statistics** — totals across all categories
+- **Element counts by type**: how many Characters, Scenes, Problems, Settings, and Folders the outline contains
+- **Character appearances**: using `SearchForReferences` to find every scene and problem that references each character
+- **Setting usage**: how many scenes use each setting
+- **Problem scope**: whether each problem has a protagonist and antagonist assigned
+- **Summary statistics**: totals across all categories
 
 This demonstrates how to combine `GetElementsByType`, `GetStoryElement`, and `SearchForReferences` to build analytical tools on top of the story graph.
 

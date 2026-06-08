@@ -16,7 +16,7 @@ Semantic Kernel uses `[KernelFunction]` attributes to discover methods that an L
 <div class="code-tabs" markdown="1">
 
 ```csharp
-// From StoryCADAPI.cs — every method looks like this:
+// From StoryCADAPI.cs: every method looks like this:
 [KernelFunction]
 [Description("Creates a new empty story outline from a template.")]
 public async Task<OperationResult<List<Guid>>> CreateEmptyOutline(
@@ -24,7 +24,7 @@ public async Task<OperationResult<List<Guid>>> CreateEmptyOutline(
 ```
 
 ```python
-# (no direct Python equivalent — [KernelFunction]/[Description] attributes and
+# (no direct Python equivalent: [KernelFunction]/[Description] attributes and
 # the OperationResult<T> return type are .NET / Semantic Kernel concepts.)
 # In Python, the same method is just a plain call that returns the payload
 # directly and raises on error:
@@ -71,7 +71,7 @@ from storycad import StoryCAD
 sc = StoryCAD(headless=True)
 
 # 3 + 4. Building a Semantic Kernel and registering the API as an SK plugin have
-#        no direct Python equivalent — Kernel.CreateBuilder, AddOpenAIChatCompletion,
+#        no direct Python equivalent: Kernel.CreateBuilder, AddOpenAIChatCompletion,
 #        and ImportPluginFromObject are .NET / Semantic Kernel concepts.
 ```
 
@@ -95,7 +95,7 @@ var settings = new OpenAIPromptExecutionSettings
 ```
 
 ```python
-# (no direct Python equivalent — OpenAIPromptExecutionSettings and
+# (no direct Python equivalent: OpenAIPromptExecutionSettings and
 # FunctionChoiceBehavior.Auto() are .NET / Semantic Kernel concepts.)
 ```
 
@@ -169,7 +169,7 @@ from storycad import StoryCAD
 
 sc = StoryCAD(headless=True)
 
-# (no direct Python equivalent — building a Kernel, registering the API as an SK
+# (no direct Python equivalent: building a Kernel, registering the API as an SK
 # plugin, IChatCompletionService, OpenAIPromptExecutionSettings, ChatHistory, and
 # the automatic-function-calling chat loop are all .NET / Semantic Kernel
 # concepts. The `sc` object exposes the same story-building methods the agent
@@ -261,7 +261,7 @@ When building SK agents with the StoryCAD plugin:
 To use Semantic Kernel with StoryCADLib, add these packages:
 
 ```xml
-<PackageReference Include="StoryCADLib" Version="4.0.0" />
+<PackageReference Include="StoryCADLib" Version="4.2.0" />
 <PackageReference Include="Microsoft.SemanticKernel" Version="1.*" />
 ```
 

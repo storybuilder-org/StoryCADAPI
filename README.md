@@ -59,7 +59,7 @@ using StoryCADLib.Services.API;
 using CommunityToolkit.Mvvm.DependencyInjection;
 
 // Initialize (once at startup)
-ServiceLocator.Initialize(headless: true);
+BootStrapper.Initialise(headless: true);
 
 // Get the API
 var api = Ioc.Default.GetRequiredService<SemanticKernelApi>();
@@ -150,7 +150,7 @@ else
 
 ### Headless Mode
 
-`ServiceLocator.Initialize(headless: true)` configures the library for use without a UI:
+`BootStrapper.Initialise(headless: true)` configures the library for use without a UI:
 - Console applications
 - Web APIs
 - Background services

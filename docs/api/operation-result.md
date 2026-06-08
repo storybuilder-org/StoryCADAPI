@@ -18,7 +18,7 @@ public class OperationResult<T>
 ```
 
 ```python
-# (no direct Python equivalent — the Python binding has no OperationResult wrapper.
+# (no direct Python equivalent: the Python binding has no OperationResult wrapper.
 #  Methods on the StoryCAD object return their payload directly and raise on error.)
 from storycad import StoryCAD
 ```
@@ -87,7 +87,7 @@ public static OperationResult<T> Success(T payload)
 ```
 
 ```python
-# (no direct Python equivalent — there is no OperationResult to construct.
+# (no direct Python equivalent: there is no OperationResult to construct.
 #  A successful Python call simply returns the payload directly.)
 ```
 
@@ -101,7 +101,7 @@ return OperationResult<List<Guid>>.Success(elementGuids);
 ```
 
 ```python
-# (no direct Python equivalent — Python returns the payload directly instead of
+# (no direct Python equivalent: Python returns the payload directly instead of
 #  wrapping it in a success result.)
 return element_guids
 ```
@@ -121,7 +121,7 @@ public static OperationResult<T> Failure(string errorMessage)
 ```
 
 ```python
-# (no direct Python equivalent — there is no failure result to construct.
+# (no direct Python equivalent: there is no failure result to construct.
 #  The Python wrapper signals failure by raising an exception.)
 ```
 
@@ -135,7 +135,7 @@ return OperationResult<bool>.Failure("Element not found");
 ```
 
 ```python
-# (no direct Python equivalent — Python raises instead of returning a failure result.)
+# (no direct Python equivalent: Python raises instead of returning a failure result.)
 raise Exception("Element not found")
 ```
 
@@ -154,7 +154,7 @@ public static async Task<OperationResult<T>> SafeExecuteAsync(Task<T> operation)
 ```
 
 ```python
-# (no direct Python equivalent — there is no SafeExecuteAsync wrapper.
+# (no direct Python equivalent: there is no SafeExecuteAsync wrapper.
 #  Python lets exceptions propagate; callers wrap calls in try/except as needed.)
 ```
 
@@ -169,7 +169,7 @@ var result = await OperationResult<StoryModel>.SafeExecuteAsync(
 ```
 
 ```python
-# (no direct Python equivalent — Python has no SafeExecuteAsync wrapper.
+# (no direct Python equivalent: Python has no SafeExecuteAsync wrapper.
 #  Call the method directly and handle errors with try/except.)
 try:
     elements = sc.create_empty_outline(name, author, template_index=template_index)
@@ -241,7 +241,7 @@ public OperationResult<bool> MyOperation()
 ```
 
 ```python
-# Python propagates errors by letting the exception bubble up — no result wrapper.
+# Python propagates errors by letting the exception bubble up: no result wrapper.
 def my_operation():
     element = sc.get_element(handle)  # raises if the element is not found
 

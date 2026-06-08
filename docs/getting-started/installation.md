@@ -7,7 +7,7 @@ nav_order: 1
 
 # Installation
 
-StoryCADLib is a .NET library, so this page covers the .NET / NuGet install. The Python examples elsewhere in these docs use the `storycad` module — a thin Python wrapper around this same library.
+StoryCADLib is a .NET library, so this page covers the .NET / NuGet install. The Python examples elsewhere in these docs use the `storycad` module, a thin Python wrapper around this same library.
 
 ## Requirements
 
@@ -31,7 +31,7 @@ Install-Package StoryCADLib
 Add to your `.csproj` file:
 
 ```xml
-<PackageReference Include="StoryCADLib" Version="4.0.0" />
+<PackageReference Include="StoryCADLib" Version="4.2.0" />
 ```
 
 ## Initialization
@@ -56,7 +56,7 @@ var api = Ioc.Default.GetRequiredService<StoryCADApi>();
 from storycad import StoryCAD
 
 # Initialize in headless mode (console apps, web APIs, etc.)
-# The sc object is the API directly — there is no separate DI container step.
+# The sc object is the API directly: there is no separate DI container step.
 sc = StoryCAD(headless=True)
 ```
 

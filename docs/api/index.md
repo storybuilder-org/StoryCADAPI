@@ -18,13 +18,12 @@ This section documents the StoryCADLib public API.
 
 ## Namespaces
 
-Generated reference for the supporting model types:
+Reference for the supporting model types:
 
 | Namespace | Description |
 |-----------|-------------|
 | [Models](models.md) | Core story element and document models |
 | [Models.Tools](models-tools.md) | Writing-tool data models (conflicts, key questions, plot patterns) |
-| [Models.Scrivener](models-scrivener.md) | Scrivener import/export models |
 | [Models.StoryWorld](models-storyworld.md) | Story world-building entry models |
 
 ## Quick Reference by Category

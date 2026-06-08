@@ -7,12 +7,12 @@ nav_order: 2
 
 # Quick Start
 
-Build your first story outline in 5 minutes — the classic Hello World, applied to StoryCADLib.
+Build your first story outline in 5 minutes: the classic Hello World, applied to StoryCADLib.
 
 ## Prerequisites
 
 - [.NET 10.0 SDK](https://dotnet.microsoft.com/download)
-- StoryCADLib package installed (see [Installation](index.md))
+- StoryCADLib package installed (see [Installation](installation.md))
 
 ## Step 1: Set Up Your Project
 
@@ -35,7 +35,7 @@ mkdir hello-storycad && cd hello-storycad
 
 ## Step 2: Write the Code
 
-Add the following code — in `Program.cs` for C#, or a file such as `hello_world.py` for Python:
+Add the following code, in `Program.cs` for C#, or a file such as `hello_world.py` for Python:
 
 <div class="code-tabs" markdown="1">
 
@@ -130,11 +130,13 @@ python hello_world.py
 Expected output:
 
 ```
-Outline created with 1 elements.
+Outline created with 3 elements.
 Character added.
 Scene added.
 Saved to hello-world.stbx
 ```
+
+A blank outline already contains three elements before you add anything: the Story Overview, the Trash can, and the Narrator-view folder.
 
 ## Step 4: Open in StoryCAD
 
@@ -190,13 +192,19 @@ result = sc.create_empty_outline("Hello World", "Your Name", template_index="0")
 </div>
 
 Parameters:
-- `title` — the story title.
-- `author` — the author name.
-- `templateIndex` — `"0"` for blank, `"1"` for a basic template.
+- `title`: the story title.
+- `author`: the author name.
+- `templateIndex`: the starter template, as a string from `"0"` to `"5"`:
+  - `"0"`: Blank (Story Overview only)
+  - `"1"`: Overview and Story Problem (a Problem with a Protagonist and Antagonist)
+  - `"2"`: Folders (Problems, Characters, Settings, Scenes)
+  - `"3"`: External and Internal Problems
+  - `"4"`: Protagonist and Antagonist
+  - `"5"`: Problems and Characters
 
 ### The OperationResult Pattern
 
-In C#, every API method returns `OperationResult<T>`; always check `IsSuccess` before reading `Payload`. The Python wrapper takes the opposite approach — methods return their value directly and raise an exception on failure, so you use `try`/`except` instead:
+In C#, every API method returns `OperationResult<T>`; always check `IsSuccess` before reading `Payload`. The Python wrapper takes the opposite approach: methods return their value directly and raise an exception on failure, so you use `try`/`except` instead:
 
 <div class="code-tabs" markdown="1">
 
@@ -242,5 +250,5 @@ Saves the current outline to the specified path. The `.stbx` extension is the St
 
 ## Next Steps
 
-- [API Reference](../api/index.md) — full method documentation.
-- [Samples](../samples/index.md) — five working sample applications, starting with [Story Graph Basics](../samples/story-graph-basics.md) as the foundational walkthrough.
+- [API Reference](../api/index.md): full method documentation.
+- [Samples](../samples/index.md): five working sample applications, starting with [Story Graph Basics](../samples/story-graph-basics.md) as the foundational walkthrough.

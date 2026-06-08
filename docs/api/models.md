@@ -7,214 +7,13 @@ nav_order: 3
 
 # Models
 
-Auto-generated reference for the `StoryCADLib.Models` namespace (27 types).
+Reference for the consumer-facing types in the `StoryCADLib.Models` namespace.
 
 {: .fs-6 .fw-300 }
 
-## AppState
-
-*Class* — `StoryCADLib.Models.AppState`
-
-This class holds developer tools and app data.
-
-```csharp
-public class AppState
-```
-
-### Constructors
-
-#### AppState()
-
-```csharp
-public AppState()
-```
-
-### Fields
-
-#### EnvPresent
-
-Is .env present?
-
-```csharp
-public bool EnvPresent
-```
-
-**Type** `bool`
-
-#### Headless
-
-Suppresses graphical output if True
-
-```csharp
-public bool Headless
-```
-
-**Type** `bool`
-
-#### IsClosing
-
-Indicates the application is in the process of shutting down.
-Used to guard UI operations that would fail after window destruction.
-
-```csharp
-public bool IsClosing
-```
-
-**Type** `bool`
-
-#### LoadedWithVersionChange
-
-Returns true if the app has loaded with a version change.
-If this is true a changelog will show, install service will
-run and the server will update the version.
-
-```csharp
-public bool LoadedWithVersionChange
-```
-
-**Type** `bool`
-
-#### StartUpTimer
-
-This is a debug timer that counts the amount of time from
-the app being opened to Shell being properly initialised.
-
-```csharp
-public readonly Stopwatch StartUpTimer
-```
-
-**Type** `Stopwatch`
-
-### Properties
-
-#### RootDirectory
-
-This is the path where all app files are stored
-
-```csharp
-public string RootDirectory { get; }
-```
-
-**Type** `string`
-
-#### DeveloperBuild
-
-This variable will return true if any of following are true:
-- The Build revision is NOT 0.
-- A debugger i.e. VS2022 is attached.
-- .ENV is missing.
-Usually it's all or none of the above.
-
-```csharp
-public bool DeveloperBuild { get; }
-```
-
-**Type** `bool`
-
-#### Version
-
-The current version of StoryCADLib
-
-```csharp
-public string Version { get; }
-```
-
-**Type** `string`
-
-#### CurrentDocument
-
-```csharp
-public StoryDocument? CurrentDocument { get; set; }
-```
-
-**Type** `StoryDocument`
-
-#### CurrentSaveable
-
-The current ViewModel that can save its edits back to the model.
-Set by pages in OnNavigatedTo when they have saveable content.
-Null for pages without editable content (Home, Reports, etc.).
-
-```csharp
-public ISaveable? CurrentSaveable { get; set; }
-```
-
-**Type** `ISaveable`
-
-#### CurrentViewType
-
-The current view type (Explorer or Narrator).
-Set by ShellViewModel.ViewChanged() when user switches views.
-
-```csharp
-public StoryViewType CurrentViewType { get; set; }
-```
-
-**Type** `StoryViewType`
-
-#### CurrentNode
-
-The currently selected node in the tree view.
-Set by ShellViewModel.TreeViewNodeClicked() when user clicks a node.
-Null when no node is selected.
-
-```csharp
-public StoryNodeItem? CurrentNode { get; set; }
-```
-
-**Type** `StoryNodeItem`
-
-#### RightTappedNode
-
-The node that was right-clicked to open a context menu.
-Set by Shell.xaml.cs right-click handler.
-Used by tools that operate on the right-clicked node.
-Null when no node has been right-clicked.
-
-```csharp
-public StoryNodeItem? RightTappedNode { get; set; }
-```
-
-**Type** `StoryNodeItem`
-
-### Events
-
-#### CurrentDocumentChanged
-
-The currently open story document, combining the model and its file path.
-Null when no document is open (app startup).
-When set, triggers UI binding updates through the Shell.
-
-```csharp
-public event EventHandler? CurrentDocumentChanged
-```
-
-**Type** `EventHandler`
-
----
-
-## BrowserType
-
-*Enum* — `StoryCADLib.Models.BrowserType`
-
-```csharp
-public enum BrowserType
-```
-
-### Values
-
-| Value | Description |
-|-------|-------------|
-| `DuckDuckGo` |  |
-| `Google` |  |
-| `Bing` |  |
-| `Yahoo` |  |
-
----
-
 ## CharacterModel
 
-*Class* — `StoryCADLib.Models.CharacterModel`
+*Class*: `StoryCADLib.Models.CharacterModel`
 
 ```csharp
 public class CharacterModel : StoryElement
@@ -685,42 +484,9 @@ public string BackStory { get; set; }
 
 ---
 
-## FilePathAttribute
-
-*Class* — `StoryCADLib.Models.FilePathAttribute`
-
-```csharp
-public class FilePathAttribute : ValidationAttribute
-```
-
-### Constructors
-
-#### FilePathAttribute()
-
-```csharp
-public FilePathAttribute()
-```
-
-### Methods
-
-#### IsValid(object, ValidationContext)
-
-```csharp
-protected override ValidationResult IsValid(object value, ValidationContext validationContext)
-```
-
-**Parameters**
-
-- `value` (`object`)
-- `validationContext` (`ValidationContext`)
-
-**Returns** `ValidationResult`
-
----
-
 ## FolderModel
 
-*Class* — `StoryCADLib.Models.FolderModel`
+*Class*: `StoryCADLib.Models.FolderModel`
 
 ```csharp
 public class FolderModel : StoryElement
@@ -751,45 +517,9 @@ public FolderModel()
 
 ---
 
-## ListData
-
-*Class* — `StoryCADLib.Models.ListData`
-
-This stores the lists for StoryCAD's Lists.json.
-Previously lists were stored in GlobalData.
-
-```csharp
-public class ListData
-```
-
-### Constructors
-
-#### ListData(ILogService, JSONResourceLoader)
-
-```csharp
-public ListData(ILogService log, JSONResourceLoader resourceLoader)
-```
-
-**Parameters**
-
-- `log` (`ILogService`)
-- `resourceLoader` (`JSONResourceLoader`)
-
-### Fields
-
-#### ListControlSource
-
-```csharp
-public Dictionary<string, ObservableCollection<string>> ListControlSource
-```
-
-**Type** `Dictionary<string, ObservableCollection<string>>`
-
----
-
 ## OverviewModel
 
-*Class* — `StoryCADLib.Models.OverviewModel`
+*Class*: `StoryCADLib.Models.OverviewModel`
 
 OverviewModel contains overview information for the entire story, such as title, author, and so on.
 It's a good place to capture the original idea which prompted the story.
@@ -996,51 +726,9 @@ public string Notes { get; set; }
 
 ---
 
-## PersistableNode
-
-*Class* — `StoryCADLib.Models.PersistableNode`
-
-Node that can be persisted to JSON
-
-```csharp
-public class PersistableNode
-```
-
-### Constructors
-
-#### PersistableNode()
-
-```csharp
-public PersistableNode()
-```
-
-### Properties
-
-#### Uuid
-
-UUID of node
-
-```csharp
-public Guid Uuid { get; set; }
-```
-
-**Type** `Guid`
-
-#### ParentUuid
-
-UUID of parent node
-
-```csharp
-public Guid? ParentUuid { get; set; }
-```
-
-**Type** `Guid?`
-
----
-
 ## ProblemModel
 
-*Class* — `StoryCADLib.Models.ProblemModel`
+*Class*: `StoryCADLib.Models.ProblemModel`
 
 ```csharp
 public class ProblemModel : StoryElement
@@ -1311,7 +999,7 @@ public string BoundStructure { get; set; }
 
 ## RelationshipModel
 
-*Class* — `StoryCADLib.Models.RelationshipModel`
+*Class*: `StoryCADLib.Models.RelationshipModel`
 
 ```csharp
 public class RelationshipModel
@@ -1410,104 +1098,9 @@ public string Notes { get; set; }
 
 ---
 
-## RelationType
-
-*Class* — `StoryCADLib.Models.RelationType`
-
-```csharp
-public class RelationType : ObservableObject
-```
-
-### Constructors
-
-#### RelationType(string, string)
-
-```csharp
-public RelationType(string memberRole, string partnerRole)
-```
-
-**Parameters**
-
-- `memberRole` (`string`)
-- `partnerRole` (`string`)
-
-### Fields
-
-#### MemberRole
-
-```csharp
-public string MemberRole
-```
-
-**Type** `string`
-
-#### PartnerRole
-
-```csharp
-public string PartnerRole
-```
-
-**Type** `string`
-
-### Methods
-
-#### ToString()
-
-```csharp
-public override string ToString()
-```
-
-**Returns** `string`
-
----
-
-## SavedBeatsheet
-
-*Class* — `StoryCADLib.Models.SavedBeatsheet`
-
-Beatsheet model that is able to be saved/loaded from a file.
-
-```csharp
-public class SavedBeatsheet
-```
-
-### Constructors
-
-#### SavedBeatsheet()
-
-```csharp
-public SavedBeatsheet()
-```
-
-### Properties
-
-#### Description
-
-Descritpion of beatsheet.
-
-```csharp
-[JsonInclude]
-public string Description { get; set; }
-```
-
-**Type** `string`
-
-#### Beats
-
-Story beats
-
-```csharp
-[JsonInclude]
-public List<StructureBeatViewModel> Beats { get; set; }
-```
-
-**Type** `List<StructureBeatViewModel>`
-
----
-
 ## SceneModel
 
-*Class* — `StoryCADLib.Models.SceneModel`
+*Class*: `StoryCADLib.Models.SceneModel`
 
 ```csharp
 public class SceneModel : StoryElement
@@ -1800,7 +1393,7 @@ public string Notes { get; set; }
 
 ## SettingModel
 
-*Class* — `StoryCADLib.Models.SettingModel`
+*Class*: `StoryCADLib.Models.SettingModel`
 
 ```csharp
 public class SettingModel : StoryElement
@@ -1974,7 +1567,7 @@ public string Notes { get; set; }
 
 ## StoryDocument
 
-*Class* — `StoryCADLib.Models.StoryDocument`
+*Class*: `StoryCADLib.Models.StoryDocument`
 
 Encapsulates a story document, combining the model and its file path.
 This ensures the model and path are always kept together as a unit.
@@ -1995,8 +1588,8 @@ public StoryDocument(StoryModel model, string? filePath = null)
 
 **Parameters**
 
-- `model` (`StoryModel`) — The story model (required)
-- `filePath` (`string`) — The file path (optional, null for new documents)
+- `model` (`StoryModel`): The story model (required)
+- `filePath` (`string`): The file path (optional, null for new documents)
 
 ### Properties
 
@@ -2038,7 +1631,7 @@ public bool IsDirty { get; }
 
 ## StoryElement
 
-*Class* — `StoryCADLib.Models.StoryElement`
+*Class*: `StoryCADLib.Models.StoryElement`
 
 ```csharp
 public class StoryElement : ObservableObject
@@ -2056,10 +1649,10 @@ public StoryElement(string name, StoryItemType type, StoryModel model, StoryNode
 
 **Parameters**
 
-- `name` (`string`) — Name of element
-- `type` (`StoryItemType`) — Type of element
-- `model` (`StoryModel`) — Story Model this element belongs to
-- `parentNode` (`StoryNodeItem`) — Parent of this node
+- `name` (`string`): Name of element
+- `type` (`StoryItemType`): Type of element
+- `model` (`StoryModel`): Story Model this element belongs to
+- `parentNode` (`StoryNodeItem`): Parent of this node
 
 #### StoryElement()
 
@@ -2155,8 +1748,8 @@ public static StoryElement GetByGuid(Guid guid, StoryModel storyModel = null)
 
 **Parameters**
 
-- `guid` (`Guid`) — The Guid of the StoryElement to retrieve
-- `storyModel` (`StoryModel`) — optional story model override, defaults to current app state model.
+- `guid` (`Guid`): The Guid of the StoryElement to retrieve
+- `storyModel` (`StoryModel`): optional story model override, defaults to current app state model.
 
 **Returns** `StoryElement`
 
@@ -2170,9 +1763,9 @@ public static StoryElement Deserialize(string json)
 
 **Parameters**
 
-- `json` (`string`) — JSON to deserialize.
+- `json` (`string`): JSON to deserialize.
 
-**Returns** `StoryElement` — StoryElement Object.
+**Returns** `StoryElement`: StoryElement Object.
 
 #### Serialize()
 
@@ -2182,7 +1775,7 @@ Serialises this StoryElement into JSON.
 public string Serialize()
 ```
 
-**Returns** `string` — JSON Representation of this object.
+**Returns** `string`: JSON Representation of this object.
 
 #### ToString()
 
@@ -2196,7 +1789,7 @@ public override string ToString()
 
 ## StoryElementCollection
 
-*Class* — `StoryCADLib.Models.StoryElementCollection`
+*Class*: `StoryCADLib.Models.StoryElementCollection`
 
 StoryElementCollection is an ObservableCollection of StoryElement
 instances, which automatically maintains several derivative
@@ -2263,7 +1856,7 @@ public ObservableCollection<StoryElement> Problems { get; }
 
 ## StoryItemType
 
-*Enum* — `StoryCADLib.Models.StoryItemType`
+*Enum*: `StoryCADLib.Models.StoryItemType`
 
 ```csharp
 [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -2291,7 +1884,7 @@ public enum StoryItemType
 
 ## StoryModel
 
-*Class* — `StoryCADLib.Models.StoryModel`
+*Class*: `StoryCADLib.Models.StoryModel`
 
 ```csharp
 public class StoryModel : ObservableObject
@@ -2422,28 +2015,9 @@ public void RefreshCurrentView()
 
 ---
 
-## StoryViewType
-
-*Enum* — `StoryCADLib.Models.StoryViewType`
-
-Views Modes available in StoryCAD UI.
-
-```csharp
-public enum StoryViewType
-```
-
-### Values
-
-| Value | Description |
-|-------|-------------|
-| `ExplorerView` |  |
-| `NarratorView` |  |
-
----
-
 ## StoryWorldModel
 
-*Class* — `StoryCADLib.Models.StoryWorldModel`
+*Class*: `StoryCADLib.Models.StoryWorldModel`
 
 Model for the StoryWorld story element.
 Contains worldbuilding information organized by category.
@@ -2784,50 +2358,9 @@ public string SocialImpact { get; set; }
 
 ---
 
-## StringSelection
-
-*Class* — `StoryCADLib.Models.StringSelection`
-
-```csharp
-public class StringSelection : ObservableObject
-```
-
-### Constructors
-
-#### StringSelection(string, bool)
-
-```csharp
-public StringSelection(string stringName, bool selected = false)
-```
-
-**Parameters**
-
-- `stringName` (`string`)
-- `selected` (`bool`)
-
-### Properties
-
-#### StringName
-
-```csharp
-public string StringName { get; set; }
-```
-
-**Type** `string`
-
-#### Selection
-
-```csharp
-public bool Selection { get; set; }
-```
-
-**Type** `bool`
-
----
-
 ## TrashCanModel
 
-*Class* — `StoryCADLib.Models.TrashCanModel`
+*Class*: `StoryCADLib.Models.TrashCanModel`
 
 The TrashCanModel is a container for deleted StoryElements. It's the second root node
 in both the Explorer View and Narrator Views, and contains no properties.
@@ -2861,7 +2394,7 @@ public TrashCanModel(StoryModel model, StoryNodeItem node)
 
 ## WebModel
 
-*Class* — `StoryCADLib.Models.WebModel`
+*Class*: `StoryCADLib.Models.WebModel`
 
 ```csharp
 public class WebModel : StoryElement
@@ -2907,340 +2440,3 @@ public Uri URL
 ```
 
 **Type** `Uri`
-
----
-
-## Windowing
-
-*Class* — `StoryCADLib.Models.Windowing`
-
-This class contains window (MainWindow) related items etc.
-
-```csharp
-public class Windowing : ObservableRecipient
-```
-
-### Constructors
-
-#### Windowing(AppState, ILogService)
-
-```csharp
-public Windowing(AppState appState, ILogService logService)
-```
-
-**Parameters**
-
-- `appState` (`AppState`)
-- `logService` (`ILogService`)
-
-### Fields
-
-#### WindowHandle
-
-A pointer to the App Window (MainWindow) handle
-
-```csharp
-public nint WindowHandle
-```
-
-**Type** `nint`
-
-#### PageKey
-
-```csharp
-public string PageKey
-```
-
-**Type** `string`
-
-#### MainWindow
-
-```csharp
-public Window MainWindow
-```
-
-**Type** `Window`
-
-#### XamlRoot
-
-A defect in early WinUI 3 Win32 code is that ContentDialog
-controls don't have an established XamlRoot. A workaround
-is to assign the dialog's XamlRoot to the root of a visible
-Page. The Shell page's XamlRoot is stored here and accessed wherever needed.
-
-```csharp
-public XamlRoot XamlRoot
-```
-
-**Type** `XamlRoot`
-
-#### GlobalDispatcher
-
-A universal dispatcher to show messages/change UI from
-a non UI thread. Example: Showing a warning from backup.
-
-```csharp
-public DispatcherQueue GlobalDispatcher
-```
-
-**Type** `DispatcherQueue`
-
-### Properties
-
-#### RequestedTheme
-
-```csharp
-public ElementTheme RequestedTheme { get; set; }
-```
-
-**Type** `ElementTheme`
-
-#### AccentColor
-
-Returns the users accent color
-(Set in Windows Settings)
-
-```csharp
-public Color AccentColor { get; }
-```
-
-**Type** `Color`
-
-#### PrimaryColor
-
-Sets the shell color
-
-```csharp
-public SolidColorBrush PrimaryColor { get; set; }
-```
-
-**Type** `SolidColorBrush`
-
-#### SecondaryColor
-
-Handles various other colorations
-
-```csharp
-public SolidColorBrush SecondaryColor { get; set; }
-```
-
-**Type** `SolidColorBrush`
-
-#### ContrastColor
-
-This is a color that should in most cases
-contrast the users accent color
-
-```csharp
-public SolidColorBrush ContrastColor { get; }
-```
-
-**Type** `SolidColorBrush`
-
-### Methods
-
-#### UpdateWindowTitle()
-
-This will dynamically update the title based
-on the current conditions of the app.
-
-```csharp
-public void UpdateWindowTitle()
-```
-
-#### UpdateUIToTheme()
-
-This will update the elements of the UI to
-match the theme set in RequestedTheme.
-
-```csharp
-public void UpdateUIToTheme()
-```
-
-#### ShowContentDialog(ContentDialog, bool)
-
-This takes a ContentDialog and shows it to the user
-It will handle theming, XAMLRoot and showing the dialog.
-
-```csharp
-public Task<ContentDialogResult> ShowContentDialog(ContentDialog Dialog, bool force = false)
-```
-
-**Parameters**
-
-- `Dialog` (`ContentDialog`) — Content dialog to show
-- `force` (`bool`) — Force show content dialog, will close currently open dialog if one
-            is already open
-
-**Returns** `Task<ContentDialogResult>` — A ContentDialogResult value
-
-#### CloseContentDialog()
-
-Dismisses the current content dialog
-
-```csharp
-public void CloseContentDialog()
-```
-
-#### ActivateMainInstance()
-
-When a second instance is opened, this code will be ran on the main (first) instance
-It will bring up the main window.
-
-```csharp
-public void ActivateMainInstance()
-```
-
-#### ShowFilePicker(string, string)
-
-Shows a file picker.
-
-```csharp
-public Task<StorageFile> ShowFilePicker(string buttonText = "Open", string filter = "*")
-```
-
-**Parameters**
-
-- `buttonText` (`string`)
-- `filter` (`string`)
-
-**Returns** `Task<StorageFile>` — A StorageFile object, of the file picked.
-
-#### ShowFileSavePicker(string, string)
-
-Shows a file save as picker.
-
-```csharp
-public Task<StorageFile> ShowFileSavePicker(string buttonText, string extension)
-```
-
-**Parameters**
-
-- `buttonText` (`string`)
-- `extension` (`string`)
-
-**Returns** `Task<StorageFile>` — A StorageFile object, of the file picked.
-
-#### ShowFolderPicker(string, string)
-
-Spawn a folder picker for the user to select a folder.
-
-```csharp
-public Task<StorageFolder> ShowFolderPicker(string buttonText = "Select folder", string filter = "*")
-```
-
-**Parameters**
-
-- `buttonText` (`string`) — Text shown on the confirmation button
-- `filter` (`string`) — Filter filetype?
-
-**Returns** `Task<StorageFolder>`
-
-#### SetWindowSize(Window, double, double)
-
-Sets the window size in physical pixels (consistent across all platforms regardless of DPI)
-
-```csharp
-public void SetWindowSize(Window window, double desiredWidthPx, double desiredHeightPx)
-```
-
-**Parameters**
-
-- `window` (`Window`) — The Window to resize
-- `desiredWidthPx` (`double`) — Desired width in physical pixels
-- `desiredHeightPx` (`double`) — Desired height in physical pixels
-
-#### CenterOnScreen(Window)
-
-```csharp
-public void CenterOnScreen(Window window)
-```
-
-**Parameters**
-
-- `window` (`Window`)
-
-#### GetActiveWindow()
-
-```csharp
-public static extern nint GetActiveWindow()
-```
-
-**Returns** `nint`
-
-#### ShowResourceErrorMessage()
-
-Shows an error message to the user that there's an issue
-with the app, and it needs to be reinstalled.
-
-```csharp
-public void ShowResourceErrorMessage()
-```
-
----
-
-## Windowing.IInitializeWithWindow
-
-*Interface* — `StoryCADLib.Models.Windowing.IInitializeWithWindow`
-
-```csharp
-[Guid("3E68D4BD-7135-4D10-8018-9FB6D9F33FA1")]
-[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-public interface Windowing.IInitializeWithWindow
-```
-
-### Methods
-
-#### Initialize(nint)
-
-```csharp
-void Initialize(nint hwnd)
-```
-
-**Parameters**
-
-- `hwnd` (`nint`)
-
----
-
-## WorkflowStepModel
-
-*Class* — `StoryCADLib.Models.WorkflowStepModel`
-
-```csharp
-public class WorkflowStepModel
-```
-
-### Constructors
-
-#### WorkflowStepModel()
-
-```csharp
-public WorkflowStepModel()
-```
-
-### Properties
-
-#### Name
-
-```csharp
-public string Name { get; set; }
-```
-
-**Type** `string`
-
-#### Description
-
-```csharp
-public string Description { get; set; }
-```
-
-**Type** `string`
-
-#### IsCompleted
-
-```csharp
-public bool IsCompleted { get; set; }
-```
-
-**Type** `bool`

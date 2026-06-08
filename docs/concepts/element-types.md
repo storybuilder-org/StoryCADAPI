@@ -29,7 +29,7 @@ Use the `Name` and `Description` property names with `UpdateElementProperty`.
 ```csharp
 public enum StoryItemType
 {
-    StoryOverview,  // Singleton — story metadata
+    StoryOverview,  // Singleton: story metadata
     Problem,        // Story problem / conflict
     Character,      // Character profile
     Setting,        // Location / environment
@@ -38,14 +38,15 @@ public enum StoryItemType
     Section,        // Narrator View organizer (chapter, act)
     Web,            // Web bookmark
     Notes,          // Notes element (uses base properties only)
-    TrashCan,       // Singleton — deleted elements container
-    StoryWorld      // Singleton (optional) — worldbuilding
+    TrashCan,       // Singleton: deleted elements container
+    StoryWorld,     // Singleton (optional): worldbuilding
+    Unknown         // Sentinel: not a usable element type
 }
 ```
 
 ```python
 # The StoryItemType enum is exposed as sc.item_type (C#-type concept):
-sc.item_type.StoryOverview  # Singleton — story metadata
+sc.item_type.StoryOverview  # Singleton: story metadata
 sc.item_type.Problem        # Story problem / conflict
 sc.item_type.Character      # Character profile
 sc.item_type.Setting        # Location / environment
@@ -54,8 +55,8 @@ sc.item_type.Folder         # Explorer View organizer
 sc.item_type.Section        # Narrator View organizer (chapter, act)
 sc.item_type.Web            # Web bookmark
 sc.item_type.Notes          # Notes element (uses base properties only)
-sc.item_type.TrashCan       # Singleton — deleted elements container
-sc.item_type.StoryWorld     # Singleton (optional) — worldbuilding
+sc.item_type.TrashCan       # Singleton: deleted elements container
+sc.item_type.StoryWorld     # Singleton (optional): worldbuilding
 ```
 
 </div>
@@ -328,17 +329,17 @@ Singleton container for soft-deleted elements. No additional properties beyond t
 | TrashCan | Any deleted element |
 
 **Key constraints**:
-- Don't add Folders to the Narrator View — use Sections instead
-- Don't add Sections to the Explorer View — use Folders instead
-- Don't add elements directly to the TrashCan — use `DeleteElement`
-- Don't add elements to the Narrator View unless explicitly needed — default to the Overview
+- Don't add Folders to the Narrator View; use Sections instead
+- Don't add Sections to the Explorer View; use Folders instead
+- Don't add elements directly to the TrashCan; use `DeleteElement`
+- Don't add elements to the Narrator View unless explicitly needed; default to the Overview
 
 ## Property Value Types
 
 Properties fall into three categories:
 
 ### Plain Strings
-Free text — pass any string value:
+Free text, pass any string value:
 <div class="code-tabs" markdown="1">
 
 ```csharp
@@ -352,7 +353,7 @@ sc.update_element_property(problem, "ProtGoal", "Find the treasure")
 </div>
 
 ### GUID References
-Link to another element — pass the target element's GUID as a string:
+Link to another element, pass the target element's GUID as a string:
 <div class="code-tabs" markdown="1">
 
 ```csharp
@@ -383,4 +384,4 @@ sc.update_element_property(character, "Role", "Protagonist")
 ```
 
 </div>
-You can also pass free text for these properties — the examples are suggestions, not constraints.
+You can also pass free text for these properties. The examples are suggestions, not constraints.

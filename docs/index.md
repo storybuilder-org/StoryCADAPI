@@ -9,7 +9,19 @@ permalink: /
 # StoryCAD API
 {: .no_toc }
 
-Build story outlines programmatically with the StoryCADLib API.
+Programmatic story outlining for .NET. StoryCADLib lets you build, analyze, and transform `.stbx` story outlines from your own code, in console apps, web APIs, batch jobs, and AI agents, with no UI required.
+
+It's the same engine that powers [StoryCAD](https://github.com/storybuilder-org/StoryCAD), exposed as a headless library and published on [NuGet](https://www.nuget.org/packages/StoryCADLib).
+
+## What StoryCAD does
+
+- **Manage outlines**: create, open, and save `.stbx` story outlines.
+- **Work with elements**: add and edit characters, scenes, problems, settings, and more, then search and link them together.
+- **Apply story structure**: drive beat sheets, master plots, and dramatic situations from built-in writing-craft data.
+- **Run headless**: use it in console apps, web APIs, and batch pipelines without a window.
+- **Integrate with AI**: pre-built Semantic Kernel functions and an MCP server expose the API to Claude Desktop, Claude Code, and other agents.
+
+Every operation returns an `OperationResult<T>`. Check `IsSuccess` before reading `Payload`.
 
 ## Quick Example
 
@@ -51,31 +63,22 @@ sc.write_outline("my-story.stbx")
 
 </div>
 
-## Features
+## Get started
 
-- **Outline Management** - Create, open, save story outlines (.stbx files)
-- **Element CRUD** - Add characters, scenes, problems, settings, and more
-- **Structure Tools** - Beat sheets, master plots, dramatic situations
-- **Headless Mode** - Use in console apps, web APIs, batch processing
-- **Semantic Kernel Ready** - Pre-built functions for AI agent integration
-- **MCP Server** - Expose the API to Claude Desktop, Claude Code, and other MCP clients
+- [Installation](getting-started/installation.md): add the library to your project.
+- [Quick Start](getting-started/quick-start.md): build your first outline (Hello World) in 5 minutes.
 
-## Getting Started
+## Where to find more
 
-- [Installation](getting-started/installation.md) - Add the library to your project
-- [Quick Start](getting-started/quick-start.md) - Build your first outline (Hello World) in 5 minutes
-
-## Documentation
-
-- [Concepts](concepts/story-model.md) - Understand the story model, element types, and resource data
-- [Operations](operations/search.md) - Search, resource workflows, and beat sheet operations
-- [Samples](samples/index.md) - Working code examples
-- [Advanced](advanced/semantic-kernel.md) - Semantic Kernel integration and MCP server
-- [API Reference](api/index.md) - Complete technical documentation
+- [Concepts](concepts/story-model.md): the story model, element types, and resource data.
+- [Operations](operations/search.md): search, resource workflows, and beat sheet operations.
+- [Samples](samples/index.md): working code examples.
+- [Advanced](advanced/semantic-kernel.md): Semantic Kernel integration and the MCP server.
+- [API Reference](api/index.md): complete technical documentation.
 
 ## About StoryCAD
 
-[StoryCAD](https://github.com/storybuilder-org/StoryCAD) is a free, open-source outlining tool for fiction writers. StoryCADLib is the core library that powers StoryCAD, available as a NuGet package for developers who want to build tools that work with story outlines.
+[StoryCAD](https://github.com/storybuilder-org/StoryCAD) is a free, open-source outlining tool for fiction writers. StoryCADLib is the core library that powers it, available as a NuGet package for developers who want to build tools that work with story outlines.
 
 ## License
 

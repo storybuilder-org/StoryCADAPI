@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **StoryCADAPI** is the documentation and samples repository for [StoryCADLib](https://www.nuget.org/packages/StoryCADLib), the core library powering StoryCAD. It contains:
 
-- **docs/** — Reference documentation (docfx-generated GitHub Pages site)
+- **docs/** — Reference documentation (Jekyll "Just the Docs" GitHub Pages site)
 - **samples/** — Runnable .NET 10 sample applications
 - **StoryCADMcp/** — MCP server exposing StoryCADLib tools to AI agents
 - **StoryCADCli/** — Console CLI wrapper around the API
@@ -70,7 +70,7 @@ $env:OPENAI_API_KEY = "your_key_here"
 
 **OperationResult**: all API methods return `OperationResult<T>` — always check `IsSuccess` before using `Payload`.
 
-**Headless mode**: `ServiceLocator.Initialize(headless: true)` configures StoryCADLib without a UI. Required in every sample entry point.
+**Headless mode**: `BootStrapper.Initialise(headless: true)` configures StoryCADLib without a UI. Required in every sample entry point.
 
 **NuGet vs ProjectReference**: controlled by `UseStoryCADLibNuGet` in `Directory.Build.props`. Currently `true` (NuGet, version pinned by `StoryCADLibVersion`). Set to `false` to use the sibling-clone source.
 
@@ -93,19 +93,21 @@ Test strategy: deterministic tests use `StubbedPipelineTests.cs` with `FakeChatC
 
 `StoryCADMcp/` exposes StoryCADLib operations as MCP tools for AI agent integration. Tests in `StoryCADMcp.Tests/`.
 
-## Documentation (docfx)
+## Documentation (Jekyll / Just the Docs)
+
+The docs site lives in `docs/` and is a Jekyll [Just the Docs](https://just-the-docs.com/) site — it is no longer docfx, and there is no `docfx.json`. The API reference pages under `docs/api/` are hand-authored Markdown. The site builds and deploys to GitHub Pages via `.github/workflows/deploy-docs.yml` on every push to `main` that touches `docs/`.
+
+Serving locally requires Ruby + Bundler:
 
 ```powershell
-# Step 1: build StoryCADLib (from StoryCAD repo)
-dotnet build StoryCADLib/StoryCADLib.csproj -c Debug -f net10.0-windows10.0.22621
+# Preferred: wrapper script. Installs gems on first run, then serves with livereload.
+# Serves at http://localhost:4000/StoryCADAPI/ (the site uses a /StoryCADAPI baseurl).
+pwsh serve-docs.ps1 [port]
 
-# Step 2: copy artifacts
-mkdir _assemblies
-cp ../StoryCAD/StoryCADLib/bin/Debug/net10.0-windows10.0.22621/StoryCADLib.dll _assemblies/
-cp ../StoryCAD/StoryCADLib/bin/Debug/net10.0-windows10.0.22621/StoryCADLib.xml _assemblies/
-
-# Step 3: generate and serve (run via cmd.exe on WSL; docfx needs .NET 9)
-cd docs && docfx docfx.json --serve
+# Equivalent manual steps, run from the docs/ directory:
+cd docs
+bundle install                 # first run only
+bundle exec jekyll serve --livereload
 ```
 
 GitHub Pages deployment is disabled until the 4.0 store release.

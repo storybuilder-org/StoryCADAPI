@@ -8,7 +8,7 @@ nav_order: 3
 # 3. Reading and Editing Elements
 {: .no_toc }
 
-Your characters have names, but a name isn't a character. In this lesson you'll set their properties — role, age, a note or two — both one at a time and in batches, then read an element back to see everything you've stored.
+Your characters have names, but a name isn't a character. In this lesson you'll set their properties (role, age, a note or two) both one at a time and in batches, then read an element back to see everything you've stored.
 
 1. TOC
 {:toc}
@@ -74,11 +74,11 @@ sc.update_element_properties(mara, {
 Same idea, just a map of names to values. Use a single update for one field and a batch when you're filling in several.
 
 {: .note }
-> **Which property names can I use?** They match the fields StoryCAD knows about for each element type — `Role`, `Age`, `Archetype`, and so on for a character. If you set a name the element doesn't recognize, the call simply won't change anything. The [Element Types](../concepts/element-types.md) page lists the properties for each type.
+> **Which property names can I use?** They match the fields StoryCAD knows about for each element type: `Role`, `Age`, `Archetype`, and so on for a character. If you set a name the element doesn't recognize, the call simply won't change anything. The [Element Types](../concepts/element-types.md) page lists the properties for each type.
 
 ## Read an element back
 
-To see everything stored on an element, ask for it. `GetElement` returns the element's full state — every field, not just the ones you set.
+To see everything stored on an element, ask for it. `GetElement` returns the element's full state: every field, not just the ones you set.
 
 <div class="code-tabs" markdown="1">
 
@@ -124,7 +124,7 @@ sc.write_outline("the-vault.stbx")
 
 - `UpdateElementProperty` sets one field; `UpdateElementProperties` sets a batch.
 - Property names are the fields StoryCAD defines for each element type.
-- `GetElement` returns an element's complete stored state — useful for checking what you've saved.
+- `GetElement` returns an element's complete stored state: useful for checking what you've saved.
 
 Your cast is taking shape. So far everything sits in a flat list under the overview, though. Next we'll organize the outline into folders and put the scenes in order.
 

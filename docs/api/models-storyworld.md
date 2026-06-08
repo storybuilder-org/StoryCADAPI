@@ -7,13 +7,13 @@ nav_order: 6
 
 # Models.StoryWorld
 
-Auto-generated reference for the `StoryCADLib.Models.StoryWorld` namespace (5 types).
+Reference for the `StoryCADLib.Models.StoryWorld` namespace.
 
 {: .fs-6 .fw-300 }
 
 ## CultureEntry
 
-*Class* — `StoryCADLib.Models.StoryWorld.CultureEntry`
+*Class*: `StoryCADLib.Models.StoryWorld.CultureEntry`
 
 Entry for the Cultures list tab.
 Represents a culture, milieu, or social environment.
@@ -107,7 +107,7 @@ public string Entertainment { get; set; }
 
 ## GovernmentEntry
 
-*Class* — `StoryCADLib.Models.StoryWorld.GovernmentEntry`
+*Class*: `StoryCADLib.Models.StoryWorld.GovernmentEntry`
 
 Entry for the Governments list tab.
 Represents a government, faction, or power structure.
@@ -190,7 +190,7 @@ public string ForeignRelations { get; set; }
 
 ## PhysicalWorldEntry
 
-*Class* — `StoryCADLib.Models.StoryWorld.PhysicalWorldEntry`
+*Class*: `StoryCADLib.Models.StoryWorld.PhysicalWorldEntry`
 
 Entry for the Physical World list tab.
 Represents a world, planet, or realm in multi-world stories.
@@ -283,7 +283,7 @@ public string Astronomy { get; set; }
 
 ## ReligionEntry
 
-*Class* — `StoryCADLib.Models.StoryWorld.ReligionEntry`
+*Class*: `StoryCADLib.Models.StoryWorld.ReligionEntry`
 
 Entry for the Religions list tab.
 Represents a religion or belief system.
@@ -366,7 +366,7 @@ public string CreationMyths { get; set; }
 
 ## SpeciesEntry
 
-*Class* — `StoryCADLib.Models.StoryWorld.SpeciesEntry`
+*Class*: `StoryCADLib.Models.StoryWorld.SpeciesEntry`
 
 Entry for the People/Species list tab.
 Represents a species, race, or people group.
