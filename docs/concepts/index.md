@@ -14,3 +14,4 @@ Background on how StoryCAD outlines are structured and the rules for working wit
 | [The Story Model](story-model.md) | The root data structure for every outline |
 | [Element Types and Properties](element-types.md) | All 11 story element types and their properties |
 | [Resource Data and Writing Tools](resource-data.md) | Built-in reference data and writing-tool resources |
+| [Glossary](glossary.md) | One-line definitions of the terms used across the documentation |
