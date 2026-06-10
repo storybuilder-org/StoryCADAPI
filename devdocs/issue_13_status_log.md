@@ -136,6 +136,23 @@ Open acceptance criteria:
 Related sibling work:
 - Issue #15 item 2 — Help button on Outliner nav: not started.
 
+### 2026-06-10 — IP cleanup, stubbed tests removed, CLAUDE.md fixed
+
+**Done**
+- Pulled Jake's changes to `main` (33 files — Jekyll/Just the Docs conversion of docs site, glossary, site images).
+- Fixed `docs/samples/index.md`: "five" → "six" samples, "last two" → "last three" Semantic Kernel samples.
+- On `issue-13-harden-outliner`: removed `Mirror, Mirror.docx` from `OutlinerInput/` and all four derived files from `OutlinerOutput/` (IP — published story).
+- Deleted `StubbedPipelineTests.cs`, `FakeChatCompletionService.cs`, and `Fixtures/Mirror, Mirror.raw.json`. These tests were AI-hallucinated: the fixture was hand-crafted JSON tied to a proprietary story, and the tests asserted hardcoded values from it. They tested deserialization plumbing, not real behavior. (Note: a previous session had replaced the Mirror Mirror fixture with a Yellow Wallpaper fixture; that replacement is now also gone — the whole stubbed-test apparatus was removed.)
+- Updated `.gitignore` to add folder-level ignore for `OutlinerInput/` (OutputDir and TestOutputs were already covered).
+- Removed the `Build and Run` section from `CLAUDE.md` — it contained wrong `net10.0-desktop` TFM flags copy-pasted from the main StoryCAD repo. Fixed "Uno WinUI app" → "Uno app" and removed stale `StubbedPipelineTests`/`FakeChatCompletionService` references from the test strategy line.
+- Both `Outliner.csproj` and `OutlinerTests.csproj` build clean with MSBuild (0 errors, 2 pre-existing nullable warnings).
+- Merged `issue-13-harden-outliner` to `main`. Updated issue #13 body with session notes.
+- Started on issue #14 (`issue-14-critter-rebuild`): confirmed no IP issues in Critter, built clean (0 errors), found pre-existing CS0436 `GlobalStaticResources` warnings from the `.Core` project split. Not introduced today.
+
+**Remains (carry-forward)**
+- CS0436 `GlobalStaticResources` warnings in Critter build — pre-existing Uno.Sdk `.Core` split issue, not blocking.
+- Outliner targets `net10.0-windows10.0.22621` only; Critter targets both `net10.0-windows10.0.22621` and `net10.0-desktop`. If both samples should support macOS, Outliner's csproj needs updating to match Critter.
+
 ### 2026-05-25 — Handoff for desktop continuation
 
 **State**
