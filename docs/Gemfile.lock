@@ -14,6 +14,7 @@ GEM
     eventmachine (1.2.7)
     ffi (1.17.4)
     ffi (1.17.4-arm64-darwin)
+    ffi (1.17.4-x64-mingw-ucrt)
     ffi (1.17.4-x86-linux-gnu)
     ffi (1.17.4-x86-linux-musl)
     ffi (1.17.4-x86_64-darwin)
@@ -22,6 +23,9 @@ GEM
       bigdecimal
       rake (~> 13.3)
     google-protobuf (4.35.0-arm64-darwin)
+      bigdecimal
+      rake (~> 13.3)
+    google-protobuf (4.35.0-x64-mingw-ucrt)
       bigdecimal
       rake (~> 13.3)
     google-protobuf (4.35.0-x86-linux-gnu)
@@ -93,6 +97,8 @@ GEM
       rake (>= 13)
     sass-embedded (1.100.0-arm64-darwin)
       google-protobuf (~> 4.31)
+    sass-embedded (1.100.0-x64-mingw-ucrt)
+      google-protobuf (~> 4.31)
     sass-embedded (1.100.0-x86_64-darwin)
       google-protobuf (~> 4.31)
     terminal-table (3.0.2)
@@ -103,6 +109,7 @@ GEM
 PLATFORMS
   arm64-darwin
   ruby
+  x64-mingw-ucrt
   x86-linux-gnu
   x86-linux-musl
   x86_64-darwin
