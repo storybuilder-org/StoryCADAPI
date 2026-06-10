@@ -48,7 +48,7 @@ dev/src/
 
 ### Outliner sample architecture
 
-`samples/Outliner/` is a Uno WinUI app:
+`samples/Outliner/` is a Uno app:
 
 - `ProseDocumentReader` — reads `.docx` and `.txt` prose files
 - `ProseAnalyzer` — calls OpenAI via Semantic Kernel, returns `OnePassResponse`
@@ -59,7 +59,7 @@ dev/src/
 
 Prompt is at `samples/Outliner/Outliner/Prompts/OnePassSystemPrompt.md` (current: v4).
 
-Test strategy: deterministic tests use `StubbedPipelineTests.cs` with `FakeChatCompletionService` and recorded fixture `Fixtures/Mirror, Mirror.raw.json`. Live-LLM tests are in `ManualTests/Outliner_End_To_End_Test.md`.
+Test strategy: live-LLM end-to-end tests are in `ManualTests/Outliner_End_To_End_Test.md`.
 
 ### MCP server
 

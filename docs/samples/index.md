@@ -7,7 +7,7 @@ has_children: true
 
 # Samples
 
-Five self-contained console applications that show you the StoryCADLib API in action. The first three use the core API only; the last two bring in Semantic Kernel for LLM-powered analysis.
+Six sample applications that show you the StoryCADLib API in action. The first three use the core API only; the last three bring in Semantic Kernel for LLM-powered analysis.
 
 | Sample | Type | What You'll Learn |
 |--------|------|-------------------|
