@@ -25,34 +25,6 @@ dev/src/
   StoryCADAPI/    # This repo
 ```
 
-## Build and Run
-
-All samples target `net10.0-desktop` (Uno SDK):
-
-```powershell
-# Build a sample
-dotnet build samples/StoryGraphBasics/StoryGraphBasics.csproj -f net10.0-desktop
-
-# Run a sample
-dotnet run --project samples/StoryGraphBasics/StoryGraphBasics.csproj -f net10.0-desktop
-
-# Outliner requires x64 platform
-dotnet build samples/Outliner/Outliner/Outliner.csproj -f net10.0-desktop -p:Platform=x64
-dotnet run --project samples/Outliner/Outliner/Outliner.csproj -f net10.0-desktop -p:Platform=x64
-
-# Run MCP server tests
-dotnet test StoryCADMcp.Tests/StoryCADMcp.Tests.csproj -f net10.0-desktop
-
-# Run Outliner tests
-dotnet test samples/Outliner/OutlinerTests/OutlinerTests.csproj -f net10.0-desktop -p:Platform=x64
-```
-
-For Semantic Kernel samples, set the API key first:
-
-```powershell
-$env:OPENAI_API_KEY = "your_key_here"
-```
-
 ## Architecture
 
 ### Samples
@@ -64,7 +36,7 @@ $env:OPENAI_API_KEY = "your_key_here"
 | `ConsistencyValidation` | No | 6 validation checks (orphan characters, unused settings, etc.) |
 | `StoryDiagnosticAgent` | Yes | LLM-powered diagnosis of pacing, passive protagonist, plot holes |
 | `StoryCADCritter` | Yes | LLM scores outline against 5 craft criteria |
-| `Outliner` | Yes | Full Uno WinUI app — converts prose documents to `.stbx` outlines |
+| `Outliner` | Yes | Uno app — converts prose documents to `.stbx` outlines |
 
 ### Key patterns
 

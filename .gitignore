@@ -407,7 +407,8 @@ FodyWeavers.xsd
 # docfx build output
 docs/_site/
 
-# Outliner runtime outputs (user-picked output folder)
+# Outliner runtime folders (user input/output, regenerated test outputs)
+samples/Outliner/Outliner/OutlinerInput/
 samples/Outliner/Outliner/OutlinerOutput/
 
 # Outliner test outputs (regenerated each test run)
