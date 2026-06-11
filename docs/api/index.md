@@ -1,3 +1,10 @@
+---
+layout: default
+title: API Reference
+nav_order: 8
+has_children: true
+---
+
 # API Reference
 
 This section documents the StoryCADLib public API.
@@ -8,6 +15,16 @@ This section documents the StoryCADLib public API.
 |-------|-------------|
 | [StoryCADApi](storycad-api.md) | Main API for story outline operations |
 | [OperationResult\<T\>](operation-result.md) | Result wrapper for all API calls |
+
+## Namespaces
+
+Reference for the supporting model types:
+
+| Namespace | Description |
+|-----------|-------------|
+| [Models](models.md) | Core story element and document models |
+| [Models.Tools](models-tools.md) | Writing-tool data models (conflicts, key questions, plot patterns) |
+| [Models.StoryWorld](models-storyworld.md) | Story world-building entry models |
 
 ## Quick Reference by Category
 

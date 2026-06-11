@@ -283,7 +283,9 @@ namespace Outliner
             try
             {
                 var picker = new FileOpenPicker();
+#if WINDOWS
                 WinRT.Interop.InitializeWithWindow.Initialize(picker, WindowHandle);
+#endif
 
                 picker.FileTypeFilter.Add(".txt");
                 picker.FileTypeFilter.Add(".docx");
@@ -346,7 +348,9 @@ namespace Outliner
             try
             {
                 var picker = new FileSavePicker();
+#if WINDOWS
                 WinRT.Interop.InitializeWithWindow.Initialize(picker, WindowHandle);
+#endif
 
                 picker.FileTypeChoices.Add("Story Outline", new[] { ".stbx" });
                 picker.SuggestedFileName = _storyFile != null

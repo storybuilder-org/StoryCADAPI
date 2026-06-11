@@ -1,3 +1,10 @@
+---
+layout: default
+title: "Resource Workflows"
+parent: "Operations"
+nav_order: 2
+---
+
 # Resource API Workflows
 
 This page provides step-by-step code examples for each multi-step resource workflow. For an overview of what each resource provides, see [Resource Data and Writing Tools](../concepts/resource-data.md).
@@ -5,6 +12,8 @@ This page provides step-by-step code examples for each multi-step resource workf
 ## Conflict Builder (4 Steps)
 
 Build a structured conflict description for a Problem's protagonist or antagonist.
+
+<div class="code-tabs" markdown="1">
 
 ```csharp
 // Step 1: Get conflict categories
@@ -31,9 +40,38 @@ api.ApplyConflictToProtagonist(problemGuid, examples.First());
 api.ApplyConflictToAntagonist(problemGuid, "Custom conflict text is also valid");
 ```
 
+```python
+# Step 1: Get conflict categories
+categories = sc.get_conflict_categories()
+# ["Relationship", "Situational", "Inner Conflict", "Paranormal",
+#  "Criminal activities", "Mystery and suspense", "Social drama", "Romantic"]
+
+# Step 2: Get subcategories for a category
+subcategories = sc.get_conflict_subcategories("Relationship")
+# ["Lovers", "Family", "Friends", "Rivals", ...]
+
+# Step 3: Get example conflicts for the subcategory
+examples = sc.get_conflict_examples("Relationship", "Lovers")
+# ["Jealousy threatens to destroy a passionate affair",
+#  "A secret from the past resurfaces", ...]
+
+# Step 4: Apply to a Problem element
+problem = ...  # an existing Problem element handle
+
+# Apply to protagonist's conflict
+sc.apply_conflict_to_protagonist(problem, examples[0])
+
+# Or apply to antagonist's conflict
+sc.apply_conflict_to_antagonist(problem, "Custom conflict text is also valid")
+```
+
+</div>
+
 ### Presenting to Users or LLMs
 
 For interactive applications, present each step as a choice:
+
+<div class="code-tabs" markdown="1">
 
 ```csharp
 // Show categories
@@ -57,11 +95,37 @@ foreach (var example in examples)
     Console.WriteLine($"  - {example}");
 ```
 
+```python
+# Show categories
+print("Choose a conflict category:")
+categories = sc.get_conflict_categories()
+for i, category in enumerate(categories):
+    print(f"  {i + 1}. {category}")
+
+# After user selects, show subcategories
+selected = categories[user_choice - 1]
+subcategories = sc.get_conflict_subcategories(selected)
+print(f"\nSubcategories for '{selected}':")
+for i, subcategory in enumerate(subcategories):
+    print(f"  {i + 1}. {subcategory}")
+
+# After user selects subcategory, show examples
+selected_sub = subcategories[user_choice - 1]
+examples = sc.get_conflict_examples(selected, selected_sub)
+print(f"\nExamples for '{selected}' > '{selected_sub}':")
+for example in examples:
+    print(f"  - {example}")
+```
+
+</div>
+
 For an LLM agent, provide all categories in a single prompt and let it choose, or walk through the steps in a multi-turn conversation.
 
 ## Key Questions (2 Steps)
 
 Retrieve development prompts organized by element type and topic.
+
+<div class="code-tabs" markdown="1">
 
 ```csharp
 // Step 1: Discover which element types have key questions
@@ -80,9 +144,28 @@ foreach (var (topic, question) in questions)
 // ...
 ```
 
+```python
+# Step 1: Discover which element types have key questions
+element_types = sc.get_key_question_elements()
+# ["Character", "Problem", "Scene", "Setting", "Overview"]
+
+# Step 2: Get questions for a specific type
+questions = sc.get_key_questions("Character")
+for q in questions:
+    print(f"[{q.topic}] {q.question}")
+# [Motivation] What does this character want more than anything?
+# [Backstory] What event from their past shaped who they are today?
+# [Relationships] Who is the most important person in their life?
+# ...
+```
+
+</div>
+
 ### Using Key Questions for Element Development
 
 Key questions are ideal for guiding an author (or LLM) through element creation:
+
+<div class="code-tabs" markdown="1">
 
 ```csharp
 // Create a character, then use key questions to flesh it out
@@ -103,9 +186,29 @@ foreach (var (topic, question) in questions)
 }
 ```
 
+```python
+# Create a character, then use key questions to flesh it out
+character = sc.add_element(sc.item_type.Character, overview, "Detective Morgan")
+
+questions = sc.get_key_questions("Character")
+for q in questions:
+    # Present question to user or LLM
+    print(f"\n{q.topic}: {q.question}")
+    answer = get_user_input()  # or LLM response
+
+    # Map topic to property (your application logic)
+    # e.g., "Motivation" → ProtGoal, "Backstory" → BackStory
+    if q.topic == "Backstory" and answer:
+        sc.update_element_property(character, "BackStory", answer)
+```
+
+</div>
+
 ## Master Plots (3 Steps)
 
 Explore Tobias's 20 Master Plots to find a structure for your story.
+
+<div class="code-tabs" markdown="1">
 
 ```csharp
 // Step 1: List all master plots
@@ -131,9 +234,35 @@ foreach (var (sceneTitle, sceneNotes) in scenes)
 // ...
 ```
 
+```python
+# Step 1: List all master plots
+plot_names = sc.get_master_plot_names()
+# ["Quest", "Adventure", "Pursuit", "Rescue", "Escape", "Revenge", ...]
+
+# Step 2: Read the notes for a plot
+notes = sc.get_master_plot_notes("Quest")
+print(notes)
+# "The Quest plot sends the protagonist on a journey to find something..."
+
+# Step 3: Get the scene breakdown
+scenes = sc.get_master_plot_scenes("Quest")
+for scene in scenes:
+    print(f"\n{scene.title}")
+    print(f"  {scene.notes}")
+# Call to Adventure
+#   The hero receives a call to leave their ordinary world...
+# Crossing the Threshold
+#   The hero commits to the journey and enters the special world...
+# ...
+```
+
+</div>
+
 ### Creating Scenes from a Master Plot
 
 Use the scene breakdown to populate an outline:
+
+<div class="code-tabs" markdown="1">
 
 ```csharp
 var plotScenes = api.GetMasterPlotScenes("Quest").Payload;
@@ -153,9 +282,23 @@ foreach (var (title, notes) in plotScenes)
 }
 ```
 
+```python
+plot_scenes = sc.get_master_plot_scenes("Quest")
+overview = ...  # the StoryOverview element handle
+
+for plot_scene in plot_scenes:
+    # add_element raises on failure instead of returning a result object
+    scene = sc.add_element(sc.item_type.Scene, overview, plot_scene.title)
+    sc.update_element_property(scene, "Notes", plot_scene.notes)
+```
+
+</div>
+
 ## Stock Scenes (2 Steps)
 
 Browse scene templates organized by genre or purpose.
+
+<div class="code-tabs" markdown="1">
 
 ```csharp
 // Step 1: List categories
@@ -174,7 +317,26 @@ foreach (var scene in scenes)
 // ...
 ```
 
+```python
+# Step 1: List categories
+categories = sc.get_stock_scene_categories()
+# ["Action", "Romance", "Mystery", "Horror", ...]
+
+# Step 2: Get scenes for a category
+scenes = sc.get_stock_scenes("Mystery")
+for scene in scenes:
+    print(f"  - {scene}")
+# - The detective discovers a vital clue at the crime scene
+# - A witness reveals a contradictory account
+# - The suspect's alibi falls apart under questioning
+# ...
+```
+
+</div>
+
 ### Creating a Scene from Stock
+
+<div class="code-tabs" markdown="1">
 
 ```csharp
 var stockScenes = api.GetStockScenes("Mystery").Payload.ToList();
@@ -191,9 +353,22 @@ if (sceneResult.IsSuccess)
 }
 ```
 
+```python
+stock_scenes = sc.get_stock_scenes("Mystery")
+selected_scene = stock_scenes[0]  # or user's choice
+
+# add_element raises on failure instead of returning a result object
+scene = sc.add_element(sc.item_type.Scene, overview, "Crime Scene Discovery")
+sc.update_element_property(scene, "Notes", selected_scene)
+```
+
+</div>
+
 ## Combining Workflows
 
-Resources are most powerful when combined. Here's an example that creates a Problem with conflict and structure:
+Resources work best when combined. Here's an example that creates a Problem with conflict and structure:
+
+<div class="code-tabs" markdown="1">
 
 ```csharp
 // Create a problem
@@ -212,7 +387,25 @@ api.ApplyBeatSheetToProblem(problemGuid, "Three Act Structure");
 
 // Use master plot scenes to inspire the beat assignments
 var plotScenes = api.GetMasterPlotScenes("Quest").Payload.ToList();
-// Create scenes and assign them to beats — see Beat Sheet Operations
+// Create scenes and assign them to beats: see Beat Sheet Operations
 ```
+
+```python
+# Create a problem
+problem = sc.add_element(sc.item_type.Problem, overview, "The Missing Artifact")
+
+# Use the Conflict Builder to set up protagonist conflict
+examples = sc.get_conflict_examples("Mystery and suspense", "Whodunit")
+sc.apply_conflict_to_protagonist(problem, examples[0])
+
+# Apply a beat sheet for structure
+sc.apply_beat_sheet_to_problem(problem, "Three Act Structure")
+
+# Use master plot scenes to inspire the beat assignments
+plot_scenes = sc.get_master_plot_scenes("Quest")
+# Create scenes and assign them to beats: see Beat Sheet Operations
+```
+
+</div>
 
 See [Beat Sheet Operations](beat-sheets.md) for the complete beat sheet workflow.

@@ -5,7 +5,7 @@ You are provided with the full prose of a short story. Your task is to process t
 1. **CharactersList** — every character identified, with their attributes
 2. **SettingsList** — every distinct location/time the action occurs in
 3. **ScenesList** — each continuous scene in the prose
-4. **ProblemsList** — all conflicts (internal and external) detected
+4. **ProblemsList** — all story problems detected by following Goal, Motivation, and Conflict (GMC)
 
 ## Output Format
 
@@ -16,9 +16,12 @@ Output a single JSON object with this exact shape. All inner property names are 
   "story_overview": {
     "title": "extracted title",
     "author": "extracted author",
+    "storyIdea": "one or two sentences capturing the seed idea or premise behind the story",
+    "viewpoint": "First person | Limited third person | Multiple third person | Omniscent | Second person",
+    "viewpointCharacter": "GUID of the viewpoint character (required if viewpoint is First person or Limited third person; omit otherwise)",
     "premise": "premise generated from the story problem (see Premise Template below)",
     "storyType": "Short-Short | Short Story | Novelette | Novella | Novel",
-    "storyGenre": "Science Fiction | Fantasy | Mystery | Thriller | Romance | Literary Fiction | Horror | Other",
+    "storyGenre": "Action/Adventure | Erotica | Fantasy | Historical Romance | Horror/Occult | Humor | Inspirational | Juvenile | Literary | Mainstream | Men's Adventure | Mystery Thriller | Romance | Science Fiction | Suspense | Western | Women's Fiction | Young Adult",
     "storyProblem": "GUID of the Problem element that is the central story problem",
     "concept": "one-sentence concept statement"
   },
@@ -86,7 +89,8 @@ Output a single JSON object with this exact shape. All inner property names are 
       "antagGoal": "the antagonist's goal — what they want",
       "antagMotive": "the antagonist's motive — why they want it",
       "antagConflict": "what stands between the antagonist and the goal",
-      "outcome": "..."
+      "outcome": "...",
+      "premise": "premise generated from this problem using the Premise Template below"
     }
   ]
 }
@@ -106,6 +110,40 @@ A problem is a **conflict between two opposing goals**. Every problem has a prot
 
 Also fill `subject` (what the conflict is about), `theme` (the abstract idea at stake), and `method` (how the problem is approached) on every problem.
 
+### Finding problems — follow the GMC
+
+The entry point is usually a visible conflict in the prose. From there, ask:
+- What does each side want? (Goal)
+- Why do they want it? (Motivation)
+- What stands in their way? (Conflict)
+
+The motive often reveals a deeper internal problem beneath the surface conflict.
+
+Not every entry point is a visible conflict — sometimes a relationship under pressure, or a character pursuing a goal the reader can see will cost them, signals a problem before any open conflict appears.
+
+An incident alone (an accident, a discovery) is not a problem. It becomes one only if it has a sustained GMC: a character with a goal, a reason for wanting it, and something blocking them across more than a single moment. An incident that serves an existing problem is a beat of that problem, not a new one.
+
+Three tests a valid problem must pass:
+
+1. **Agency**: the protagonist is actively pursuing a goal — not enduring, reacting, or coping. A character without agency does not have a problem; they have a situation.
+2. **Individual**: the problem belongs to a named individual, not a group. "The family must cope" is not a problem. Assign every problem to the specific character who owns the goal.
+3. **Opposing agency**: the antagonist must have a genuine goal that opposes the protagonist's — not merely be a force, an animal in distress, or an abstract circumstance. If the antagonist has no agency, the conflict is a situation, not a problem.
+
+### Detecting internal (Person vs. Self) problems
+
+Internal conflicts are often more deeply resonant than external ones. Do not skip them. Scan the prose for the following four categories and generate a Person vs. Self problem for any you find:
+
+| Category | Prose signals |
+|---|---|
+| **Came to realize** | A character's attitude, belief, or goal shifts at or near the resolution — they understand something they didn't before |
+| **Want vs. need** | A character pursues a goal that undermines their deeper need (e.g., craves revenge but needs forgiveness; seeks approval but needs self-acceptance) |
+| **Flaw** | A character has an explicit or implied defect — addiction, rigidity, guilt, poor impulse control, or a wound from backstory — that drives events or must be faced |
+| **Blind spot** | A character is unaware of a trait causing conflict or grief; events force them to see it (also common in romance: the external conflict is boy vs. girl, but the boy's blind spot is what must change for the relationship to develop) |
+
+**External/internal pairing.** When you identify an external conflict (Person vs. Person, Nature, Society, etc.), check whether the same character also has an internal conflict that the external pressure forces to the surface. These pairs are common: the external problem creates the conditions in which the internal problem must be resolved.
+
+**Foil.** The protagonist's internal problem is sometimes mirrored by a secondary character who faces the same choice but fails to resolve it — Gollum mirrors Frodo's struggle with obsession; Saruman mirrors Gandalf's temptation by power. If the prose includes such a pairing, note it in the foil character's `psychNotes`.
+
 ### Person vs. Self conflicts — strict rule
 
 If you classify a problem as **Person vs. Self**, the protagonist and the antagonist are the **same character**. This rule is absolute and has two consequences you must enforce:
@@ -116,6 +154,15 @@ If you classify a problem as **Person vs. Self**, the protagonist and the antago
 The principle of antagonism above still applies: the same character has two opposing internal goals, each with its own motive and conflict. Fill `antagGoal`, `antagMotive`, `antagConflict` as the character's *resistant* internal pull (fear, denial, attachment to the old self), not as the external aid's goals.
 
 If you find yourself wanting to put a different character into the antagonist slot, the conflict is not Person vs. Self — reclassify it.
+
+### Problem outcomes — be concrete
+
+The `outcome` field must state what concretely happens to the conflict — not offer thematic commentary.
+
+- **Good:** `"Protagonist abandons goal"`, `"Protagonist achieves goal at great cost"`, `"Antagonist is defeated"`, `"Both sides reach a compromise"`, `"Protagonist fails"`, `"Character accepts loss and moves forward"`
+- **Bad:** `"The conflict leads to a deeper understanding"`, `"The story resolves thematically"`, `"A tragic event brings the family together"`
+
+Read the prose's ending carefully before filling the `outcome` field on the story problem.
 
 ### Scene purpose — required, multi-select
 
@@ -163,11 +210,11 @@ Include any character the prose identifies — protagonists, antagonists, suppor
 
 ### Premise template
 
-When the story problem is identified, generate a `premise` using:
+Generate a `premise` for **every problem** (and for `story_overview`) using:
 
 > "A **[character]** wants **[goal]**, but **[opposing force]** resists. After **[obstacles]**, the conflict resolves **[result]**."
 
-Fill the brackets with content extracted from the prose. Aim for one clean sentence.
+Fill the brackets with content extracted from the prose. Aim for one clean sentence. For internal (Person vs. Self) problems, the opposing force is the character's own fear, denial, or attachment.
 
 ### Story overview cross-reference
 
@@ -217,7 +264,8 @@ Expected output shape (truncated for brevity):
       "conflictType": "Person vs. Person",
       "problemCategory": "Story problem",
       "protagonist": "aaaaaaaa-1111-1111-1111-aaaaaaaaaaaa",
-      "antagonist": "bbbbbbbb-2222-2222-2222-bbbbbbbbbbbb"
+      "antagonist": "bbbbbbbb-2222-2222-2222-bbbbbbbbbbbb",
+      "premise": "A weary smith wants to keep his livelihood, but the lord's tax collector resists. After he refuses the tribute, the conflict turns violent."
     }
   ]
 }

@@ -1,3 +1,10 @@
+---
+layout: default
+title: "StoryCADCritter"
+parent: "Samples"
+nav_order: 5
+---
+
 # StoryCADCritter
 
 Uses Semantic Kernel and an LLM to evaluate a story outline against five craft criteria, producing a scored checklist with recommendations. This is the most advanced sample, combining the full breadth of StoryCADLib's query APIs with structured LLM prompting.
@@ -11,7 +18,7 @@ Uses Semantic Kernel and an LLM to evaluate a story outline against five craft c
 
 The sample creates a fleshed-out outline called "The Last Lighthouse Keeper" with 3 Characters (with roles, flaws, and backstory), 2 Problems (with goals, motives, theme, and premise), 3 Settings, and 5 Scenes (with conflict, cast, and outcomes). Unlike the Diagnostic Agent sample, this outline is intentionally well-constructed so the critique can demonstrate both praise and suggestions.
 
-After building the outline, it serializes all elements and gathers key questions via `GetKeyQuestionElements` and `GetKeyQuestions` — these are the craft questions that StoryCAD uses to guide writers. The serialized outline and key questions are sent to the LLM along with a scoring rubric.
+After building the outline, it serializes all elements and gathers key questions via `GetKeyQuestionElements` and `GetKeyQuestions`. These are the craft questions that StoryCAD uses to guide writers. The serialized outline and key questions are sent to the LLM along with a scoring rubric.
 
 The LLM evaluates the outline on five criteria, each scored 1-5:
 

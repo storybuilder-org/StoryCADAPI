@@ -1,3 +1,10 @@
+---
+layout: default
+title: "Story Diagnostic Agent"
+parent: "Samples"
+nav_order: 4
+---
+
 # Story Diagnostic Agent
 
 Uses Semantic Kernel and an LLM to analyze a story outline and produce a diagnostic report identifying structural issues. This is the first of two samples that demonstrate AI-powered story analysis.
@@ -9,7 +16,7 @@ Uses Semantic Kernel and an LLM to analyze a story outline and produce a diagnos
 
 ## What It Demonstrates
 
-The sample creates an outline with intentional structural weaknesses — a passive protagonist with no goals or motives, front-loaded action with filler scenes at the end, missing reversals and turning points, and unresolved plot threads. It then serializes every element via `GetElement` and sends the full outline to an LLM along with a system prompt explaining StoryCAD concepts.
+The sample creates an outline with intentional structural weaknesses: a passive protagonist with no goals or motives, front-loaded action with filler scenes at the end, missing reversals and turning points, and unresolved plot threads. It then serializes every element via `GetElement` and sends the full outline to an LLM along with a system prompt explaining StoryCAD concepts.
 
 The LLM returns a diagnostic report identifying issues like pacing problems, passive characters, and missing story beats. This demonstrates how to combine StoryCADLib's data extraction APIs with Semantic Kernel's chat completion to build AI-powered analysis tools.
 

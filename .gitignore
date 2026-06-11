@@ -410,7 +410,8 @@ FodyWeavers.xsd
 # docfx build output
 docs/_site/
 
-# Outliner runtime outputs (user-picked output folder)
+# Outliner runtime folders (user input/output, regenerated test outputs)
+samples/Outliner/Outliner/OutlinerInput/
 samples/Outliner/Outliner/OutlinerOutput/
 
 # Outliner test outputs (regenerated each test run)
@@ -442,3 +443,15 @@ samples/Outliner/OutlinerTests/**/*.rating.json
 !samples/Outliner/OutlinerTests/ManualTests/Fixtures/**
 
 
+
+# Developer session notes — not for public repo
+devdocs/
+
+# Jekyll / Just the Docs documentation build output
+_site/
+docs/_site/
+.jekyll-cache/
+docs/.jekyll-cache/
+.jekyll-metadata
+/samples/Outliner/.idea
+.DS_Store

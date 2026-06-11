@@ -1,3 +1,10 @@
+---
+layout: default
+title: "Resource Data and Writing Tools"
+parent: "Concepts"
+nav_order: 3
+---
+
 # Resource Data and Writing Tools
 
 StoryCADLib ships with built-in reference data designed to help fiction writers develop their stories. The API exposes this data through discovery methods that follow a consistent pattern: call a listing method first, then drill into specifics.
@@ -15,16 +22,25 @@ StoryCADLib ships with built-in reference data designed to help fiction writers 
 
 ## Example Lists
 
-The simplest resource — a single call returns valid values for a property.
+The simplest resource: a single call returns valid values for a property.
+
+<div class="code-tabs" markdown="1">
 
 ```csharp
 var tones = api.GetExamples("Tone").Payload;
 // ["Humorous", "Serious", "Dark", "Light", ...]
 ```
 
+```python
+tones = sc.get_examples("Tone")
+# ["Humorous", "Serious", "Dark", "Light", ...]
+```
+
+</div>
+
 **Available property names**: Tone, Role, Archetype, Sex, Age, Build, Complexion, EyeColor, HairColor, HairStyle, Demeanor, Enneagram, Intelligence, Values, Abnormality, Focus, Adventuresome, Aggression, Confidence, Conscientiousness, Creativity, Dominance, Enthusiasm, Assurance, Sensitivity, Shrewdness, Sociability, Stability, ScenePurpose, SceneType, SceneValueExchange, SettingCountry, Locale, Season
 
-These values are suggestions, not constraints. You can pass any string to `UpdateElementProperty` — the examples help users and AI agents discover the intended vocabulary.
+These values are suggestions, not constraints. You can pass any string to `UpdateElementProperty`: the examples help users and AI agents discover the intended vocabulary.
 
 See [Element Types and Properties](element-types.md) for which properties accept which example lists.
 
@@ -34,7 +50,7 @@ A 4-step workflow for developing story conflicts. Each step narrows the scope.
 
 | Step | Method | Input | Output |
 |------|--------|-------|--------|
-| 1 | `GetConflictCategories()` | — | Category names |
+| 1 | `GetConflictCategories()` | (none) | Category names |
 | 2 | `GetConflictSubcategories(category)` | Category name | Subcategory names |
 | 3 | `GetConflictExamples(category, subcategory)` | Category + subcategory | Conflict descriptions |
 | 4 | `ApplyConflictToProtagonist(problemGuid, text)` | Problem GUID + text | Applied to Problem |
@@ -42,7 +58,7 @@ A 4-step workflow for developing story conflicts. Each step narrows the scope.
 
 **Categories include**: Relationship, Situational, Inner Conflict, Paranormal, Criminal activities, Mystery and suspense, Social drama, Romantic
 
-Step 4 has two variants — one for the protagonist's conflict, one for the antagonist's. You can also use custom text instead of a value from step 3.
+Step 4 has two variants: one for the protagonist's conflict, one for the antagonist's. You can also use custom text instead of a value from step 3.
 
 See [Resource Workflows](../operations/resource-workflows.md) for a complete code example.
 
@@ -52,7 +68,7 @@ A 2-step workflow that returns development prompts organized by topic.
 
 | Step | Method | Input | Output |
 |------|--------|-------|--------|
-| 1 | `GetKeyQuestionElements()` | — | Element type names |
+| 1 | `GetKeyQuestionElements()` | (none) | Element type names |
 | 2 | `GetKeyQuestions(elementType)` | Element type name | (Topic, Question) tuples |
 
 **Common element types**: Character, Problem, Scene, Setting, Overview
@@ -67,7 +83,7 @@ A 3-step workflow based on Tobias's *20 Master Plots*. Each plot pattern include
 
 | Step | Method | Input | Output |
 |------|--------|-------|--------|
-| 1 | `GetMasterPlotNames()` | — | Plot pattern names |
+| 1 | `GetMasterPlotNames()` | (none) | Plot pattern names |
 | 2 | `GetMasterPlotNotes(plotName)` | Plot name | Descriptive text |
 | 3 | `GetMasterPlotScenes(plotName)` | Plot name | (SceneTitle, Notes) tuples |
 
@@ -83,7 +99,7 @@ A 2-step workflow for scene inspiration organized by genre or purpose.
 
 | Step | Method | Input | Output |
 |------|--------|-------|--------|
-| 1 | `GetStockSceneCategories()` | — | Category names |
+| 1 | `GetStockSceneCategories()` | (none) | Category names |
 | 2 | `GetStockScenes(category)` | Category name | Scene descriptions |
 
 Stock scene descriptions can be used as the `Description` property when creating Scene elements, or as inspiration for more detailed scene development.
@@ -96,7 +112,7 @@ Beat sheets are story structure frameworks (Three Act Structure, Hero's Journey,
 
 | Step | Method | Input | Output |
 |------|--------|-------|--------|
-| 1 | `GetBeatSheetNames()` | — | Template names |
+| 1 | `GetBeatSheetNames()` | (none) | Template names |
 | 2 | `GetBeatSheet(name)` | Template name | (Description, Beats) |
 | 3 | `ApplyBeatSheetToProblem(problemGuid, name)` | Problem GUID + name | Beats applied |
 | 4+ | `AssignElementToBeat`, `CreateBeat`, etc. | Various | Customize structure |
@@ -107,8 +123,8 @@ Beat sheets are covered in full detail in [Beat Sheet Operations](../operations/
 
 All resource APIs follow the same pattern:
 
-1. **Discover** — call a listing method to see what's available
-2. **Inspect** — call a detail method to understand a specific item
-3. **Apply** — use the data to create or update story elements
+1. **Discover**: call a listing method to see what's available
+2. **Inspect**: call a detail method to understand a specific item
+3. **Apply**: use the data to create or update story elements
 
 No resource method modifies the story model until the final "apply" step. The discovery and inspection steps are read-only and safe to call at any time.

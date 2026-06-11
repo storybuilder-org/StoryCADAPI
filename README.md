@@ -59,7 +59,7 @@ using StoryCADLib.Services.API;
 using CommunityToolkit.Mvvm.DependencyInjection;
 
 // Initialize (once at startup)
-ServiceLocator.Initialize(headless: true);
+BootStrapper.Initialise(headless: true);
 
 // Get the API
 var api = Ioc.Default.GetRequiredService<SemanticKernelApi>();
@@ -150,7 +150,7 @@ else
 
 ### Headless Mode
 
-`ServiceLocator.Initialize(headless: true)` configures the library for use without a UI:
+`BootStrapper.Initialise(headless: true)` configures the library for use without a UI:
 - Console applications
 - Web APIs
 - Background services
@@ -169,67 +169,53 @@ else
 
 ## Building the Documentation Locally
 
-The API reference is auto-generated from StoryCADLib's XML documentation using [docfx](https://dotnet.github.io/docfx/).
+The documentation site lives in [`docs/`](docs/) and is a [Jekyll](https://jekyllrb.com/)
+site using the [Just the Docs](https://just-the-docs.com/) theme. Pages are plain
+Markdown with YAML front matter that drives the navigation (`title`, `parent`,
+`nav_order`).
 
 ### Prerequisites
 
-- [docfx](https://dotnet.github.io/docfx/) CLI tool (`dotnet tool install -g docfx`)
-- docfx requires the .NET 9 runtime (its own dependency, separate from the project's .NET 10 target)
-- On WSL, run docfx commands via `cmd.exe` since WSL may not have .NET 9 installed
+- Ruby 3.x and [Bundler](https://bundler.io/) (`gem install bundler`)
 
 ### Workflow
 
-**Step 1: Build StoryCADLib** (generates DLL + XML documentation)
-
 ```bash
-# From the StoryCAD repo
-dotnet build StoryCADLib/StoryCADLib.csproj -c Debug -f net10.0-windows10.0.22621
-```
-
-This produces:
-- `StoryCADLib/bin/Debug/net10.0-windows10.0.22621/StoryCADLib.dll`
-- `StoryCADLib/bin/Debug/net10.0-windows10.0.22621/StoryCADLib.xml`
-
-**Step 2: Copy artifacts to `_assemblies/`**
-
-```bash
-# From the StoryCADAPI repo root
-mkdir -p _assemblies
-cp ../StoryCAD/StoryCADLib/bin/Debug/net10.0-windows10.0.22621/StoryCADLib.dll _assemblies/
-cp ../StoryCAD/StoryCADLib/bin/Debug/net10.0-windows10.0.22621/StoryCADLib.xml _assemblies/
-```
-
-docfx reads the DLL for type metadata and the XML for documentation comments. This avoids
-building the UNO SDK project directly (which docfx cannot do due to multi-targeting).
-
-**Step 3: Generate and preview the site**
-
-```bash
-# Build only
+# From the repo root — installs gems into docs/ and serves with live reload
 cd docs
-docfx docfx.json
-
-# Build and serve locally (opens at http://localhost:8080)
-docfx docfx.json --serve
-
-# Stop the server (WSL — Linux tools can't see Windows processes)
-taskkill.exe /F /IM docfx.exe
+bundle install
+bundle exec jekyll serve --livereload
+# → http://localhost:4000/StoryCADAPI/
 ```
 
-> **Note:** `InvalidAssemblyReference` warnings are expected. docfx cannot resolve
-> StoryCADLib's dependencies (UNO, WinUI, Semantic Kernel, etc.) but generates
-> correct API documentation regardless.
+On Windows you can use the helper script instead:
 
-### CI Workflow
+```powershell
+pwsh serve-docs.ps1        # serves at http://localhost:4000
+```
 
-The GitHub Actions workflow (`.github/workflows/deploy-docs.yml`) automates this:
-1. Checks out both StoryCADAPI and StoryCAD repos
-2. Builds StoryCADLib via `dotnet build`
-3. Copies DLL + XML to `_assemblies/`
-4. Runs `docfx docfx.json`
-5. Uploads the generated site as a build artifact
+To produce the static site without serving:
 
-Deployment to GitHub Pages is disabled until the 4.0 store release.
+```bash
+cd docs
+bundle exec jekyll build   # output in docs/_site/ (git-ignored)
+```
+
+### API Reference
+
+The pages under `docs/api/` are hand-curated Markdown. The per-namespace model
+reference (`docs/api/models*.md`) was converted from the StoryCADLib XML docs;
+regenerate it if the public model surface changes.
+
+### CI / Deployment
+
+The GitHub Actions workflow (`.github/workflows/deploy-docs.yml`) builds the site
+with Bundler/Jekyll and deploys it to GitHub Pages on every push to `main` that
+touches `docs/`.
+
+> **One-time setup:** in repo **Settings → Pages**, set **Source** to
+> **GitHub Actions**. The site then publishes to
+> <https://storybuilder-org.github.io/StoryCADAPI/>.
 
 ## Related Projects
 
