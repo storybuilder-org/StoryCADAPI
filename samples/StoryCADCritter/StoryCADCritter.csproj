@@ -1,17 +1,68 @@
 <Project Sdk="Uno.Sdk">
   <PropertyGroup>
-    <UnoSingleProject>true</UnoSingleProject>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net10.0-windows10.0.22621</TargetFramework>
+    <UnoSingleProject>true</UnoSingleProject>
+
+    <ApplicationTitle>StoryCAD Critter</ApplicationTitle>
+    <ApplicationId>com.storybuilder.storycadcritter</ApplicationId>
+    <ApplicationDisplayVersion>0.1.0</ApplicationDisplayVersion>
+    <ApplicationVersion>1</ApplicationVersion>
+    <Description>Per-element critique walk over StoryCAD outlines.</Description>
+
+    <RootNamespace>StoryCADCritter</RootNamespace>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
+
+    <!-- The test project lives in a subdirectory of this one. Uno.Sdk
+         convention-includes everything under the project root by default,
+         which would pull the test sources into the app build. -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);StoryCADCritterTests\**;StoryCADCritter.Core\**</DefaultItemExcludes>
+  </PropertyGroup>
+
+  <!-- Windows first so MSIX packaged debugging works in VS (matches StoryCAD). -->
+  <PropertyGroup Condition="'$(OS)'=='Windows_NT'">
+    <NoWarn>$(NoWarn);UNOB0012</NoWarn>
+    <TargetFrameworks>
+      net10.0-windows10.0.22621;
+      net10.0-desktop
+    </TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(OS)'!='Windows_NT'">
+    <TargetFrameworks>net10.0-desktop</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <UseWinUI Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">true</UseWinUI>
+    <EnableMsixTooling Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">true</EnableMsixTooling>
+    <WindowsPackageType Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">None</WindowsPackageType>
+    <WindowsAppSDKSelfContained Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">true</WindowsAppSDKSelfContained>
+    <PublishReadyToRun Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">false</PublishReadyToRun>
+
+    <UnoFeatures>
+      Toolkit;
+    </UnoFeatures>
+
+    <Platforms>x86;x64;ARM64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="CritiqueOrchestrator.cs;CritiqueResponse.cs;CritiqueCost.cs;CritterPreferences.cs;LighthouseKeeperFixture.cs" />
+    <ProjectReference Include="StoryCADCritter.Core\StoryCADCritter.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="Microsoft.SemanticKernel" Version="1.72.0" />
+    <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.72.0" />
     <PackageReference Include="StoryCADLib" Version="$(StoryCADLibVersion)" ExcludeAssets="contentFiles"
                       Condition="'$(UseStoryCADLibNuGet)' == 'true'" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SemanticKernel" Version="1.72.0" />
+    <None Update="Prompts\CritiquePrompt.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

@@ -1,0 +1,86 @@
+{
+  "story_overview": {
+    "title": "The Yellow Wallpaper",
+    "author": "Charlotte Perkins Gilman",
+    "premise": "A young wife, confined to an upstairs room for a rest cure, wants relief from her nervous condition, but her husband's well-meaning control and her own deteriorating mind resist. As she fixates on the room's wallpaper, the conflict resolves with her losing her grip on reality.",
+    "storyType": "Short Story",
+    "storyGenre": "Literary",
+    "storyProblem": "d2f3e4b5-6a7b-4c8d-9e0f-1a2b3c4d5e6f",
+    "concept": "A woman undergoing a rest cure becomes obsessed with the yellow wallpaper in her room."
+  },
+  "characters": [
+    {
+      "guid": "a1b2c3d4-e5f6-7a8b-9c0d-e1f2a3b4c5d6",
+      "name": "The Narrator",
+      "characterSketch": "A young wife and new mother prescribed a rest cure for what her husband calls a temporary nervous depression.",
+      "role": "Patient",
+      "storyRole": "Protagonist",
+      "age": "Adult",
+      "sex": "Female",
+      "appearance": "Pale and tired, kept in loose house clothes; rarely seen outside the room.",
+      "physNotes": "Fatigued, sleeps poorly, loses weight over the summer.",
+      "psychNotes": "Imaginative and observant; her perceptions are dismissed by those around her.",
+      "flaw": "Defers to others' judgment of her own mind until it is too late.",
+      "backStory": "Recently gave birth; her writing and independence have been curtailed by the prescribed rest."
+    },
+    {
+      "guid": "f6e7d8c9-b0a1-2b3c-4d5e-6f7a8b9c0d1e",
+      "name": "John",
+      "characterSketch": "The narrator's husband, a practical physician who is certain there is nothing seriously wrong with her.",
+      "role": "Physician",
+      "storyRole": "Supporting Role",
+      "age": "Adult",
+      "sex": "Male",
+      "appearance": "Composed and authoritative; the picture of professional confidence.",
+      "physNotes": "Healthy, brisk, frequently away on cases.",
+      "psychNotes": "Rational to a fault; mistakes control for care.",
+      "flaw": "Cannot believe a condition he cannot measure.",
+      "backStory": "A respected doctor who prescribes his own wife the fashionable rest cure."
+    }
+  ],
+  "settings": [
+    {
+      "guid": "b1c2d3e4-f5a6-7b8c-9d0e-1f2a3b4c5d6e",
+      "name": "The Nursery",
+      "summary": "A large upstairs room with barred windows and peeling yellow wallpaper, once a nursery, where the narrator is kept to rest.",
+      "locale": "A colonial mansion let for the summer, set well back from the road",
+      "lighting": "Changeable daylight through barred windows; moonlight at night",
+      "sights": "Sprawling, lurid yellow wallpaper with a confused, repeating pattern",
+      "sounds": "Quiet of an isolated house; the narrator's own restless movement",
+      "smellTaste": "A peculiar lingering smell the narrator attributes to the paper"
+    }
+  ],
+  "scenes": [
+    {
+      "guid": "c1d2e3f4-a5b6-7c8d-9e0f-1a2b3c4d5e6f",
+      "name": "The narrator studies the wallpaper",
+      "description": "Left alone in the nursery, the narrator traces the wallpaper's pattern and becomes convinced there is a figure trapped behind it. John, when present, insists she is improving and must not give in to fancy.",
+      "viewpointCharacter": "a1b2c3d4-e5f6-7a8b-9c0d-e1f2a3b4c5d6",
+      "setting": "b1c2d3e4-f5a6-7b8c-9d0e-1f2a3b4c5d6e",
+      "cast": ["a1b2c3d4-e5f6-7a8b-9c0d-e1f2a3b4c5d6", "f6e7d8c9-b0a1-2b3c-4d5e-6f7a8b9c0d1e"],
+      "scenePurpose": ["Introduce Situation", "Develop Characters"],
+      "protagonist": "a1b2c3d4-e5f6-7a8b-9c0d-e1f2a3b4c5d6",
+      "protGoal": "Make sense of the room and her own worsening state",
+      "antagonist": "a1b2c3d4-e5f6-7a8b-9c0d-e1f2a3b4c5d6",
+      "antagGoal": "Suppress her perceptions and submit to the rest cure",
+      "outcome": "The narrator sinks further into obsession with the paper."
+    }
+  ],
+  "problems": [
+    {
+      "guid": "d2f3e4b5-6a7b-4c8d-9e0f-1a2b3c4d5e6f",
+      "name": "The narrator's mental decline",
+      "storyQuestion": "Will the narrator hold onto her sanity under the rest cure?",
+      "problemType": "Conflict",
+      "conflictType": "Person vs. Self",
+      "problemCategory": "Story problem",
+      "problemSource": "Protagonist is placed in strange surroundings",
+      "protagonist": "a1b2c3d4-e5f6-7a8b-9c0d-e1f2a3b4c5d6",
+      "protGoal": "To recover and be believed about her own mind",
+      "antagonist": "a1b2c3d4-e5f6-7a8b-9c0d-e1f2a3b4c5d6",
+      "antagGoal": "To submit to the rest cure and silence her own perceptions",
+      "antagMotive": "Fear, isolation, and the weight of others' certainty",
+      "outcome": "The narrator loses her grip on reality, freeing the woman she sees in the paper."
+    }
+  ]
+}

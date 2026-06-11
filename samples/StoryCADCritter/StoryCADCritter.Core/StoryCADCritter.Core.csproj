@@ -1,0 +1,25 @@
+<Project Sdk="Uno.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net10.0-desktop;net10.0-windows10.0.22621</TargetFrameworks>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>StoryCADCritter</RootNamespace>
+    <AssemblyName>StoryCADCritter.Core</AssemblyName>
+    <UnoDisableVSTargetFrameworksRewrite>true</UnoDisableVSTargetFrameworksRewrite>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\CritiqueOrchestrator.cs" Link="CritiqueOrchestrator.cs" />
+    <Compile Include="..\CritiqueResponse.cs" Link="CritiqueResponse.cs" />
+    <Compile Include="..\CritiqueCost.cs" Link="CritiqueCost.cs" />
+    <Compile Include="..\CritterPreferences.cs" Link="CritterPreferences.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SemanticKernel" Version="1.72.0" />
+    <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.72.0" />
+    <PackageReference Include="StoryCADLib" Version="$(StoryCADLibVersion)" ExcludeAssets="contentFiles"
+                      Condition="'$(UseStoryCADLibNuGet)' == 'true'" />
+  </ItemGroup>
+</Project>

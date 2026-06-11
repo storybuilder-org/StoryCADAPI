@@ -1,0 +1,41 @@
+<Project Sdk="Uno.Sdk">
+  <PropertyGroup>
+    <UnoSingleProject>true</UnoSingleProject>
+    <TargetFramework>net10.0-desktop</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>StoryCADCritterTests</RootNamespace>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\StoryCADCritter.Core\StoryCADCritter.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\LighthouseKeeperFixture.cs" Link="Critter\LighthouseKeeperFixture.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\Prompts\CritiquePrompt.md" Link="Prompts\CritiquePrompt.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectCapability Include="TestContainer" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.0" />
+    <PackageReference Include="Microsoft.SemanticKernel" Version="1.72.0" />
+    <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.72.0" />
+    <PackageReference Include="StoryCADLib" Version="$(StoryCADLibVersion)" ExcludeAssets="contentFiles"
+                      Condition="'$(UseStoryCADLibNuGet)' == 'true'" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.10.1" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.10.1" />
+  </ItemGroup>
+</Project>
