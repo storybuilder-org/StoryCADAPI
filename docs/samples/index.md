@@ -7,7 +7,7 @@ has_children: true
 
 # Samples
 
-Six sample applications that show you the StoryCADLib API in action. The first three use the core API only; the last three bring in Semantic Kernel for LLM-powered analysis.
+Six sample applications that show you the StoryCADLib API in action. The first three use the core API only; the last three bring in Semantic Kernel and an LLM.
 
 | Sample | Type | What You'll Learn |
 |--------|------|-------------------|
@@ -15,7 +15,8 @@ Six sample applications that show you the StoryCADLib API in action. The first t
 | [Story Metrics](story-metrics.md) | Core | Query an outline for analytics and statistics |
 | [Consistency Validation](consistency-validation.md) | Core | Detect structural issues in an outline |
 | [Story Diagnostic Agent](story-diagnostic-agent.md) | Semantic Kernel | LLM-powered structural diagnosis |
-| [StoryCADCritter](storycad-critter.md) | Semantic Kernel | LLM-scored craft evaluation with rubric |
+| [Outliner](outliner.md) | Semantic Kernel | Reverse-engineer a StoryCAD outline from prose |
+| [StoryCADCritter](storycad-critter.md) | Semantic Kernel | Per-element craft critique walk with Key Questions |
 
 ## Prerequisites
 
@@ -24,7 +25,7 @@ Every sample needs:
 - **.NET 10.0 SDK**
 - **StoryCADLib**: each sample references it as a NuGet package by default (version pinned by `StoryCADLibVersion` in `Directory.Build.props`). Set `UseStoryCADLibNuGet=false` to build against a local [StoryCAD](https://github.com/storybuilder-org/StoryCAD) checkout via `ProjectReference` instead.
 
-The two Semantic Kernel samples also need:
+The Semantic Kernel samples also need:
 
 - An **OpenAI API key** set as the `OPENAI_API_KEY` environment variable
 - Internet access for OpenAI API calls
