@@ -441,6 +441,9 @@ samples/Outliner/OutlinerTests/**/*.rating.json
 
 
 
+# Developer session notes — not for public repo
+devdocs/
+
 # Jekyll / Just the Docs documentation build output
 _site/
 docs/_site/
