@@ -4,9 +4,9 @@ title: StoryCAD API
 description: Build story outlines programmatically with the StoryCADLib API.
 lang: en-US
 
-# Project site published at https://storybuilder-org.github.io/StoryCADAPI/
-url: https://storybuilder-org.github.io
-baseurl: /StoryCADAPI
+# Project site published at https://api.storybuilder.org
+url: https://api.storybuilder.org
+baseurl: ""
 
 theme: just-the-docs
 
