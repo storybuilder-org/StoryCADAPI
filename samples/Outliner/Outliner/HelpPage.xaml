@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="Outliner.HelpPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Outliner"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <ScrollViewer>
+        <StackPanel Margin="20" Spacing="10" MaxWidth="800" HorizontalAlignment="Left">
+
+            <TextBlock Text="How to use Outliner" FontSize="20" FontWeight="Bold"/>
+
+            <!-- Setup -->
+            <TextBlock Text="Setup" FontSize="16" FontWeight="SemiBold" Margin="0,15,0,5"/>
+
+            <TextBlock TextWrapping="Wrap">
+                The Outliner uses a large language model to turn prose into a StoryCAD outline. Today the sample is configured to call OpenAI; you'll need an account and an API key from platform.openai.com.
+            </TextBlock>
+
+            <TextBlock TextWrapping="Wrap">
+                Set two environment variables before launching Outliner:
+            </TextBlock>
+
+            <StackPanel Margin="20,0,0,0" Spacing="3">
+                <TextBlock TextWrapping="Wrap">
+                    <Run FontFamily="Consolas" FontWeight="SemiBold">OPENAI_API_KEY</Run>
+                    <Run> — your API key (required)</Run>
+                </TextBlock>
+                <TextBlock TextWrapping="Wrap">
+                    <Run FontFamily="Consolas" FontWeight="SemiBold">OPENAI_MODEL</Run>
+                    <Run> — the model to use (optional; defaults to </Run>
+                    <Run FontFamily="Consolas">gpt-4o</Run>
+                    <Run>)</Run>
+                </TextBlock>
+            </StackPanel>
+
+            <TextBlock TextWrapping="Wrap">
+                Restart Outliner after setting them so the new values are picked up.
+            </TextBlock>
+
+            <TextBlock TextWrapping="Wrap">
+                The sample isn't locked to OpenAI or to a particular model. It builds on Semantic Kernel, so the chat-completion provider can be swapped at the source level. The same code paths can drive frontier models from OpenAI, Anthropic, and Google, and open-source local models that conform to the JSON schema and tool-calling contract Outliner expects (local models eliminate per-run cost entirely). Configuration via environment variables targets OpenAI today; instructions for alternative providers will be added here once we've tested them.
+            </TextBlock>
+
+            <TextBlock TextWrapping="Wrap">
+                Each run against a hosted API costs a small amount proportional to the length of the prose. The exact cost is recorded in the
+                <Run FontFamily="Consolas">.costs.json</Run>
+                <Run> artifact described below.</Run>
+            </TextBlock>
+
+            <!-- Running the program -->
+            <TextBlock Text="Running the program" FontSize="16" FontWeight="SemiBold" Margin="0,20,0,5"/>
+
+            <TextBlock TextWrapping="Wrap">
+                Outliner has two modes, selected from the navigation pane on the left.
+            </TextBlock>
+
+            <TextBlock Margin="0,5,0,0" TextWrapping="Wrap">
+                <Run FontWeight="SemiBold">Single</Run>
+                <Run> — one story at a time.</Run>
+            </TextBlock>
+
+            <StackPanel Margin="20,0,0,0" Spacing="3">
+                <TextBlock TextWrapping="Wrap">
+                    1. Click
+                    <Run FontWeight="SemiBold">Read Story</Run>
+                    <Run> and pick a </Run>
+                    <Run FontFamily="Consolas">.docx</Run>
+                    <Run>, </Run>
+                    <Run FontFamily="Consolas">.pdf</Run>
+                    <Run>, or </Run>
+                    <Run FontFamily="Consolas">.txt</Run>
+                    <Run> file.</Run>
+                </TextBlock>
+                <TextBlock TextWrapping="Wrap">
+                    2. The prose appears in the Story Content box. You can edit it before submitting.
+                </TextBlock>
+                <TextBlock TextWrapping="Wrap">
+                    3. Click
+                    <Run FontWeight="SemiBold">Generate Outline</Run>
+                    <Run>. Status messages appear in gray as the run progresses (analyzing → building → saving). Short-shorts take seconds; longer prose takes minutes.</Run>
+                </TextBlock>
+                <TextBlock TextWrapping="Wrap">
+                    4. The output
+                    <Run FontFamily="Consolas">.stbx</Run>
+                    <Run> and three companion files are written to the location you chose.</Run>
+                </TextBlock>
+            </StackPanel>
+
+            <TextBlock Margin="0,10,0,0" TextWrapping="Wrap">
+                <Run FontWeight="SemiBold">Batch</Run>
+                <Run> — a folder of stories at once.</Run>
+            </TextBlock>
+
+            <StackPanel Margin="20,0,0,0" Spacing="3">
+                <TextBlock TextWrapping="Wrap">
+                    1. Pick the input folder. The list of supported files (
+                    <Run FontFamily="Consolas">.docx</Run>
+                    <Run>, </Run>
+                    <Run FontFamily="Consolas">.pdf</Run>
+                    <Run>, </Run>
+                    <Run FontFamily="Consolas">.txt</Run>
+                    <Run>) populates automatically.</Run>
+                </TextBlock>
+                <TextBlock TextWrapping="Wrap">
+                    2. Output goes to
+                    <Run FontFamily="Consolas">&lt;input&gt;/Outlines/</Run>
+                    <Run> by default. Use </Run>
+                    <Run FontWeight="SemiBold">Pick Output Folder…</Run>
+                    <Run> to override.</Run>
+                </TextBlock>
+                <TextBlock TextWrapping="Wrap">
+                    3. The batch run processes each file in sequence and continues past per-file errors. A summary appears at the end.
+                </TextBlock>
+            </StackPanel>
+
+            <TextBlock Margin="0,10,0,0" TextWrapping="Wrap">
+                <Run FontWeight="SemiBold">Settings</Run>
+                <Run> (footer) — your default input and output folders (shared by both modes) and your startup mode (Single or Batch).</Run>
+            </TextBlock>
+
+            <!-- Results -->
+            <TextBlock Text="Results" FontSize="16" FontWeight="SemiBold" Margin="0,20,0,5"/>
+
+            <TextBlock TextWrapping="Wrap">
+                Every successful run produces four files, all sharing the input's base name:
+            </TextBlock>
+
+            <StackPanel Margin="20,0,0,0" Spacing="5">
+                <TextBlock TextWrapping="Wrap">
+                    <Run FontFamily="Consolas" FontWeight="SemiBold">&lt;name&gt;.stbx</Run>
+                    <Run> — the StoryCAD outline. Open it in StoryCAD to read, refine, or export.</Run>
+                </TextBlock>
+                <TextBlock TextWrapping="Wrap">
+                    <Run FontFamily="Consolas" FontWeight="SemiBold">&lt;name&gt;.raw.json</Run>
+                    <Run> — the raw JSON the model returned. Useful for inspecting what the model actually emitted before it was mapped into StoryCAD fields.</Run>
+                </TextBlock>
+                <TextBlock TextWrapping="Wrap">
+                    <Run FontFamily="Consolas" FontWeight="SemiBold">&lt;name&gt;.costs.json</Run>
+                    <Run> — token counts (input, output, total), USD cost, the model id used, and the date of the price table. Track spend per run.</Run>
+                </TextBlock>
+                <TextBlock TextWrapping="Wrap">
+                    <Run FontFamily="Consolas" FontWeight="SemiBold">&lt;name&gt;.rating.json</Run>
+                    <Run> — run metadata (model, prompt version, timestamp, element counts) plus an auto-computed completeness score and a thumbs verdict.</Run>
+                </TextBlock>
+            </StackPanel>
+
+            <TextBlock TextWrapping="Wrap" Margin="0,10,0,0">
+                In Single mode you can also rate the outline yourself using the thumbs-up / thumbs-down panel at the bottom of the page, optionally with a free-text comment. Your rating is appended to the same
+                <Run FontFamily="Consolas">.rating.json</Run>
+                <Run>.</Run>
+            </TextBlock>
+
+        </StackPanel>
+    </ScrollViewer>
+</Page>
