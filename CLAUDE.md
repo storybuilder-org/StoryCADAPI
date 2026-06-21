@@ -96,17 +96,6 @@ GitHub Pages deployment is disabled until the 4.0 store release.
 
 **Update it at the end of every working session**, or more frequently if directed.
 
-## Task Self-Check
-
-**Before acting on any task, explicitly verify compliance with these instructions:**
-
-1. Is there an approved plan before implementation starts? (PIE workflow)
-2. Has the wiki been consulted for non-trivial tasks?
-3. Are issue body checkboxes being kept current?
-4. Does this task meet the agent-usage threshold (>15 min OR >2 files OR architectural)?
-5. Is the proposed solution the simplest that could work?
-6. Will the status log and wiki be updated after this session?
-
 ## Standards
 
 This repo follows the shared standards in `D:\dev\src\CLAUDE.md`:
