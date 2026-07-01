@@ -63,6 +63,15 @@ dotnet build -f net10.0-desktop
 dotnet run -f net10.0-desktop
 ```
 
+On Windows, build the WinUI target:
+
+```bash
+cd samples/StoryCADCritter
+dotnet build -f net10.0-windows10.0.22621 -p:Platform=x64
+```
+
+From the repo root, `.\scripts\build-critter.cmd` runs this build.
+
 You can optionally set the model (defaults to `gpt-4o-mini`):
 
 ```bash
