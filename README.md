@@ -117,6 +117,8 @@ dotnet build -f net10.0-desktop
 dotnet run -f net10.0-desktop
 ```
 
+The Outliner and StoryCADCritter samples also have a Windows (WinUI) target, `net10.0-windows10.0.22621`, which requires `-p:Platform=x64` on the build command. The [scripts/](scripts/) folder contains batch files (`build-outliner.cmd` and `build-critter.cmd`) that run those Windows builds.
+
 For Semantic Kernel samples, set your API key first:
 
 ```bash

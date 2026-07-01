@@ -58,6 +58,8 @@ cd samples/Outliner/Outliner
 dotnet build -f net10.0-windows10.0.22621 -p:Platform=x64
 ```
 
+From the repo root, `.\scripts\build-outliner.cmd` runs this build.
+
 When the app opens, select a prose file (`.txt`, `.docx`, or `.pdf`) and an output path for the `.stbx`. The app extracts the text, calls the LLM, and builds the outline. A `.raw.json` file is written alongside the output with the full LLM response for inspection.
 
 You can optionally set the model (defaults to `gpt-4o-mini`):
