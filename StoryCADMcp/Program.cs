@@ -9,7 +9,9 @@ using StoryCADMcp;
 using StoryCollaborator.Models;
 
 // The server keeps its own root folder, so a sign-in refresh never writes the installed app's
-// Preferences.json (Collaborator #291, design section 5.5). StoryCADLib reads the variable in Debug builds.
+// Preferences.json (Collaborator #291, design section 5.5). StoryCADLib honors the variable when it runs
+// headless, in Debug and Release builds. Set it before BootStrapper.Initialise, which makes AppState and
+// PreferenceService; Initialise below is called with headless: true.
 if (string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable(AppState.RootDirectoryOverrideVariable)))
 {
     var root = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "StoryCADMcp");

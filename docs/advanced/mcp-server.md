@@ -393,7 +393,7 @@ These tools run the same Collaborator workflows as the StoryCAD Collaborator win
 
 **Backup.** Before the first write to an outline (`run_workflow`, which can create elements while it finds inputs, `accept`, `accept_all`, or `save_outline` during a session), the server zips the outline file as it is on disk into its own backup folder: `%LOCALAPPDATA%\StoryCADMcp\Backups` on Windows, the matching local application data folder elsewhere. It makes one backup for each opened outline. If the backup fails, the tool returns the error and writes nothing. An outline that has never been saved has no file to back up.
 
-**Run time and cost.** `run_workflow` and `try_again` return the run time in seconds and the cost in dollars, from the Worker's cost report. `chat` returns the time only.
+**Run time and cost.** `run_workflow` and `try_again` return the run time in seconds and the cost in dollars, from the Worker's cost report. `chat` returns the time and the cost of the call.
 
 A typical session: `open_outline`, `list_workflows`, `run_workflow`, `get_proposals`, then `accept` or `skip` for each key, then `save_outline`.
 
@@ -407,7 +407,7 @@ Lists the Collaborator workflows.
 
 #### `run_workflow`
 
-Runs a workflow on one element of the open outline and keeps its proposals. Takes a minute or more and costs credit. The Character Interview workflow is not available through this server; use the Collaborator window.
+Runs a workflow on one element of the open outline and keeps its proposals. Takes a minute or more and costs credit. For Character Interview it opens the interview instead of running once: the result lists what the interview can explore, and you answer through `chat` (see `chat`).
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
@@ -417,7 +417,9 @@ Runs a workflow on one element of the open outline and keeps its proposals. Take
 
 If an input cannot be found, the tool returns an error that names it. Find the GUID with `list_elements` and pass it in `inputs`.
 
-**Returns:** JSON with `{workflow, proposals[], kept[], seconds, cost}`. `kept` lists the properties the Worker left as they are.
+**Returns:** JSON with `{workflow, proposals[], kept[], seconds, cost}`. `kept` lists the properties the Worker left as they are. When a run fails, the tool returns the error text, for example the out-of-credit message.
+
+For Character Interview the result is `{workflow, interview, character, message, choices}`. `choices` is the list the app shows: numbers, field names, or "you choose".
 
 ---
 
@@ -478,13 +480,13 @@ Runs the workflow again. The open and skipped proposals go to the Worker as what
 
 #### `chat`
 
-Sends one chat message about the proposals. The reply can change proposals; it never writes the outline. Costs credit.
+Sends one chat message about the proposals. The reply can change proposals; it never writes the outline. Costs credit. In a Character Interview, the first message says what to explore (numbers from `choices`, a field name, or "you choose"), and each later message is an answer in the character's voice. The MCP server cannot save an interview to the character's notes yet, so an interview writes nothing to the outline.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `text` | string | The message |
 
-**Returns:** JSON with `{reply, changed[], seconds}`. `changed` lists the keys whose proposed text or status the reply changed.
+**Returns:** JSON with `{reply, question, changed[], seconds, cost}`. `changed` lists the keys whose proposed text or status the reply changed. `question` is the next interview question and is null outside an interview. `cost` is the cost of the call, or null when the Worker reported none.
 
 ---
 
@@ -512,7 +514,7 @@ StoryCADMcp bridges two dependency injection containers:
 
 ```
 Program.cs
-├── STORYCAD_ROOT_DIR = %LOCALAPPDATA%/StoryCADMcp (honored by Debug builds of StoryCADLib)
+├── STORYCAD_ROOT_DIR = %LOCALAPPDATA%/StoryCADMcp (honored by StoryCADLib when headless)
 ├── BootStrapper.Initialise(headless: true)   ← StoryCADLib DI
 ├── KernelFactory.ClientName = "mcp"          ← the Worker journal counts MCP use
 ├── CollaboratorSignIn.EnsureAsync()          ← copies the app's Collaborator sign-in

@@ -272,4 +272,80 @@ public class CollaboratorToolsTests
             CollaboratorTools.Leave();
         }
     }
+
+    // A sign-in that has not expired: the activation service takes it as Active without a Worker
+    // call. The tests below stop before any request would leave the machine.
+    private async Task WithFakeSignIn(Func<Task> test)
+    {
+        var prefsPath = Path.Combine(TestDataSetup.TempDir, $"live_prefs_{Guid.NewGuid():N}.json");
+        File.WriteAllText(prefsPath, System.Text.Json.JsonSerializer.Serialize(new Dictionary<string, object>
+        {
+            ["StoreUserGuid"] = Guid.NewGuid().ToString(),
+            ["StoreActivationJwt"] = FakeToken,
+            ["StoreActivationJwtExpiry"] = DateTime.UtcNow.AddHours(6).ToString("O"),
+            ["StoreActivationPath"] = "store"
+        }));
+        var model = Ioc.Default.GetRequiredService<PreferenceService>().Model;
+        var (savedGuid, savedJwt, savedExpiry, savedPath) = (model.StoreUserGuid, model.StoreActivationJwt,
+            model.StoreActivationJwtExpiry, model.StoreActivationPath);
+        var priorPath = CollaboratorSignIn.PreferencesPathOverride;
+        CollaboratorSignIn.PreferencesPathOverride = prefsPath;
+        try
+        {
+            await test();
+        }
+        finally
+        {
+            CollaboratorSignIn.PreferencesPathOverride = priorPath;
+            (model.StoreUserGuid, model.StoreActivationJwt, model.StoreActivationJwtExpiry,
+                model.StoreActivationPath) = (savedGuid, savedJwt, savedExpiry, savedPath);
+        }
+    }
+
+    [TestMethod]
+    public async Task TryAgain_RunFails_ReturnsTheSessionError()
+    {
+        await WithFakeSignIn(async () =>
+        {
+            // A workflow with a required input and a session with no input elements: the runner
+            // refuses before it builds a request.
+            var workflow = WorkflowRegistry.All.First(w =>
+                w.Mode == WorkflowMode.OneShot && w.GetIO().RequiredInputs.Count > 0);
+            var session = new WorkflowSession(workflow, TestDataSetup.Api.CurrentModel);
+            CollaboratorTools.UseSession(session);
+
+            var result = await CollaboratorTools.TryAgain(TestDataSetup.Api);
+
+            Assert.IsTrue(result.StartsWith("Error:"), result);
+            StringAssert.Contains(result, "Missing required element");
+            Assert.IsFalse(result.Contains(FakeToken), result);
+        });
+    }
+
+    [TestMethod]
+    public async Task CharacterInterview_OpensAndChatReadsTheChoiceWithoutWorker()
+    {
+        await WithFakeSignIn(async () =>
+        {
+            var added = TestDataSetup.Api.AddElement(StoryItemType.Character, _overview.ToString(), "Hero");
+            Assert.IsTrue(added.IsSuccess, added.ErrorMessage);
+            var character = TestDataSetup.Api.GetStoryElement(added.Payload).Payload;
+
+            var opened = await CollaboratorTools.RunWorkflow(
+                TestDataSetup.Api, "CharacterInterview", character.Uuid.ToString());
+
+            Assert.IsFalse(opened.StartsWith("Error:"), opened);
+            using (var doc = System.Text.Json.JsonDocument.Parse(opened))
+            {
+                Assert.IsTrue(doc.RootElement.GetProperty("interview").GetBoolean());
+                Assert.IsFalse(string.IsNullOrWhiteSpace(doc.RootElement.GetProperty("choices").GetString()));
+            }
+
+            // Text the choice parser cannot read gets the list again; no request is made.
+            var chat = await CollaboratorTools.Chat(TestDataSetup.Api, "zzzz qqqq");
+
+            Assert.IsFalse(chat.StartsWith("Error:"), chat);
+            StringAssert.Contains(chat, "did not catch");
+        });
+    }
 }

@@ -88,9 +88,6 @@ public static class CollaboratorTools
         if (chosen == null)
             return Out($"Error: No workflow named '{workflow}'. Labels: {string.Join(", ", WorkflowRegistry.All.Select(w => w.Label))}");
 
-        if (chosen.Mode == WorkflowMode.Conversational)
-            return Out($"Error: {chosen.Title} is an interview, and the MCP server cannot run interviews. Use the Collaborator window.");
-
         if (!Guid.TryParse(element, out var elementGuid))
             return Out($"Error: '{element}' is not a GUID. Use list_elements to find one.");
         var primary = api.GetStoryElement(elementGuid);
@@ -153,6 +150,8 @@ public static class CollaboratorTools
             }
 
             _session = session;
+            if (chosen.Mode == WorkflowMode.Conversational)
+                return Out(OpenInterview(service, session));
             return Out(await RunAndReport(service, session, () => service.RunAsync(session)));
         }
         finally
@@ -319,7 +318,7 @@ public static class CollaboratorTools
         [Description("The message")] string text)
     {
         var session = _session;
-        if (session?.Proposals == null)
+        if (session == null || (session.Proposals == null && !session.IsInterview))
             return Out("Error: No proposals to chat about. Call run_workflow first.");
         if (!ReferenceEquals(session.Model, api.CurrentModel))
             return Out("Error: The outline changed since the run. Call run_workflow again.");
@@ -333,6 +332,7 @@ public static class CollaboratorTools
                 return Out($"Error: {signInError}");
 
             var before = Snapshot(session);
+            var interview = session.IsInterview;
             var clock = Stopwatch.StartNew();
             string reply;
             try
@@ -341,17 +341,23 @@ public static class CollaboratorTools
             }
             catch (Exception ex)
             {
-                return Out($"Error: {ex.Message}");
+                return Out($"Error: {session.LastError ?? ex.Message}");
             }
 
             clock.Stop();
+            if (session.LastError != null)
+                return Out($"Error: {session.LastError}");
+
             var after = Snapshot(session);
             return Out(JsonSerializer.Serialize(new
             {
                 reply,
+                // In an interview the next question is the pending question; the opening turn returns no reply text.
+                question = interview ? session.InterviewPendingQuestion : null,
                 changed = after.Where(p => !before.TryGetValue(p.Key, out var old) || old != p.Value)
                     .Select(p => p.Key).ToList(),
-                seconds = Math.Round(clock.Elapsed.TotalSeconds, 1)
+                seconds = Math.Round(clock.Elapsed.TotalSeconds, 1),
+                cost = Cost(session.LastChatCost)
             }, JsonOptions));
         }
         finally
@@ -416,7 +422,7 @@ public static class CollaboratorTools
 
         // A failed run leaves the last good result in place, so a changed result means success.
         if (ReferenceEquals(before, session.Result))
-            return "Error: The run did not finish. Check the Collaborator sign-in and your credit, then try again."
+            return $"Error: {session.LastError ?? "The run did not finish."}"
                    + (session.Result != null ? " The proposals of the last good run are still open." : "");
 
         var result = session.Result!;
@@ -427,15 +433,7 @@ public static class CollaboratorTools
             proposals = session.Proposals?.All.Select(Describe).ToList(),
             kept = result.KeptProperties,
             seconds = Math.Round(clock.Elapsed.TotalSeconds, 1),
-            cost = cost == null
-                ? null
-                : new
-                {
-                    usd = cost.CostUsd,
-                    model = cost.Model,
-                    inputTokens = cost.InputTokens,
-                    outputTokens = cost.OutputTokens
-                }
+            cost = Cost(cost)
         }, JsonOptions);
     }
 
@@ -456,8 +454,35 @@ public static class CollaboratorTools
         status = e.Status.ToString()
     };
 
+    private static object? Cost(ProxyCostInfo? cost) => cost == null
+        ? null
+        : new { usd = cost.CostUsd, model = cost.Model, inputTokens = cost.InputTokens, outputTokens = cost.OutputTokens };
+
+    /// <summary>
+    /// Opens a Character Interview the way the app does: <c>StartInterview</c>, then the writer picks
+    /// what to explore. The AI session answers through <c>chat</c>.
+    /// </summary>
+    private static string OpenInterview(WorkflowSessionService service, WorkflowSession session)
+    {
+        service.StartInterview(session);
+        session.Elements.TryGetValue("Character", out var character);
+        return JsonSerializer.Serialize(new
+        {
+            workflow = session.Workflow.Label,
+            interview = true,
+            character = session.InterviewCharacterName,
+            message = $"Answer as {session.InterviewCharacterName}, in their voice, in first person, with the chat tool. "
+                      + "Nothing is written to the character until the interview is saved, and the MCP server cannot save an interview yet. "
+                      + "First say what to explore.",
+            choices = InterviewChoice.ListText(session.InterviewCharacterName,
+                InterviewScript.BlankFields(character as CharacterModel))
+        }, JsonOptions);
+    }
+
     private static Dictionary<string, string> Snapshot(WorkflowSession session) =>
-        session.Proposals!.All.ToDictionary(e => e.Update.Key, e => e.Status + "|" + e.ProposedText);
+        session.Proposals == null
+            ? new Dictionary<string, string>()
+            : session.Proposals.All.ToDictionary(e => e.Update.Key, e => e.Status + "|" + e.ProposedText);
 
     private static List<string> OpenKeys(WorkflowSession session) =>
         session.Proposals!.All.Where(e => e.Status == ProposalSessionStatus.Open)
