@@ -391,7 +391,7 @@ These tools run the same Collaborator workflows as the StoryCAD Collaborator win
 
 **One session at a time.** A new `run_workflow` ends the session before it. `close_outline` ends it too.
 
-**Backup.** Before the first write to an outline (`accept`, `accept_all`, or `save_outline` during a session), the server makes one backup of the outline file in the StoryCAD backup folder. An outline that has never been saved has no file to back up.
+**Backup.** Before the first write to an outline (`run_workflow`, which can create elements while it finds inputs, `accept`, `accept_all`, or `save_outline` during a session), the server zips the outline file as it is on disk into its own backup folder: `%LOCALAPPDATA%\StoryCADMcp\Backups` on Windows, the matching local application data folder elsewhere. It makes one backup for each opened outline. If the backup fails, the tool returns the error and writes nothing. An outline that has never been saved has no file to back up.
 
 **Run time and cost.** `run_workflow` and `try_again` return the run time in seconds and the cost in dollars, from the Worker's cost report. `chat` returns the time only.
 

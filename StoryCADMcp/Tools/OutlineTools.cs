@@ -42,7 +42,9 @@ public static class OutlineTools
         if (string.IsNullOrEmpty(savePath))
             return "Error: No save path available. Provide a path explicitly.";
 
-        await CollaboratorTools.BackupBeforeSaveAsync(api);
+        var backupError = CollaboratorTools.BackupBeforeSave(api);
+        if (backupError != null)
+            return backupError;
         var result = await api.WriteOutline(savePath);
         if (!result.IsSuccess)
             return $"Error: {result.ErrorMessage}";
@@ -57,10 +59,20 @@ public static class OutlineTools
         if (api.CurrentModel == null)
             return "No outline is currently open.";
 
-        api.SetCurrentModel(null!);
-        _openedPath = null;
-        CollaboratorTools.EndSession();
-        return "Outline closed.";
+        // A Collaborator write in flight must finish before the outline goes away.
+        if (!CollaboratorTools.TryEnter(out var busyError))
+            return busyError;
+        try
+        {
+            api.SetCurrentModel(null!);
+            _openedPath = null;
+            CollaboratorTools.EndSession();
+            return "Outline closed.";
+        }
+        finally
+        {
+            CollaboratorTools.Leave();
+        }
     }
 
     [McpServerTool(Name = "new_outline")]

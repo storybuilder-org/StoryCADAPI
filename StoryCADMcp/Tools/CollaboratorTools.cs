@@ -6,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using ModelContextProtocol.Server;
 using StoryCADLib.Models;
 using StoryCADLib.Services.API;
-using StoryCADLib.Services.Backup;
 using StoryCADLib.Services.Collaborator.Contracts;
 using StoryCollaborator.Models;
 using StoryCollaborator.Services;
@@ -97,12 +96,22 @@ public static class CollaboratorTools
         var primary = api.GetStoryElement(elementGuid);
         if (!primary.IsSuccess)
             return Out($"Error: {primary.ErrorMessage}");
+        if (chosen.PrimaryElementType != StoryItemType.Unknown
+            && primary.Payload.ElementType != chosen.PrimaryElementType)
+            return Out($"Error: {chosen.Title} works on a {chosen.PrimaryElementType}, but '{primary.Payload.Name}' is a "
+                       + $"{primary.Payload.ElementType}. Use list_elements with type {chosen.PrimaryElementType} to find one.");
 
+        var io = chosen.GetIO();
+        var inputNames = io.RequiredInputs.Concat(io.OptionalInputs).Select(i => i.ElementLabel).ToList();
         var given = new Dictionary<string, Guid>(StringComparer.OrdinalIgnoreCase);
         foreach (var pair in inputs ?? new Dictionary<string, string>())
         {
+            if (!inputNames.Contains(pair.Key, StringComparer.OrdinalIgnoreCase))
+                return Out($"Error: {chosen.Title} has no input named '{pair.Key}'. Inputs: {string.Join(", ", inputNames)}.");
             if (!Guid.TryParse(pair.Value, out var inputGuid))
                 return Out($"Error: Input '{pair.Key}' is not a GUID: '{pair.Value}'.");
+            if (!api.GetStoryElement(inputGuid).IsSuccess)
+                return Out($"Error: Input '{pair.Key}' names no element of this outline: '{pair.Value}'.");
             given[pair.Key] = inputGuid;
         }
 
@@ -114,6 +123,12 @@ public static class CollaboratorTools
             var signInError = await CollaboratorSignIn.EnsureAsync();
             if (signInError != null)
                 return Out($"Error: {signInError}");
+
+            // Finding inputs can write to the outline (it creates a StoryWorld, sets a ProblemCategory),
+            // so the backup comes first.
+            var backupError = BackupOnce(api);
+            if (backupError != null)
+                return Out(backupError);
 
             if (!ReferenceEquals(_touchedModel, api.CurrentModel))
             {
@@ -163,35 +178,39 @@ public static class CollaboratorTools
         [Description("Proposal key from get_proposals")] string key,
         [Description("Set true to replace text you wrote. Default false.")] bool overwrite_your_text = false)
     {
-        var problem = CheckOpenProposal(api, key, out var session, out var resolved);
-        if (problem != null)
-            return Out(problem);
-
-        var pending = session!.Result?.PendingUpdates
-            .FirstOrDefault(u => string.Equals(u.Key, resolved, StringComparison.OrdinalIgnoreCase));
-        if (pending == null)
-            return Out(OpenKeysError(session, $"'{key}' is not an open proposal."));
-
-        var isProtect = pending.Kind == UpdateKind.Protect;
-        if (isProtect && !overwrite_your_text)
-            return Out($"Error: '{resolved}' replaces text you wrote. Nothing was written. "
-                       + "Call accept again with overwrite_your_text true to replace it, or skip it.");
-
         if (!TryEnter(out var busyError))
             return Out(busyError);
         try
         {
-            await BackupOnceAsync(api);
+            var problem = CheckOpenProposal(api, key, out var session, out var resolved);
+            if (problem != null)
+                return Out(problem);
+
+            var pending = session!.Result?.PendingUpdates
+                .FirstOrDefault(u => string.Equals(u.Key, resolved, StringComparison.OrdinalIgnoreCase));
+            if (pending == null)
+                return Out(OpenKeysError(session, $"'{key}' is not an open proposal."));
+
+            var isProtect = pending.Kind == UpdateKind.Protect;
+            if (isProtect && !overwrite_your_text)
+                return Out($"Error: '{resolved}' replaces text you wrote. Nothing was written. "
+                           + "Call accept again with overwrite_your_text true to replace it, or skip it.");
+
+            var backupError = BackupOnce(api);
+            if (backupError != null)
+                return Out(backupError);
+
             var service = Service(api);
             var writes = session.WriteCount;
             var accepted = await service.AcceptAsync(session, resolved!);
             if (accepted && isProtect)
                 await service.ApplyStagedAsync(session, true);
-            if (session.PendingSave != null)
-                await AwaitSave(session);
 
             if (!accepted || session.WriteCount == writes)
                 return Out($"Error: '{resolved}' could not be written to the outline.");
+            var saveError = await SaveCheckAsync(api, session);
+            if (saveError != null)
+                return Out(saveError);
             return Out(JsonSerializer.Serialize(Describe(session.Proposals!.Get(resolved!)!), JsonOptions));
         }
         finally
@@ -206,14 +225,23 @@ public static class CollaboratorTools
         StoryCADApi api,
         [Description("Proposal key from get_proposals")] string key)
     {
-        var session = _session;
-        if (session?.Proposals == null)
-            return Out("Error: No proposals. Call run_workflow first.");
+        if (!TryEnter(out var busyError))
+            return Out(busyError);
+        try
+        {
+            var session = _session;
+            if (session?.Proposals == null)
+                return Out("Error: No proposals. Call run_workflow first.");
 
-        var resolved = session.Proposals.ResolveKey(key);
-        if (resolved == null || !Service(api).Skip(session, resolved))
-            return Out(OpenKeysError(session, $"'{key}' is not an open proposal."));
-        return Out(JsonSerializer.Serialize(Describe(session.Proposals.Get(resolved)!), JsonOptions));
+            var resolved = session.Proposals.ResolveKey(key);
+            if (resolved == null || !Service(api).Skip(session, resolved))
+                return Out(OpenKeysError(session, $"'{key}' is not an open proposal."));
+            return Out(JsonSerializer.Serialize(Describe(session.Proposals.Get(resolved)!), JsonOptions));
+        }
+        finally
+        {
+            Leave();
+        }
     }
 
     [McpServerTool(Name = "accept_all")]
@@ -232,11 +260,18 @@ public static class CollaboratorTools
             return Out(busyError);
         try
         {
-            await BackupOnceAsync(api);
+            var backupError = BackupOnce(api);
+            if (backupError != null)
+                return Out(backupError);
+
             session.LastAppliedKeys.Clear();
             await Service(api).AcceptAllAsync(session, overwrite_your_text);
-            if (session.PendingSave != null)
-                await AwaitSave(session);
+            if (session.LastAppliedKeys.Count > 0)
+            {
+                var saveError = await SaveCheckAsync(api, session);
+                if (saveError != null)
+                    return Out(saveError);
+            }
 
             return Out(JsonSerializer.Serialize(new
             {
@@ -333,6 +368,10 @@ public static class CollaboratorTools
         [Description("Story forms you like, comma-separated")] string? story_form_likes = null,
         [Description("Story forms you want to avoid, comma-separated")] string? story_form_dislikes = null)
     {
+        if (!TryEnter(out var busyError))
+            return Out(busyError);
+        try
+        {
         if (terseness != null)
         {
             if (!Enum.TryParse<TersenessLevel>(terseness, true, out var level))
@@ -351,6 +390,11 @@ public static class CollaboratorTools
             storyFormLikes = _settings.StoryFormLikes,
             storyFormDislikes = _settings.StoryFormDislikes
         }, JsonOptions));
+        }
+        finally
+        {
+            Leave();
+        }
     }
 
     #endregion
@@ -442,38 +486,77 @@ public static class CollaboratorTools
         return null;
     }
 
-    private static async Task AwaitSave(WorkflowSession session)
+    /// <summary>
+    /// The service saves the outline file after a write but does not report a failed save. Wait
+    /// for that save, then save once more and report the result, so a caller is never told a
+    /// write is on disk when it is not. Returns an error message, or null.
+    /// </summary>
+    private static async Task<string?> SaveCheckAsync(StoryCADApi api, WorkflowSession session)
     {
-        try
+        if (session.PendingSave != null)
         {
-            await session.PendingSave!;
+            try
+            {
+                await session.PendingSave;
+            }
+            catch
+            {
+                // The final save below reports the outcome.
+            }
         }
-        catch
-        {
-            // The service logged the failed save.
-        }
+
+        if (string.IsNullOrEmpty(session.FilePath))
+            return "Error: The outline has no file yet, so the write is in memory only. Call save_outline with a path.";
+
+        var saved = await api.WriteOutline(session.FilePath);
+        return saved.IsSuccess
+            ? null
+            : $"Error: The write is in the outline in memory, but saving the file failed: {saved.ErrorMessage}";
     }
 
-    /// <summary>One backup before the first write to an outline (design section 5.8).</summary>
-    internal static async Task BackupOnceAsync(StoryCADApi api)
+    /// <summary>Where the backups go. Tests point this at a folder of their own.</summary>
+    internal static string? BackupFolderOverride { get; set; }
+
+    internal static string BackupFolder => BackupFolderOverride ?? Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "StoryCADMcp", "Backups");
+
+    /// <summary>
+    /// One backup of the outline file before the first write to an outline (design section 5.8):
+    /// a zip of the file on disk in <see cref="BackupFolder"/>. Returns an error message when the
+    /// backup fails, and the write must not go on. An outline with no file yet has nothing to back up.
+    /// </summary>
+    internal static string? BackupOnce(StoryCADApi api)
     {
         if (ReferenceEquals(_backedUpModel, api.CurrentModel))
-            return;
+            return null;
 
-        // An outline that was never saved has nothing on disk to back up.
-        var appState = Ioc.Default.GetRequiredService<AppState>();
-        if (string.IsNullOrEmpty(appState.CurrentDocument?.FilePath))
-            return;
+        var source = OutlineTools.OpenedPath;
+        if (string.IsNullOrEmpty(source) || !File.Exists(source))
+        {
+            _backedUpModel = api.CurrentModel;
+            return null;
+        }
 
-        _backedUpModel = api.CurrentModel;
-        await Ioc.Default.GetRequiredService<BackupService>().BackupProject();
+        try
+        {
+            Directory.CreateDirectory(BackupFolder);
+            var name = $"{Path.GetFileNameWithoutExtension(source)} as of {DateTime.Now:yyyyMMdd_HHmmss}.zip";
+            var zipPath = Path.Combine(BackupFolder, name);
+            using (var zip = System.IO.Compression.ZipFile.Open(zipPath, System.IO.Compression.ZipArchiveMode.Create))
+                System.IO.Compression.ZipFileExtensions.CreateEntryFromFile(zip, source, Path.GetFileName(source));
+            _backedUpModel = api.CurrentModel;
+            return null;
+        }
+        catch (Exception ex)
+        {
+            return $"Error: The backup failed, so nothing was written: {ex.Message}";
+        }
     }
 
-    /// <summary>save_outline is a write too. It backs up first when a Collaborator session is open.</summary>
-    internal static Task BackupBeforeSaveAsync(StoryCADApi api) =>
-        HasSession ? BackupOnceAsync(api) : Task.CompletedTask;
+    /// <summary>save_outline is a write too. During a Collaborator session it backs up first.</summary>
+    internal static string? BackupBeforeSave(StoryCADApi api) => HasSession ? BackupOnce(api) : null;
 
-    private static bool TryEnter(out string error)
+    internal static bool TryEnter(out string error)
     {
         if (Interlocked.CompareExchange(ref _busy, 1, 0) != 0)
         {
@@ -485,7 +568,7 @@ public static class CollaboratorTools
         return true;
     }
 
-    private static void Leave() => Interlocked.Exchange(ref _busy, 0);
+    internal static void Leave() => Interlocked.Exchange(ref _busy, 0);
 
     /// <summary>Every tool result passes through here, so the token never leaves the server.</summary>
     private static string Out(string text) => CollaboratorSignIn.Scrub(text);
