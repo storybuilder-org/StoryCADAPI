@@ -11,14 +11,16 @@ StoryCADMcp is a [Model Context Protocol](https://modelcontextprotocol.io/) serv
 
 ## Overview
 
-The server wraps `StoryCADApi` and exposes 24 tools across four categories:
+The server wraps `StoryCADApi` and exposes 42 tools across six categories:
 
 | Category | Tools | Purpose |
 |----------|-------|---------|
-| Outline | 3 | Open, save, and close outline files |
+| Outline | 4 | Create, open, save, and close outline files |
 | Read | 5 | List, search, and inspect elements |
 | Write | 10 | Add, update, delete, move, link, and edit list-property entries |
+| Beat | 8 | Create, edit, assign, move, save, and load the beats of a Problem |
 | Resource | 6 | Query writing reference data (plots, beats, conflicts, etc.) |
+| Collaborator | 9 | Run Collaborator workflows and accept or skip their proposals |
 
 The server uses **stdio transport**, communicating with the client over standard input/output.
 
@@ -90,7 +92,7 @@ Saves the currently open outline to disk.
 
 #### `close_outline`
 
-Closes the currently open outline, clearing it from memory. Call `save_outline` first if you have unsaved changes.
+Closes the currently open outline, clearing it from memory, and ends the Collaborator session. Call `save_outline` first if you have unsaved changes.
 
 **Returns:** Confirmation.
 
@@ -373,6 +375,136 @@ Gets valid example values for a story element property.
 
 ---
 
+### Collaborator Tools
+
+These tools run the same Collaborator workflows as the StoryCAD Collaborator window, through the same code. A run sends story elements to the Collaborator Worker, which returns proposals: a new value for one property of one element. Nothing is written to the outline until you call `accept` or `accept_all`.
+
+**Requirements.** Collaborator is a paid feature. The server uses the Collaborator sign-in of the StoryCAD app installed on the same machine, so sign in to Collaborator in the app once before you use these tools. At start the server copies four sign-in keys (`StoreUserGuid`, `StoreActivationJwt`, `StoreActivationJwtExpiry`, `StoreActivationPath`) from the app's `Preferences.json`, and it reads them again before each run. It never writes the app's file, and no tool result contains the token. When the token has expired, a run returns "Open StoryCAD once to refresh the Collaborator sign-in." Each run is charged to your Collaborator credit, as in the app.
+
+| Platform | Preferences file the server reads |
+|----------|-----------------------------------|
+| Windows, store app | `%LOCALAPPDATA%\Packages\34432StoryBuilder.StoryBuilder_*\RoamingState\StoryCAD\Preferences.json` |
+| Windows, unpackaged build | `%APPDATA%\StoryCAD\Preferences.json` |
+| macOS | `~/Library/Application Support/StoryCAD/Preferences.json` |
+
+**Worker.** The server uses the Worker that the app uses. To use another Worker, set `COLLAB_PROXY_URL` in the `env` block of the MCP entry. The Worker chooses the model. The server tells the Worker that a call came from the MCP server, so the Worker can count that use; this does not change the price.
+
+**One session at a time.** A new `run_workflow` ends the session before it. `close_outline` ends it too.
+
+**Backup.** Before the first write to an outline (`run_workflow`, which can create elements while it finds inputs, `accept`, `accept_all`, or `save_outline` during a session), the server zips the outline file as it is on disk into its own backup folder: `%LOCALAPPDATA%\StoryCADMcp\Backups` on Windows, the matching local application data folder elsewhere. It makes one backup for each opened outline. If the backup fails, the tool returns the error and writes nothing. An outline that has never been saved has no file to back up.
+
+**Run time and cost.** `run_workflow` and `try_again` return the run time in seconds and the cost in dollars, from the Worker's cost report. `chat` returns the time and the cost of the call.
+
+A typical session: `open_outline`, `list_workflows`, `run_workflow`, `get_proposals`, then `accept` or `skip` for each key, then `save_outline`.
+
+#### `list_workflows`
+
+Lists the Collaborator workflows.
+
+**Returns:** JSON array of `{label, title, description, elementType, requiredInputs[], optionalInputs[]}`. Each input is `{name, type}`.
+
+---
+
+#### `run_workflow`
+
+Runs a workflow on one element of the open outline and keeps its proposals. Takes a minute or more and costs credit. For Character Interview it opens the interview instead of running once: the result lists what the interview can explore, and you answer through `chat` (see `chat`).
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `workflow` | string | Workflow label from `list_workflows` |
+| `element` | string | GUID of the element the run is about (from `list_elements`) |
+| `inputs` | object | Optional. Input name to element GUID, for inputs the run cannot find on its own. |
+
+If an input cannot be found, the tool returns an error that names it. Find the GUID with `list_elements` and pass it in `inputs`.
+
+**Returns:** JSON with `{workflow, proposals[], kept[], seconds, cost}`. `kept` lists the properties the Worker left as they are. When a run fails, the tool returns the error text, for example the out-of-credit message.
+
+For Character Interview the result is `{workflow, interview, character, message, choices}`. `choices` is the list the app shows: numbers, field names, or "you choose".
+
+---
+
+#### `get_proposals`
+
+Lists each proposal of the session.
+
+**Returns:** JSON array of `{key, element, property, state, current, proposed, explanation, status}`. `state` is `New` (the property is empty), `Refresh` (Collaborator wrote it earlier in this session), or `Has your text` (the proposal replaces text you wrote). `status` is `Open`, `Accepted`, or `Skipped`.
+
+---
+
+#### `accept`
+
+Accepts one proposal and writes it to the outline.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `key` | string | Proposal key from `get_proposals` |
+| `overwrite_your_text` | bool | Optional, default false. A proposal in state `Has your text` is written only when this is true. |
+
+With `overwrite_your_text` false, a `Has your text` proposal returns an error and writes nothing. An unknown key returns an error with the open keys.
+
+**Returns:** The proposal after the write.
+
+---
+
+#### `skip`
+
+Skips one proposal. The outline keeps its text.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `key` | string | Proposal key from `get_proposals` |
+
+**Returns:** The proposal after the skip.
+
+---
+
+#### `accept_all`
+
+Accepts every open proposal.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `overwrite_your_text` | bool | Optional, default false. With false, `Has your text` proposals stay open. |
+
+**Returns:** JSON with `{applied[], open[]}`: the keys the call wrote and the keys that stay open.
+
+---
+
+#### `try_again`
+
+Runs the workflow again. The open and skipped proposals go to the Worker as what to depart from. Takes a minute or more and costs credit.
+
+**Returns:** The same JSON as `run_workflow`.
+
+---
+
+#### `chat`
+
+Sends one chat message about the proposals. The reply can change proposals; it never writes the outline. Costs credit. In a Character Interview, the first message says what to explore (numbers from `choices`, a field name, or "you choose"), and each later message is an answer in the character's voice. The MCP server cannot save an interview to the character's notes yet, so an interview writes nothing to the outline.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `text` | string | The message |
+
+**Returns:** JSON with `{reply, question, changed[], seconds, cost}`. `changed` lists the keys whose proposed text or status the reply changed. `question` is the next interview question and is null outside an interview. `cost` is the cost of the call, or null when the Worker reported none.
+
+---
+
+#### `settings`
+
+Shows or changes the Collaborator settings that the next run sends. Omit an argument to leave it as it is.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `terseness` | string | Optional. `Concise`, `Balanced`, or `Detailed` |
+| `genre_preferences` | string | Optional. Preferred genres, comma-separated |
+| `story_form_likes` | string | Optional. Story forms you like, comma-separated |
+| `story_form_dislikes` | string | Optional. Story forms you want to avoid, comma-separated |
+
+**Returns:** JSON with the four current values.
+
+---
+
 ## Architecture
 
 StoryCADMcp bridges two dependency injection containers:
@@ -382,7 +514,10 @@ StoryCADMcp bridges two dependency injection containers:
 
 ```
 Program.cs
+├── STORYCAD_ROOT_DIR = %LOCALAPPDATA%/StoryCADMcp (honored by StoryCADLib when headless)
 ├── BootStrapper.Initialise(headless: true)   ← StoryCADLib DI
+├── KernelFactory.ClientName = "mcp"          ← the Worker journal counts MCP use
+├── CollaboratorSignIn.EnsureAsync()          ← copies the app's Collaborator sign-in
 ├── Ioc.Default.GetRequiredService<StoryCADApi>()
 └── Host.CreateApplicationBuilder()
     ├── services.AddSingleton(api)             ← Bridge into MCP DI
@@ -400,7 +535,7 @@ Tool classes are static and receive `StoryCADApi` via MCP's constructor injectio
 <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
 ```
 
-StoryCADLib is referenced as a `ProjectReference` (not a NuGet package), so it always tracks the current source.
+StoryCADLib is referenced as a NuGet package. `UseStoryCADLibNuGet` in `Directory.Build.props` is true, and `StoryCADLibVersion` in the same file pins the version. The Collaborator tools need a package that carries `CollaboratorLib.dll`, which starts with 4.4.0.
 
 ## See Also
 

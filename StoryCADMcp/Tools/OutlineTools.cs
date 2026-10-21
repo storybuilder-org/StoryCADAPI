@@ -9,6 +9,9 @@ public static class OutlineTools
 {
     private static string? _openedPath;
 
+    /// <summary>The file the open outline came from or was last saved to.</summary>
+    internal static string? OpenedPath => _openedPath;
+
     [McpServerTool(Name = "open_outline")]
     [Description("Opens a StoryCAD outline file (.stbx) and loads it into memory. Must be called before using any read or write tools that operate on outline elements.")]
     public static async Task<string> OpenOutline(
@@ -39,6 +42,9 @@ public static class OutlineTools
         if (string.IsNullOrEmpty(savePath))
             return "Error: No save path available. Provide a path explicitly.";
 
+        var backupError = CollaboratorTools.BackupBeforeSave(api);
+        if (backupError != null)
+            return backupError;
         var result = await api.WriteOutline(savePath);
         if (!result.IsSuccess)
             return $"Error: {result.ErrorMessage}";
@@ -53,9 +59,20 @@ public static class OutlineTools
         if (api.CurrentModel == null)
             return "No outline is currently open.";
 
-        api.SetCurrentModel(null!);
-        _openedPath = null;
-        return "Outline closed.";
+        // A Collaborator write in flight must finish before the outline goes away.
+        if (!CollaboratorTools.TryEnter(out var busyError))
+            return busyError;
+        try
+        {
+            api.SetCurrentModel(null!);
+            _openedPath = null;
+            CollaboratorTools.EndSession();
+            return "Outline closed.";
+        }
+        finally
+        {
+            CollaboratorTools.Leave();
+        }
     }
 
     [McpServerTool(Name = "new_outline")]
