@@ -10,8 +10,10 @@
 
   <ItemGroup>
     <ProjectReference Include="../StoryCADMcp/StoryCADMcp.csproj" />
-    <PackageReference Include="StoryCADLib" Version="$(StoryCADLibVersion)" ExcludeAssets="contentFiles"
-                      Condition="'$(UseStoryCADLibNuGet)' == 'true'" />
+    <!-- Until StoryCAD 4.4 ships: built from a sibling StoryCAD checkout (dev), because the
+         Collaborator tools need code no released StoryCADLib has (Collaborator #291). -->
+    <ProjectReference Include="../../StoryCAD/StoryCADLib/StoryCADLib.csproj" />
+    <ProjectReference Include="../../StoryCAD/CollaboratorLib/CollaboratorLib.csproj" />
   </ItemGroup>
 
   <ItemGroup>

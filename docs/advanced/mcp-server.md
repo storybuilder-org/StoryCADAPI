@@ -535,7 +535,7 @@ Tool classes are static and receive `StoryCADApi` via MCP's constructor injectio
 <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
 ```
 
-StoryCADLib is referenced as a NuGet package. `UseStoryCADLibNuGet` in `Directory.Build.props` is true, and `StoryCADLibVersion` in the same file pins the version. The Collaborator tools need a package that carries `CollaboratorLib.dll`, which starts with 4.4.0.
+Until StoryCAD 4.4 ships, the server builds from a StoryCAD checkout beside this repo (`../StoryCAD`, branch `dev`): `StoryCADMcp.csproj` references `StoryCADLib` and `CollaboratorLib` as projects, because the Collaborator tools need code no released StoryCADLib has. Clone StoryCAD next to StoryCADAPI before you build the server. From 4.4.0 the server goes back to the StoryCADLib NuGet package, which then carries `CollaboratorLib.dll`.
 
 ## See Also
 
