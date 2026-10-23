@@ -3,10 +3,13 @@ using System.Diagnostics;
 using System.Text.Json;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using ModelContextProtocol.Server;
+using NLog.Extensions.Logging;
 using StoryCADLib.Models;
 using StoryCADLib.Services.API;
 using StoryCADLib.Services.Collaborator.Contracts;
+using StoryCADLib.Services.Logging;
 using StoryCollaborator.Models;
 using StoryCollaborator.Services;
 using StoryCollaborator.Workflows;
@@ -407,9 +410,19 @@ public static class CollaboratorTools
 
     #region Helpers
 
+    // Same logging as the app's Collaborator (StoryCAD CollaboratorLib/Collaborator.cs): the model's
+    // answer and each Classify line go to the NLog file in the server's logs folder (Collaborator #286).
+    private static readonly ILoggerFactory LoggerFactory = Microsoft.Extensions.Logging.LoggerFactory.Create(builder =>
+    {
+        builder.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Information);
+        if (NLog.LogManager.Configuration != null)
+            builder.AddNLog(NLog.LogManager.Configuration);
+    });
+
     /// <summary>The service keeps no state, so a new one for each call is the same service.</summary>
     private static WorkflowSessionService Service(StoryCADApi api) =>
-        new(api, null, _settings, null, null);
+        new(api, LoggerFactory.CreateLogger<WorkflowSessionService>(), _settings, LoggerFactory,
+            Ioc.Default.GetService<ILogService>());
 
     /// <summary>Runs a run or a try again and reports the proposals, the time and the cost.</summary>
     private static async Task<string> RunAndReport(
