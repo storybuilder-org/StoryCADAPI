@@ -440,6 +440,16 @@ public static class CollaboratorTools
 
         var result = session.Result!;
         var cost = result.Cost;
+
+        // With COLLAB_PROMPT_ECHO=1 and the user in the Worker's PROMPT_ECHO_USERS, the Worker returns
+        // the prompt it sent. It goes to the log file, not to the caller (Collaborator #286).
+        if (result.AssembledPrompt != null)
+        {
+            LoggerFactory.CreateLogger("PromptEcho").LogInformation(
+                "=== PROMPT ECHO {Workflow} template_hash={TemplateHash} ===\n=== SYSTEM ===\n{System}\n=== USER ===\n{User}\n=== END PROMPT ECHO ===",
+                session.Workflow.Label, result.RemoteTemplateHash, result.SystemPrompt, result.AssembledPrompt);
+        }
+
         return JsonSerializer.Serialize(new
         {
             workflow = session.Workflow.Label,
