@@ -3,10 +3,13 @@ using System.Diagnostics;
 using System.Text.Json;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using ModelContextProtocol.Server;
+using NLog.Extensions.Logging;
 using StoryCADLib.Models;
 using StoryCADLib.Services.API;
 using StoryCADLib.Services.Collaborator.Contracts;
+using StoryCADLib.Services.Logging;
 using StoryCollaborator.Models;
 using StoryCollaborator.Services;
 using StoryCollaborator.Workflows;
@@ -407,9 +410,19 @@ public static class CollaboratorTools
 
     #region Helpers
 
+    // Same logging as the app's Collaborator (StoryCAD CollaboratorLib/Collaborator.cs): the model's
+    // answer and each Classify line go to the NLog file in the server's logs folder (Collaborator #286).
+    private static readonly ILoggerFactory LoggerFactory = Microsoft.Extensions.Logging.LoggerFactory.Create(builder =>
+    {
+        builder.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Information);
+        if (NLog.LogManager.Configuration != null)
+            builder.AddNLog(NLog.LogManager.Configuration);
+    });
+
     /// <summary>The service keeps no state, so a new one for each call is the same service.</summary>
     private static WorkflowSessionService Service(StoryCADApi api) =>
-        new(api, null, _settings, null, null);
+        new(api, LoggerFactory.CreateLogger<WorkflowSessionService>(), _settings, LoggerFactory,
+            Ioc.Default.GetService<ILogService>());
 
     /// <summary>Runs a run or a try again and reports the proposals, the time and the cost.</summary>
     private static async Task<string> RunAndReport(
@@ -427,6 +440,16 @@ public static class CollaboratorTools
 
         var result = session.Result!;
         var cost = result.Cost;
+
+        // With COLLAB_PROMPT_ECHO=1 and the user in the Worker's PROMPT_ECHO_USERS, the Worker returns
+        // the prompt it sent. It goes to the log file, not to the caller (Collaborator #286).
+        if (result.AssembledPrompt != null)
+        {
+            LoggerFactory.CreateLogger("PromptEcho").LogInformation(
+                "=== PROMPT ECHO {Workflow} template_hash={TemplateHash} ===\n=== SYSTEM ===\n{System}\n=== USER ===\n{User}\n=== END PROMPT ECHO ===",
+                session.Workflow.Label, result.RemoteTemplateHash, result.SystemPrompt, result.AssembledPrompt);
+        }
+
         return JsonSerializer.Serialize(new
         {
             workflow = session.Workflow.Label,
