@@ -84,23 +84,20 @@ bundle exec jekyll serve --livereload
 
 GitHub Pages deployment is disabled until the 4.0 store release.
 
-## devdocs Index
+## Build and test
 
-| File | Purpose |
-|------|---------|
-| `devdocs/issue_13_status_log.md` | Session history for Outliner hardening (#13) |
+The repo has no solution file for the whole repo. Each sample builds by itself.
 
-## Status Log
+```powershell
+# One sample
+cd samples/StoryGraphBasics
+dotnet build -f net10.0-desktop
 
-`devdocs/issue_13_status_log.md` is the current active status log.
+# The Outliner and StoryCADCritter samples
+scripts\build-outliner.cmd
+scripts\build-critter.cmd
+```
 
-**Update it at the end of every working session**, or more frequently if directed.
+There are three MSTest projects: `StoryCADMcp.Tests`, `samples/Outliner/OutlinerTests` and `samples/StoryCADCritter/StoryCADCritterTests`. The repo states no test command.
 
-## Standards
-
-This repo follows the shared standards in `D:\dev\src\CLAUDE.md`:
-- PIE workflow (Plan → Implement → Evaluate); plan must be approved before implementation
-- Wiki at `D:\dev\src\StoryCADWiki\` is the authoritative cross-repo knowledge layer
-- Agent usage required for complex tasks (>15 min OR >2 files OR architectural)
-- Issue body checkboxes updated via `gh issue edit` as work progresses
-- Use plain English and standard developer jargon; do not invent terms for tasks, code constructs, or concepts
+The development process is not in this file.
